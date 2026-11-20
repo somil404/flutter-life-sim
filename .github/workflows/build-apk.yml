@@ -15,23 +15,27 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
 
-      - name: Generate Android Skeleton & Build APK
+      - name: Generate Android project structure
         run: |
-          flutter create . --platforms=android --org com.lifesim.journey
-          flutter pub get
-          flutter build apk --release
+          flutter create --platforms=android --project-name flutter_life_sim --org com.lifesim.journey .
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Android Release APK
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: LifeJourney-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-
