@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌟 Life Journey Simulator</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --health: #ef4444;
+      --happy: #f59e0b;
+      --smarts: #38bdf8;
+      --looks: #ec4899;
+      --cash: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+    }
+
+    .device-container {
+      width: 100%;
+      max-width: 480px;
+      height: 94vh;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* App Bar */
+    .app-bar {
+      background: var(--card-bg);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    /* Status Header */
+    .status-header {
+      background: var(--card-bg);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .age-badge {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .job-badge {
+      font-size: 0.85rem;
+      color: #a5b4fc;
+      margin-top: 2px;
+    }
+
+    .money-badge {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--cash);
+      text-align: right;
+    }
+
+    .salary-badge {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* Stats Grid */
+    .stats-card {
+      margin: 12px 16px;
+      padding: 12px 16px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-label {
+      width: 105px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .stat-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: #090d16;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.4s ease, background-color 0.4s ease;
+    }
+
+    .stat-value {
+      width: 38px;
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Actions Grid */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 0 16px 10px;
+    }
+
+    .action-btn {
+      background: rgba(99, 102, 241, 0.1);
+      color: #c7d2fe;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 8px 6px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover:not(:disabled) {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Event Logs Feed */
+    .logs-feed {
+      flex: 1;
+      margin: 0 16px 12px;
+      padding: 12px;
+      background: #0b1120;
+      border-radius: 14px;
+      border: 1px solid #1e293b;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .log-item {
+      font-size: 0.88rem;
+      line-height: 1.4;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid #3b82f6;
+      color: #cbd5e1;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .log-item.latest {
+      border-left-color: var(--primary);
+      color: #fff;
+      background: rgba(99, 102, 241, 0.12);
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Primary Bottom Button */
+    .bottom-bar {
+      padding: 12px 16px 16px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .age-up-btn {
+      width: 100%;
+      height: 52px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+      transition: all 0.2s;
+    }
+
+    .age-up-btn:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    }
+
+    .age-up-btn.dead {
+      background: #475569;
+      box-shadow: none;
+    }
+
+    /* Modal / Dialog */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-height: 80%;
+      background: var(--card-bg);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 20px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-bottom: none;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .career-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .career-info h4 {
+      font-size: 0.95rem;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+
+    .career-info p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .apply-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: #334155;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      pointer-events: none;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 200;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="device-container">
+    <div id="toast" class="toast"></div>
+
+    <!-- App Bar -->
+    <header class="app-bar">
+      <div class="app-title">🌟 Life Journey Simulator</div>
+      <button class="icon-btn" onclick="confirmRestart()" title="Restart Game">🔄</button>
+    </header>
+
+    <!-- Character Status -->
+    <div class="status-header">
+      <div>
+        <div class="age-badge" id="ageBadge">Age: 0</div>
+        <div class="job-badge" id="jobBadge">Infant</div>
+      </div>
+      <div>
+        <div class="money-badge" id="moneyBadge">$0</div>
+        <div class="salary-badge" id="salaryBadge">Salary: $0/yr</div>
+      </div>
+    </div>
+
+    <!-- Stats Bars -->
+    <div class="stats-card">
+      <div class="stat-row">
+        <span class="stat-label">❤️ Health</span>
+        <div class="stat-bar-bg"><div id="healthBar" class="stat-bar-fill" style="background: var(--health); width: 100%;"></div></div>
+        <span class="stat-value" id="healthVal">100%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">😄 Happiness</span>
+        <div class="stat-bar-bg"><div id="happyBar" class="stat-bar-fill" style="background: var(--happy); width: 100%;"></div></div>
+        <span class="stat-value" id="happyVal">100%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">🧠 Smarts</span>
+        <div class="stat-bar-bg"><div id="smartsBar" class="stat-bar-fill" style="background: var(--smarts); width: 50%;"></div></div>
+        <span class="stat-value" id="smartsVal">50%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">✨ Looks</span>
+        <div class="stat-bar-bg"><div id="looksBar" class="stat-bar-fill" style="background: var(--looks); width: 50%;"></div></div>
+        <span class="stat-value" id="looksVal">50%</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions-grid">
+      <button class="action-btn" onclick="studyHard()">📚 Study</button>
+      <button class="action-btn" onclick="gymWorkout()">🏋️ Gym</button>
+      <button class="action-btn" onclick="visitDoctor()">🩺 Doctor</button>
+      <button class="action-btn" onclick="takeVacation()">🏖️ Vacation</button>
+      <button class="action-btn" onclick="openCareers()">💼 Career</button>
+      <button class="action-btn" onclick="playLottery()">🎰 Lottery</button>
+    </div>
+
+    <!-- Activity Log -->
+    <div class="logs-feed" id="logsFeed">
+      <!-- Items generated dynamically -->
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="bottom-bar">
+      <button id="ageUpBtn" class="age-up-btn" onclick="handleAgeUp()">
+        🎂 Age Up (+1 Year)
+      </button>
+    </div>
+
+    <!-- Modal Dialog for Careers & Education -->
+    <div id="careerModal" class="modal-overlay" onclick="closeModalOnBg(event)">
+      <div class="modal-content">
+        <div class="modal-title">
+          <span>💼 Education & Careers</span>
+          <button class="icon-btn" onclick="closeCareers()">✕</button>
+        </div>
+
+        <div class="career-item">
+          <div class="career-info">
+            <h4>🎓 Attend University ($8,000)</h4>
+            <p>Requires Smarts ≥ 50. Opens high-paying career paths.</p>
+          </div>
+          <button class="apply-btn" onclick="attendUniversity()">Enroll</button>
+        </div>
+
+        <div class="career-item">
+          <div class="career-info">
+            <h4>🍔 Fast Food Crew ($18,000/yr)</h4>
+            <p>No requirements. Age ≥ 18.</p>
+          </div>
+          <button class="apply-btn" onclick="applyJob('Fast Food Worker', 18000, 0, 10)">Apply</button>
+        </div>
+
+        <div class="career-item">
+          <div class="career-info">
+            <h4>🎨 Junior Designer ($35,000/yr)</h4>
+            <p>Requires High School & Smarts ≥ 30.</p>
+          </div>
+          <button class="apply-btn" onclick="applyJob('Junior Designer', 35000, 1, 30)">Apply</button>
+        </div>
+
+        <div class="career-item">
+          <div class="career-info">
+            <h4>💻 Software Engineer ($85,000/yr)</h4>
+            <p>Requires University degree & Smarts ≥ 60.</p>
+          </div>
+          <button class="apply-btn" onclick="applyJob('Software Engineer', 85000, 2, 60)">Apply</button>
+        </div>
+
+        <div class="career-item">
+          <div class="career-info">
+            <h4>🩺 Medical Doctor ($160,000/yr)</h4>
+            <p>Requires University degree & Smarts ≥ 80.</p>
+          </div>
+          <button class="apply-btn" onclick="applyJob('Medical Doctor', 160000, 2, 80)">Apply</button>
+        </div>
+
+        <div class="career-item">
+          <div class="career-info">
+            <h4>👑 Corporate Executive ($320,000/yr)</h4>
+            <p>Requires University degree & Smarts ≥ 90.</p>
+          </div>
+          <button class="apply-btn" onclick="applyJob('Corporate Executive', 320000, 2, 90)">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Game State
+    let state = {
+      age: 0,
+      health: 100,
+      happiness: 100,
+      intelligence: 50,
+      looks: 50,
+      money: 0,
+      job: 'Infant',
+      salary: 0,
+      educationLevel: 0, // 0: None, 1: High School, 2: College
+      isAlive: true,
+      logs: []
+    };
+
+    function initGame() {
+      state.age = 0;
+      state.health = 85 + Math.floor(Math.random() * 15);
+      state.happiness = 85 + Math.floor(Math.random() * 15);
+      state.intelligence = 35 + Math.floor(Math.random() * 45);
+      state.looks = 35 + Math.floor(Math.random() * 55);
+      state.money = 0;
+      state.job = 'Infant';
+      state.salary = 0;
+      state.educationLevel = 0;
+      state.isAlive = true;
+      state.logs = ['👶 Welcome to the world! You were born healthy.'];
+      updateUI();
+    }
+
+    function clamp(val, min, max) {
+      return Math.max(min, Math.min(max, val));
+    }
+
+    function notify(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function updateUI() {
+      // Clamping
+      state.health = clamp(state.health, 0, 100);
+      state.happiness = clamp(state.happiness, 0, 100);
+      state.intelligence = clamp(state.intelligence, 0, 100);
+      state.looks = clamp(state.looks, 0, 100);
+
+      // Elements
+      document.getElementById('ageBadge').innerText = `Age: ${state.age}`;
+      document.getElementById('jobBadge').innerText = state.job;
+      document.getElementById('moneyBadge').innerText = (state.money >= 0 ? '$' : '-$') + Math.abs(state.money).toLocaleString();
+      document.getElementById('moneyBadge').style.color = state.money >= 0 ? 'var(--cash)' : '#ef4444';
+      document.getElementById('salaryBadge').innerText = `Salary: $${state.salary.toLocaleString()}/yr`;
+
+      // Stat bars
+      document.getElementById('healthBar').style.width = `${state.health}%`;
+      document.getElementById('healthVal').innerText = `${state.health}%`;
+
+      document.getElementById('happyBar').style.width = `${state.happiness}%`;
+      document.getElementById('happyVal').innerText = `${state.happiness}%`;
+
+      document.getElementById('smartsBar').style.width = `${state.intelligence}%`;
+      document.getElementById('smartsVal').innerText = `${state.intelligence}%`;
+
+      document.getElementById('looksBar').style.width = `${state.looks}%`;
+      document.getElementById('looksVal').innerText = `${state.looks}%`;
+
+      // Age up button
+      const ageBtn = document.getElementById('ageUpBtn');
+      if (state.isAlive) {
+        ageBtn.className = 'age-up-btn';
+        ageBtn.innerHTML = '🎂 Age Up (+1 Year)';
+      } else {
+        ageBtn.className = 'age-up-btn dead';
+        ageBtn.innerHTML = '⚰️ Reincarnate (New Life)';
+      }
+
+      // Action buttons disabled if dead
+      const actionBtns = document.querySelectorAll('.action-btn');
+      actionBtns.forEach(b => b.disabled = !state.isAlive);
+
+      // Render logs
+      const feed = document.getElementById('logsFeed');
+      feed.innerHTML = '';
+      state.logs.forEach((log, index) => {
+        const div = document.createElement('div');
+        div.className = `log-item ${index === 0 ? 'latest' : ''}`;
+        div.innerText = log;
+        feed.appendChild(div);
+      });
+    }
+
+    function addLog(msg) {
+      state.logs.unshift(msg);
+      if (state.logs.length > 50) state.logs.pop();
+    }
+
+    function handleAgeUp() {
+      if (!state.isAlive) {
+        initGame();
+        return;
+      }
+
+      state.age++;
+
+      // Natural aging impact
+      if (state.age > 45) state.health -= (1 + Math.floor(Math.random() * 3));
+      if (state.age > 75) state.health -= (2 + Math.floor(Math.random() * 5));
+
+      // Financials
+      if (state.salary > 0) {
+        const expenses = Math.round(state.salary * 0.35) + 600;
+        state.money += (state.salary - expenses);
+      }
+
+      // Milestones
+      if (state.age === 6) {
+        addLog('🎒 Age 6: You began elementary school!');
+      } else if (state.age === 18) {
+        state.educationLevel = Math.max(state.educationLevel, 1);
+        if (state.job === 'Infant' || state.job === 'Student') {
+          state.job = 'High School Graduate';
+        }
+        addLog('🎓 Age 18: You graduated from High School!');
+      } else {
+        triggerAnnualEvent();
+      }
+
+      // Death checks
+      if (state.health <= 0) {
+        state.isAlive = false;
+        addLog(`⚰️ At age ${state.age}, your health failed completely. Rest in peace.`);
+      } else if (state.age > 70 && Math.random() < ((state.age - 65) / 100)) {
+        state.isAlive = false;
+        addLog(`🕊️ At age ${state.age}, you peacefully passed away of old age.`);
+      }
+
+      updateUI();
+    }
+
+    function triggerAnnualEvent() {
+      const roll = Math.random() * 100;
+      if (roll < 15) {
+        state.health -= (10 + Math.floor(Math.random() * 15));
+        state.happiness -= 10;
+        addLog(`🤒 Age ${state.age}: You caught an aggressive flu and spent weeks in bed.`);
+      } else if (roll < 30) {
+        const bonus = 100 + Math.floor(Math.random() * 400);
+        state.money += bonus;
+        state.happiness += 8;
+        addLog(`🍀 Age ${state.age}: You found $${bonus} in an old winter coat!`);
+      } else if (roll < 45 && state.age >= 16) {
+        state.happiness += 15;
+        addLog(`❤️ Age ${state.age}: You experienced a wonderful romance.`);
+      } else if (roll < 60 && state.salary > 0) {
+        const bonus = Math.round(state.salary * 0.12);
+        state.money += bonus;
+        state.happiness += 12;
+        addLog(`💼 Age ${state.age}: Received an annual performance bonus of $${bonus.toLocaleString()}!`);
+      } else {
+        addLog(`📅 Age ${state.age}: A peaceful, uneventful year passed.`);
+      }
+    }
+
+    // Actions
+    function studyHard() {
+      if (!state.isAlive) return;
+      state.intelligence += 4 + Math.floor(Math.random() * 4);
+      state.happiness -= 2;
+      addLog('📚 You studied diligently and learned new skills (+Smarts)');
+      updateUI();
+    }
+
+    function gymWorkout() {
+      if (!state.isAlive) return;
+      state.health += 5 + Math.floor(Math.random() * 5);
+      state.looks += 3;
+      state.happiness += 4;
+      state.money -= 25;
+      addLog('🏋️ Completed an intense workout at the gym. (+Health, +Looks)');
+      updateUI();
+    }
+
+    function visitDoctor() {
+      if (!state.isAlive) return;
+      if (state.age >= 18 && state.money < 200) {
+        notify('Doctor fee is $200. You need more funds!');
+        return;
+      }
+      if (state.age >= 18) state.money -= 200;
+      state.health += 25 + Math.floor(Math.random() * 15);
+      addLog('🩺 Doctor examined and treated you. (+Health)');
+      updateUI();
+    }
+
+    function takeVacation() {
+      if (!state.isAlive) return;
+      if (state.money < 1000) {
+        notify('Vacation costs $1,000. You need more savings!');
+        return;
+      }
+      state.money -= 1000;
+      state.happiness += 30;
+      state.health += 5;
+      addLog('🏖️ Spent a week relaxing in a beachfront villa. (+Happiness)');
+      updateUI();
+    }
+
+    function playLottery() {
+      if (!state.isAlive) return;
+      if (state.money < 50) {
+        notify('Lottery ticket costs $50.');
+        return;
+      }
+      state.money -= 50;
+      const roll = Math.random() * 100;
+      if (roll > 96) {
+        const jackpot = 35000 + Math.floor(Math.random() * 50000);
+        state.money += jackpot;
+        state.happiness += 40;
+        addLog(`🎰 JACKPOT! You won the grand lottery prize of $${jackpot.toLocaleString()}!`);
+      } else if (roll > 75) {
+        const prize = 150 + Math.floor(Math.random() * 300);
+        state.money += prize;
+        state.happiness += 10;
+        addLog(`🎫 Nice! You won $${prize} on a scratch-off card.`);
+      } else {
+        addLog('❌ The lottery ticket was not a winner.');
+      }
+      updateUI();
+    }
+
+    function openCareers() {
+      if (!state.isAlive) return;
+      document.getElementById('careerModal').classList.add('active');
+    }
+
+    function closeCareers() {
+      document.getElementById('careerModal').classList.remove('active');
+    }
+
+    function closeModalOnBg(e) {
+      if (e.target.id === 'careerModal') closeCareers();
+    }
+
+    function attendUniversity() {
+      if (state.age < 18) {
+        notify('Must be at least 18 to attend college.');
+        return;
+      }
+      if (state.educationLevel >= 2) {
+        notify('You already have a University degree!');
+        return;
+      }
+      if (state.intelligence < 50) {
+        notify('Smarts must be ≥ 50 to qualify for University.');
+        return;
+      }
+      state.educationLevel = 2;
+      state.money -= 8000;
+      state.intelligence += 20;
+      state.job = 'College Graduate';
+      addLog('🎓 Graduated from University! High-tier jobs unlocked.');
+      closeCareers();
+      updateUI();
+    }
+
+    function applyJob(title, salary, reqEdu, reqInt) {
+      if (state.age < 18) {
+        notify('Must be at least 18 to work!');
+        return;
+      }
+      if (state.educationLevel < reqEdu) {
+        notify(`Requires higher education level (${reqEdu}).`);
+        return;
+      }
+      if (state.intelligence < reqInt) {
+        notify(`Requires Smarts ≥ ${reqInt}.`);
+        return;
+      }
+
+      state.job = title;
+      state.salary = salary;
+      state.happiness += 10;
+      addLog(`🎉 Landed job as ${title} earning $${salary.toLocaleString()}/yr!`);
+      closeCareers();
+      updateUI();
+    }
+
+    function confirmRestart() {
+      if (confirm('Start a brand new life?')) {
+        initGame();
+      }
+    }
+
+    // Initialize on load
+    initGame();
+  </script>
+</body>
+</html>
