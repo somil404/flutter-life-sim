@@ -34,3 +34,4 @@ jobs:
         with:
           name: LifeJourney-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+

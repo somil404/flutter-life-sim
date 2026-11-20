@@ -578,3 +578,4 @@ class _LifeGameScreenState extends State<LifeGameScreen> {
     );
   }
 }
+

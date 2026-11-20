@@ -15,3 +15,4 @@ To run locally:
 flutter pub get
 flutter run -d chrome
 ```
+
