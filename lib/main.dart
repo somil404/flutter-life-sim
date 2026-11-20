@@ -542,7 +542,7 @@ class _LifeGameScreenState extends State<LifeGameScreen> {
                   leading: const Text('🎓', style: TextStyle(fontSize: 24)),
                   title: const Text('Attend University (Tuition: \$8,000)', style: TextStyle(color: Colors.white)),
                   subtitle: const Text('Requires Smarts >= 50. Opens higher career ladders.', style: TextStyle(color: Colors.white60)),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white50),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white54),
                   onTap: () {
                     Navigator.pop(ctx);
                     _applyUniversity();
