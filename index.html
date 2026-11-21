@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#d32f2f">
+  <link rel="manifest" href="manifest.json">
+  <title>BitJourney Life Simulator</title>
+  <style>
+    :root {
+      --header-red: #d32f2f;
+      --header-red-dark: #b71c1c;
+      --nav-blue: #1b4965;
+      --nav-blue-dark: #133549;
+      --stat-green: #2e7d32;
+      --stat-red: #c62828;
+      --stat-orange: #ef6c00;
+      --age-btn: #2e7d32;
+      --age-btn-hover: #1b5e20;
+      --bg: #f8f9fa;
+      --text: #212529;
+      --text-muted: #6c757d;
+      --border: #e9ecef;
+      --primary-accent: #0288d1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: #212529;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      height: 100vh;
+      max-height: 100vh;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    }
+
+    /* TOP RED APP BAR */
+    .top-bar {
+      background: var(--header-red);
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+
+    .menu-btn {
+      background: transparent;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 24px;
+      letter-spacing: -0.5px;
+    }
+
+    .app-logo span {
+      color: #ffeb3b;
+    }
+
+    .badge-citizen {
+      background: #ffd54f;
+      color: #b78103;
+      font-weight: 900;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px dashed #b78103;
+      letter-spacing: 0.5px;
+    }
+
+    /* IDENTITY & BALANCE BAR */
+    .identity-bar {
+      background: #ffffff;
+      border-bottom: 2px solid #eaeaea;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .id-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-circle {
+      width: 46px;
+      height: 46px;
+      background: #f1f5f9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      border: 1px solid #cbd5e1;
+      position: relative;
+    }
+
+    .country-flag {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      font-size: 14px;
+    }
+
+    .id-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .char-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0288d1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .char-info-icon {
+      background: #0288d1;
+      color: #fff;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 1px 5px;
+    }
+
+    .char-occupation {
+      font-size: 13px;
+      color: #546e7a;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .id-right {
+      text-align: right;
+    }
+
+    .char-cash {
+      font-size: 20px;
+      font-weight: 900;
+      color: #2e7d32;
+    }
+
+    .char-cash.debt {
+      color: #c62828;
+    }
+
+    .cash-label {
+      font-size: 11px;
+      color: #78909c;
+      font-weight: 600;
+    }
+
+    /* MAIN STORY / EVENT LOG FEED */
+    .story-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: #ffffff;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .year-block {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f1f3f5;
+    }
+
+    .year-header {
+      font-size: 18px;
+      font-weight: 900;
+      color: #1b4965;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .year-event {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #333333;
+      margin-bottom: 6px;
+    }
+
+    .year-event.highlight {
+      font-weight: 600;
+      color: #0d47a1;
+    }
+
+    /* BOTTOM CONTROLS & NAV DOCK */
+    .bottom-dock {
+      background: #ffffff;
+      border-top: 2px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 20;
+    }
+
+    /* 5-TAB BAR WITH FLOATING AGE BUTTON */
+    .tabs-bar {
+      height: 64px;
+      background: var(--nav-blue);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      position: relative;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #e0f2f1;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      gap: 3px;
+      padding-top: 4px;
+      transition: background 0.15s;
+    }
+
+    .tab-item:active {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .tab-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    /* CIRCULAR FLOATING AGE BUTTON */
+    .age-btn-wrapper {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      margin-top: -38px;
+      z-index: 30;
+      flex-shrink: 0;
+    }
+
+    .age-button {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #43a047 0%, #2e7d32 100%);
+      border: 4px solid #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 900;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .age-button:active {
+      transform: scale(0.92);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .age-plus {
+      font-size: 26px;
+      line-height: 20px;
+      margin-top: -2px;
+    }
+
+    .age-text {
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    .age-button.dead {
+      background: #616161;
+    }
+
+    /* BITLIFE 4 STAT BARS */
+    .stats-footer {
+      background: #f8f9fa;
+      padding: 10px 20px 14px;
+      border-top: 1px solid #eeeeee;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .stat-bar-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .stat-title {
+      width: 95px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #424242;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-track {
+      flex: 1;
+      height: 18px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .stat-fill {
+      height: 100%;
+      background: var(--stat-green);
+      transition: width 0.35s ease, background-color 0.35s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #ffffff;
+      box-sizing: border-box;
+      min-width: 32px;
+    }
+
+    .stat-fill.danger {
+      background: var(--stat-red);
+    }
+
+    .stat-fill.warn {
+      background: var(--stat-orange);
+    }
+
+    /* MODAL POPUPS */
+    .sheet-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      backdrop-filter: blur(2px);
+    }
+
+    .sheet-overlay.active {
+      display: flex;
+    }
+
+    .sheet-modal {
+      width: 100%;
+      max-height: 80%;
+      background: #ffffff;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.25s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .sheet-header {
+      background: var(--nav-blue);
+      color: #ffffff;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 17px;
+    }
+
+    .sheet-close {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .sheet-body {
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .action-row:hover {
+      background: #f1f3f5;
+    }
+
+    .action-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .action-emoji {
+      font-size: 24px;
+    }
+
+    .action-texts h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #212529;
+    }
+
+    .action-texts p {
+      font-size: 11px;
+      color: #6c757d;
+      margin-top: 2px;
+    }
+
+    .action-btn {
+      background: var(--nav-blue);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* CHOICE DIALOG */
+    .choice-dialog {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 86%;
+      max-width: 360px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      z-index: 150;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .choice-dialog.active {
+      display: flex;
+    }
+
+    .dialog-icon {
+      font-size: 40px;
+    }
+
+    .dialog-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #1b4965;
+    }
+
+    .dialog-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #495057;
+    }
+
+    .dialog-choices {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .choice-btn {
+      padding: 10px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      background: #f8f9fa;
+      font-weight: 700;
+      font-size: 13px;
+      color: #212529;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .choice-btn:hover {
+      background: #e9ecef;
+    }
+
+    .choice-btn.primary {
+      background: var(--nav-blue);
+      color: #ffffff;
+      border-color: var(--nav-blue);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-viewport">
+    
+    <!-- 1. TOP RED BITLIFE BAR -->
+    <header class="top-bar">
+      <button class="menu-btn" onclick="startNewLifeDialog()" title="Menu">☰</button>
+      <div class="app-logo">
+        👶 <span>BitLife</span>
+      </div>
+      <div class="badge-citizen">BITIZEN</div>
+    </header>
+
+    <!-- 2. CHARACTER IDENTITY & BANK BAR -->
+    <section class="identity-bar">
+      <div class="id-left">
+        <div class="avatar-circle" id="charAvatar">
+          👶
+          <span class="country-flag" id="charFlag">🇺🇸</span>
+        </div>
+        <div class="id-details">
+          <div class="char-name">
+            <span id="charName">Alyssa Roosevelt</span>
+            <span class="char-info-icon" title="Details">i</span>
+          </div>
+          <div class="char-occupation">
+            <span id="charJobIcon">🍼</span>
+            <span id="charOccupation">Infant</span>
+          </div>
+        </div>
+      </div>
+      <div class="id-right">
+        <div class="char-cash" id="charCash">$0</div>
+        <div class="cash-label">Bank Balance</div>
+      </div>
+    </section>
+
+    <!-- 3. MAIN STORY / YEAR EVENT FEED -->
+    <main class="story-scroll" id="storyScroll">
+      <!-- Generated dynamically -->
+    </main>
+
+    <!-- 4. BOTTOM DOCK (5 TABS + CENTER AGE BUTTON + 4 STATS) -->
+    <footer class="bottom-dock">
+
+      <!-- 5-Tab Bar with Center Green + Age Button -->
+      <div class="tabs-bar">
+        <div class="tab-item" onclick="openProfileSheet()">
+          <div class="tab-circle">👶</div>
+          <span id="navRoleLabel">Infant</span>
+        </div>
+
+        <div class="tab-item" onclick="openAssetsSheet()">
+          <div class="tab-circle">🏠</div>
+          <span>Assets</span>
+        </div>
+
+        <!-- Center Big Green Plus Age Button -->
+        <div class="age-btn-wrapper">
+          <button class="age-button" id="ageButton" onclick="onAgeClicked()">
+            <div class="age-plus">+</div>
+            <div class="age-text">Age</div>
+          </button>
+        </div>
+
+        <div class="tab-item" onclick="openRelationshipsSheet()">
+          <div class="tab-circle">❤️</div>
+          <span>Relationships</span>
+        </div>
+
+        <div class="tab-item" onclick="openActivitiesSheet()">
+          <div class="tab-circle">💬</div>
+          <span>Activities</span>
+        </div>
+      </div>
+
+      <!-- 4 BitLife Stats Progress Bars -->
+      <div class="stats-footer">
+        <div class="stat-bar-item">
+          <span class="stat-title">Happiness <span id="happyEmoji">😊</span></span>
+          <div class="stat-track">
+            <div class="stat-fill" id="happyBar" style="width: 100%;">100%</div>
+          </div>
+        </div>
+
+        <div class="stat-bar-item">
+          <span class="stat-title">Health <span id="healthEmoji">❤️</span></span>
+          <div class="stat-track">
+            <div class="stat-fill" id="healthBar" style="width: 100%;">100%</div>
+          </div>
+        </div>
+
+        <div class="stat-bar-item">
+          <span class="stat-title">Smarts <span id="smartsEmoji">🤓</span></span>
+          <div class="stat-track">
+            <div class="stat-fill" id="smartsBar" style="width: 50%;">50%</div>
+          </div>
+        </div>
+
+        <div class="stat-bar-item">
+          <span class="stat-title">Looks <span id="looksEmoji">✨</span></span>
+          <div class="stat-track">
+            <div class="stat-fill" id="looksBar" style="width: 50%;">50%</div>
+          </div>
+        </div>
+      </div>
+
+    </footer>
+
+    <!-- ACTIVITIES MODAL -->
+    <div id="activitiesModal" class="sheet-overlay" onclick="onOverlayClick(event, 'activitiesModal')">
+      <div class="sheet-modal">
+        <div class="sheet-header">
+          <span>Activities</span>
+          <button class="sheet-close" onclick="closeSheet('activitiesModal')">✕</button>
+        </div>
+        <div class="sheet-body">
+          <div class="action-row" onclick="actionStudy()">
+            <div class="action-left">
+              <span class="action-emoji">📚</span>
+              <div class="action-texts">
+                <h4>Study Harder / Read Books</h4>
+                <p>Sharpen your mind and increase Smarts.</p>
+              </div>
+            </div>
+            <button class="action-btn">Study</button>
+          </div>
+
+          <div class="action-row" onclick="actionGym()">
+            <div class="action-left">
+              <span class="action-emoji">🏋️</span>
+              <div class="action-texts">
+                <h4>Gym & Fitness</h4>
+                <p>Cardio and lifting weights. Increases Health & Looks.</p>
+              </div>
+            </div>
+            <button class="action-btn">Workout</button>
+          </div>
+
+          <div class="action-row" onclick="actionDoctor()">
+            <div class="action-left">
+              <span class="action-emoji">🩺</span>
+              <div class="action-texts">
+                <h4>Medical Doctor ($250)</h4>
+                <p>Visit medical clinic for diagnosis and curing disease.</p>
+              </div>
+            </div>
+            <button class="action-btn">Visit</button>
+          </div>
+
+          <div class="action-row" onclick="actionVacation()">
+            <div class="action-left">
+              <span class="action-emoji">🏖️</span>
+              <div class="action-texts">
+                <h4>First-Class Vacation ($1,200)</h4>
+                <p>Take a rejuvenating trip to boost Happiness.</p>
+              </div>
+            </div>
+            <button class="action-btn">Fly</button>
+          </div>
+
+          <div class="action-row" onclick="actionLottery()">
+            <div class="action-left">
+              <span class="action-emoji">🎰</span>
+              <div class="action-texts">
+                <h4>Lottery Tickets ($50)</h4>
+                <p>Test your luck for a massive jackpot.</p>
+              </div>
+            </div>
+            <button class="action-btn">Play</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAREER & ASSETS MODAL -->
+    <div id="assetsModal" class="sheet-overlay" onclick="onOverlayClick(event, 'assetsModal')">
+      <div class="sheet-modal">
+        <div class="sheet-header">
+          <span>Assets & Career</span>
+          <button class="sheet-close" onclick="closeSheet('assetsModal')">✕</button>
+        </div>
+        <div class="sheet-body">
+          <div class="action-row" onclick="actionUniversity()">
+            <div class="action-left">
+              <span class="action-emoji">🎓</span>
+              <div class="action-texts">
+                <h4>University ($12,000)</h4>
+                <p>Requires Smarts ≥ 50. Unlocks professional executive careers.</p>
+              </div>
+            </div>
+            <button class="action-btn">Enroll</button>
+          </div>
+
+          <div class="action-row" onclick="applyJob('Fast Food Crew', 18000, 0, 10, '🍔')">
+            <div class="action-left">
+              <span class="action-emoji">🍔</span>
+              <div class="action-texts">
+                <h4>Fast Food Worker ($18,000/yr)</h4>
+                <p>No education prerequisites.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
+          </div>
+
+          <div class="action-row" onclick="applyJob('Graphic Designer', 38000, 1, 30, '🎨')">
+            <div class="action-left">
+              <span class="action-emoji">🎨</span>
+              <div class="action-texts">
+                <h4>Graphic Designer ($38,000/yr)</h4>
+                <p>Requires High School diploma & Smarts ≥ 30.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
+          </div>
+
+          <div class="action-row" onclick="applyJob('Software Engineer', 95000, 2, 60, '💻')">
+            <div class="action-left">
+              <span class="action-emoji">💻</span>
+              <div class="action-texts">
+                <h4>Software Engineer ($95,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 60.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
+          </div>
+
+          <div class="action-row" onclick="applyJob('Medical Surgeon', 185000, 2, 80, '🩺')">
+            <div class="action-left">
+              <span class="action-emoji">🩺</span>
+              <div class="action-texts">
+                <h4>Medical Surgeon ($185,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 80.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
+          </div>
+
+          <div class="action-row" onclick="applyJob('Chief Executive Officer', 380000, 2, 90, '👑')">
+            <div class="action-left">
+              <span class="action-emoji">👑</span>
+              <div class="action-texts">
+                <h4>CEO ($380,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 90.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATIONSHIPS MODAL -->
+    <div id="relModal" class="sheet-overlay" onclick="onOverlayClick(event, 'relModal')">
+      <div class="sheet-modal">
+        <div class="sheet-header">
+          <span>Relationships</span>
+          <button class="sheet-close" onclick="closeSheet('relModal')">✕</button>
+        </div>
+        <div class="sheet-body" id="familyList">
+          <!-- Populated from state -->
+        </div>
+      </div>
+    </div>
+
+    <!-- CHOICE / SCENARIO DIALOG -->
+    <div id="choiceOverlay" class="sheet-overlay">
+      <div class="choice-dialog active" id="choiceBox">
+        <div class="dialog-icon" id="dIcon">🤔</div>
+        <div class="dialog-title" id="dTitle">Life Decision</div>
+        <div class="dialog-desc" id="dDesc">A classmate offers you a cigarette in the bathroom behind school. What do you do?</div>
+        <div class="dialog-choices" id="dChoices">
+          <!-- buttons -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // CHARACTER STATE
+    let char = {
+      name: "Alyssa Roosevelt",
+      gender: "Female",
+      city: "San Diego",
+      country: "United States",
+      flag: "🇺🇸",
+      birthday: "September 24",
+      zodiac: "Libra",
+      age: 0,
+      cash: 0,
+      salary: 0,
+      occupation: "Infant",
+      occIcon: "🍼",
+      educationLevel: 0, // 0: None, 1: High School, 2: University
+      happiness: 85,
+      health: 95,
+      smarts: 45,
+      looks: 60,
+      isAlive: true,
+      father: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
+      mother: { name: "Emma McCartney", job: "Grocer", age: 40 },
+      sister: { name: "Madison McCartney", age: 8 },
+      history: []
+    };
+
+    function startNewLife() {
+      const firstNames = ["Alyssa", "Jessica", "Sophia", "Lucas", "Noah", "Liam", "Emma", "Ethan", "Olivia", "Oliver"];
+      const lastNames = ["Roosevelt", "Kennedy", "Sterling", "Vance", "Mercer", "Sinclair", "Hayes", "Brooks"];
+      const cities = [
+        { city: "San Diego", country: "United States", flag: "🇺🇸" },
+        { city: "London", country: "United Kingdom", flag: "🇬🇧" },
+        { city: "Sydney", country: "Australia", flag: "🇦🇺" },
+        { city: "Toronto", country: "Canada", flag: "🇨🇦" }
+      ];
+
+      const c = cities[Math.floor(Math.random() * cities.length)];
+      char.name = firstNames[Math.floor(Math.random() * firstNames.length)] + " " + lastNames[Math.floor(Math.random() * lastNames.length)];
+      char.gender = Math.random() > 0.5 ? "Female" : "Male";
+      char.city = c.city;
+      char.country = c.country;
+      char.flag = c.flag;
+      char.age = 0;
+      char.cash = 0;
+      char.salary = 0;
+      char.occupation = "Infant";
+      char.occIcon = "🍼";
+      char.educationLevel = 0;
+      char.happiness = 75 + Math.floor(Math.random() * 25);
+      char.health = 80 + Math.floor(Math.random() * 20);
+      char.smarts = 30 + Math.floor(Math.random() * 60);
+      char.looks = 30 + Math.floor(Math.random() * 60);
+      char.isAlive = true;
+
+      char.father = { name: "David " + char.name.split(" ")[1], job: "Engineer", age: 28 };
+      char.mother = { name: "Sarah " + char.name.split(" ")[1], job: "Teacher", age: 26 };
+      char.sister = { name: "Chloe", age: 3 };
+
+      char.history = [];
+      char.history.push({
+        age: 0,
+        events: [
+          `I was born a ${char.gender.toLowerCase()} in ${char.city}, ${char.country}.`,
+          `My name is ${char.name}.`,
+          `My father is ${char.father.name}, a ${char.father.job} (age ${char.father.age}).`,
+          `My mother is ${char.mother.name}, a ${char.mother.job} (age ${char.mother.age}).`,
+          `I have an older sister named ${char.sister.name} (age ${char.sister.age}).`
+        ]
+      });
+
+      renderUI();
+    }
+
+    function clamp(val, min, max) {
+      return Math.max(min, Math.min(max, val));
+    }
+
+    function renderUI() {
+      // Clamping
+      char.happiness = clamp(char.happiness, 0, 100);
+      char.health = clamp(char.health, 0, 100);
+      char.smarts = clamp(char.smarts, 0, 100);
+      char.looks = clamp(char.looks, 0, 100);
+
+      // Identity bar
+      document.getElementById("charName").innerText = char.name;
+      document.getElementById("charFlag").innerText = char.flag;
+      document.getElementById("charJobIcon").innerText = char.occIcon;
+      document.getElementById("charOccupation").innerText = char.occupation;
+      
+      const cashEl = document.getElementById("charCash");
+      cashEl.innerText = (char.cash >= 0 ? "$" : "-$") + Math.abs(char.cash).toLocaleString();
+      cashEl.className = char.cash >= 0 ? "char-cash" : "char-cash debt";
+
+      // Age Button & Nav label
+      const ageBtn = document.getElementById("ageButton");
+      const navRole = document.getElementById("navRoleLabel");
+      if (char.isAlive) {
+        ageBtn.className = "age-button";
+        ageBtn.innerHTML = '<div class="age-plus">+</div><div class="age-text">Age</div>';
+      } else {
+        ageBtn.className = "age-button dead";
+        ageBtn.innerHTML = '<div style="font-size:20px;">⚰️</div><div class="age-text">Rip</div>';
+      }
+
+      if (char.age < 6) navRole.innerText = "Infant";
+      else if (char.age < 18) navRole.innerText = "Student";
+      else navRole.innerText = "Career";
+
+      // Dynamic Avatar based on age
+      const av = document.getElementById("charAvatar");
+      let baseEmoji = "👶";
+      if (char.age >= 60) baseEmoji = char.gender === "Female" ? "👵" : "👴";
+      else if (char.age >= 18) baseEmoji = char.gender === "Female" ? "👩" : "👨";
+      else if (char.age >= 6) baseEmoji = char.gender === "Female" ? "👧" : "👦";
+      av.innerHTML = `${baseEmoji}<span class="country-flag" id="charFlag">${char.flag}</span>`;
+
+      // Stats Bars
+      renderBar("happyBar", char.happiness);
+      renderBar("healthBar", char.health);
+      renderBar("smartsBar", char.smarts);
+      renderBar("looksBar", char.looks);
+
+      // Render Story Feed
+      const feed = document.getElementById("storyScroll");
+      feed.innerHTML = "";
+      for (let i = char.history.length - 1; i >= 0; i--) {
+        const block = char.history[i];
+        const blockDiv = document.createElement("div");
+        blockDiv.className = "year-block";
+
+        const title = document.createElement("div");
+        title.className = "year-header";
+        title.innerText = `Age: ${block.age} years`;
+        blockDiv.appendChild(title);
+
+        block.events.forEach(evt => {
+          const p = document.createElement("div");
+          p.className = "year-event";
+          p.innerText = evt;
+          blockDiv.appendChild(p);
+        });
+
+        feed.appendChild(blockDiv);
+      }
+    }
+
+    function renderBar(id, val) {
+      const el = document.getElementById(id);
+      el.style.width = `${Math.max(val, 6)}%`;
+      el.innerText = `${val}%`;
+
+      if (val < 20) {
+        el.className = "stat-fill danger";
+      } else if (val < 45) {
+        el.className = "stat-fill warn";
+      } else {
+        el.className = "stat-fill";
+      }
+    }
+
+    // AGING
+    function onAgeClicked() {
+      if (!char.isAlive) {
+        startNewLifeDialog();
+        return;
+      }
+
+      char.age++;
+      char.father.age++;
+      char.mother.age++;
+      char.sister.age++;
+
+      const yearEvents = [];
+
+      // Aging health decay
+      if (char.age > 45) char.health -= (1 + Math.floor(Math.random() * 3));
+      if (char.age > 75) char.health -= (2 + Math.floor(Math.random() * 5));
+
+      // Financials
+      if (char.salary > 0) {
+        const taxAndLiving = Math.round(char.salary * 0.32) + 800;
+        const net = char.salary - taxAndLiving;
+        char.cash += net;
+      }
+
+      // Milestones
+      if (char.age === 6) {
+        char.occupation = "Primary School Student";
+        char.occIcon = "🎒";
+        yearEvents.push("I started attending Elementary School!");
+      } else if (char.age === 14) {
+        char.occupation = "High School Student";
+        char.occIcon = "🎒";
+        yearEvents.push("I started High School.");
+      } else if (char.age === 18) {
+        char.educationLevel = Math.max(char.educationLevel, 1);
+        if (char.salary === 0) {
+          char.occupation = "Unemployed";
+          char.occIcon = "💼";
+        }
+        yearEvents.push("I graduated from High School!");
+      } else {
+        // Random events
+        triggerRandomYearEvent(yearEvents);
+      }
+
+      // Death check
+      if (char.health <= 0) {
+        char.isAlive = false;
+        yearEvents.push(`⚰️ At age ${char.age}, I passed away due to poor health conditions. Rest in peace.`);
+      } else if (char.age > 72 && Math.random() < ((char.age - 68) / 80)) {
+        char.isAlive = false;
+        yearEvents.push(`🕊️ At age ${char.age}, I passed away peacefully in my sleep surrounded by loved ones.`);
+      }
+
+      char.history.push({ age: char.age, events: yearEvents });
+      renderUI();
+
+      // Occasional random pop-up dilemmas
+      if (char.isAlive && char.age >= 10 && Math.random() < 0.28) {
+        setTimeout(triggerScenarioDialog, 350);
+      }
+    }
+
+    function triggerRandomYearEvent(list) {
+      const roll = Math.random() * 100;
+      if (roll < 14) {
+        char.health -= (10 + Math.floor(Math.random() * 15));
+        char.happiness -= 10;
+        list.push("I caught a bad illness and spent two weeks coughing in bed.");
+      } else if (roll < 28) {
+        const found = 50 + Math.floor(Math.random() * 350);
+        char.cash += found;
+        char.happiness += 8;
+        list.push(`I found $${found} cash on the ground while walking around town!`);
+      } else if (roll < 42 && char.age >= 16) {
+        char.happiness += 16;
+        list.push("I went on an unforgettable romantic date with a wonderful partner.");
+      } else if (roll < 55 && char.salary > 0) {
+        const bonus = Math.round(char.salary * 0.15);
+        char.cash += bonus;
+        char.happiness += 12;
+        list.push(`My boss gave me a glowing performance review and an annual bonus of $${bonus.toLocaleString()}!`);
+      } else {
+        list.push("Another peaceful year has passed.");
+      }
+    }
+
+    // DILEMMAS & CHOICES
+    function triggerScenarioDialog() {
+      const scenarios = [
+        {
+          icon: "🐶",
+          title: "Stray Puppy",
+          desc: "You found an abandoned puppy shivering under a park bench.",
+          choices: [
+            { text: "Take it home and adopt it", fn: () => { char.happiness += 15; char.cash -= 100; addEvent("I adopted the cute stray puppy and named him Buster!"); } },
+            { text: "Take it to the animal shelter", fn: () => { char.happiness += 5; addEvent("I dropped the puppy off safely at a no-kill shelter."); } },
+            { text: "Ignore it and walk away", fn: () => { char.happiness -= 8; addEvent("I walked away from the shivering puppy feeling guilty."); } }
+          ]
+        },
+        {
+          icon: "👊",
+          title: "School Bully",
+          desc: "A bully in the hallway shoves you and demands your lunch money.",
+          choices: [
+            { text: "Stand your ground and fight back", fn: () => { char.health -= 10; char.looks += 5; char.happiness += 10; addEvent("I fought the bully! I got a bruised cheek, but earned massive respect."); } },
+            { text: "Hand over the lunch money", fn: () => { char.cash -= 15; char.happiness -= 12; addEvent("I surrendered my money to the bully and felt humiliated."); } },
+            { text: "Report them to the principal", fn: () => { char.smarts += 4; addEvent("I reported the bully and they received two weeks detention."); } }
+          ]
+        },
+        {
+          icon: "📈",
+          title: "Crypto Investment Tip",
+          desc: "A friend tells you about an underground new cryptocurrency ready to rocket.",
+          choices: [
+            { text: "Invest $500", fn: () => {
+              if (Math.random() > 0.45) {
+                char.cash += 2500; char.happiness += 20; addEvent("The coin went 5x! I made $2,500 profit in cryptocurrency.");
+              } else {
+                char.cash -= 500; char.happiness -= 15; addEvent("The coin was a rug pull scam! I lost $500.");
+              }
+            }},
+            { text: "Politely pass on the offer", fn: () => { addEvent("I decided not to risk my savings on sketchy meme coins."); } }
+          ]
+        }
+      ];
+
+      const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
+      document.getElementById("dIcon").innerText = sc.icon;
+      document.getElementById("dTitle").innerText = sc.title;
+      document.getElementById("dDesc").innerText = sc.desc;
+
+      const container = document.getElementById("dChoices");
+      container.innerHTML = "";
+      sc.choices.forEach((ch, idx) => {
+        const btn = document.createElement("button");
+        btn.className = idx === 0 ? "choice-btn primary" : "choice-btn";
+        btn.innerText = ch.text;
+        btn.onclick = () => {
+          document.getElementById("choiceOverlay").style.display = "none";
+          ch.fn();
+          renderUI();
+        };
+        container.appendChild(btn);
+      });
+
+      document.getElementById("choiceOverlay").style.display = "flex";
+    }
+
+    function addEvent(txt) {
+      if (char.history.length > 0) {
+        char.history[char.history.length - 1].events.push(txt);
+      }
+    }
+
+    // ACTIVITIES
+    function actionStudy() {
+      if (!char.isAlive) return;
+      char.smarts += 5 + Math.floor(Math.random() * 5);
+      char.happiness -= 2;
+      addEvent("I spent many nights studying in the library. (+Smarts)");
+      closeSheet('activitiesModal');
+      renderUI();
+    }
+
+    function actionGym() {
+      if (!char.isAlive) return;
+      char.health += 6 + Math.floor(Math.random() * 6);
+      char.looks += 4;
+      char.happiness += 4;
+      char.cash -= 30;
+      addEvent("I hit the gym and completed a grueling workout. (+Health, +Looks)");
+      closeSheet('activitiesModal');
+      renderUI();
+    }
+
+    function actionDoctor() {
+      if (!char.isAlive) return;
+      if (char.age >= 18 && char.cash < 250) {
+        alert("You need $250 to pay doctor consultation fees!");
+        return;
+      }
+      if (char.age >= 18) char.cash -= 250;
+      char.health += 25 + Math.floor(Math.random() * 15);
+      addEvent("The doctor examined me and treated all my ailments. (+Health)");
+      closeSheet('activitiesModal');
+      renderUI();
+    }
+
+    function actionVacation() {
+      if (!char.isAlive) return;
+      if (char.cash < 1200) {
+        alert("You need at least $1,200 for a luxury vacation!");
+        return;
+      }
+      char.cash -= 1200;
+      char.happiness += 35;
+      char.health += 5;
+      addEvent("I flew first-class to Hawaii for an idyllic week at the beach. (+Happiness)");
+      closeSheet('activitiesModal');
+      renderUI();
+    }
+
+    function actionLottery() {
+      if (!char.isAlive) return;
+      if (char.cash < 50) {
+        alert("A lottery ticket costs $50!");
+        return;
+      }
+      char.cash -= 50;
+      const roll = Math.random() * 100;
+      if (roll > 95) {
+        const prize = 45000 + Math.floor(Math.random() * 75000);
+        char.cash += prize;
+        char.happiness += 45;
+        addEvent(`🎰 JACKPOT! I won the grand lottery prize of $${prize.toLocaleString()}!`);
+      } else if (roll > 75) {
+        const prize = 200 + Math.floor(Math.random() * 300);
+        char.cash += prize;
+        char.happiness += 10;
+        addEvent(`🎫 I won $${prize} on a scratch-off card!`);
+      } else {
+        addEvent("My lottery ticket was a loser.");
+      }
+      closeSheet('activitiesModal');
+      renderUI();
+    }
+
+    function actionUniversity() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        alert("You must be at least 18 to enroll in University!");
+        return;
+      }
+      if (char.educationLevel >= 2) {
+        alert("You already graduated from University!");
+        return;
+      }
+      if (char.smarts < 50) {
+        alert("Your Smarts score is too low (<50) to pass the entrance exam. Study harder!");
+        return;
+      }
+      char.educationLevel = 2;
+      char.cash -= 12000;
+      char.smarts += 20;
+      char.occupation = "College Graduate";
+      char.occIcon = "🎓";
+      addEvent("🎓 I completed my Bachelor's Degree at University! High-tier jobs unlocked.");
+      closeSheet('assetsModal');
+      renderUI();
+    }
+
+    function applyJob(title, pay, reqEdu, reqSmarts, icon) {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        alert("You must be at least 18 to work full-time!");
+        return;
+      }
+      if (char.educationLevel < reqEdu) {
+        alert(`This position requires higher education (Level ${reqEdu})!`);
+        return;
+      }
+      if (char.smarts < reqSmarts) {
+        alert(`You did not pass the interview. Requires Smarts ≥ ${reqSmarts}.`);
+        return;
+      }
+
+      char.occupation = title;
+      char.occIcon = icon;
+      char.salary = pay;
+      char.happiness += 12;
+      addEvent(`🎉 I was hired as a ${title} making $${pay.toLocaleString()}/year!`);
+      closeSheet('assetsModal');
+      renderUI();
+    }
+
+    // MODAL HELPERS
+    function openActivitiesSheet() {
+      document.getElementById('activitiesModal').classList.add('active');
+    }
+
+    function openAssetsSheet() {
+      document.getElementById('assetsModal').classList.add('active');
+    }
+
+    function openRelationshipsSheet() {
+      const container = document.getElementById('familyList');
+      container.innerHTML = `
+        <div class="action-row">
+          <div class="action-left">
+            <span class="action-emoji">👨</span>
+            <div class="action-texts">
+              <h4>${char.father.name} (Father, Age ${char.father.age})</h4>
+              <p>Occupation: ${char.father.job} • Relationship: 100%</p>
+            </div>
+          </div>
+          <button class="action-btn" onclick="spendFamilyTime('Father')">Spend Time</button>
+        </div>
+        <div class="action-row">
+          <div class="action-left">
+            <span class="action-emoji">👩</span>
+            <div class="action-texts">
+              <h4>${char.mother.name} (Mother, Age ${char.mother.age})</h4>
+              <p>Occupation: ${char.mother.job} • Relationship: 100%</p>
+            </div>
+          </div>
+          <button class="action-btn" onclick="spendFamilyTime('Mother')">Spend Time</button>
+        </div>
+        <div class="action-row">
+          <div class="action-left">
+            <span class="action-emoji">👧</span>
+            <div class="action-texts">
+              <h4>${char.sister.name} (Sister, Age ${char.sister.age})</h4>
+              <p>Relationship: 95%</p>
+            </div>
+          </div>
+          <button class="action-btn" onclick="spendFamilyTime('Sister')">Spend Time</button>
+        </div>
+      `;
+      document.getElementById('relModal').classList.add('active');
+    }
+
+    function spendFamilyTime(who) {
+      char.happiness += 10;
+      addEvent(`I spent heartwarming quality time chatting with my ${who}. (+Happiness)`);
+      closeSheet('relModal');
+      renderUI();
+    }
+
+    function openProfileSheet() {
+      openAssetsSheet();
+    }
+
+    function closeSheet(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function onOverlayClick(e, id) {
+      if (e.target.id === id) closeSheet(id);
+    }
+
+    function startNewLifeDialog() {
+      if (confirm("Start a brand new random life?")) {
+        startNewLife();
+      }
+    }
+
+    // INIT
+    startNewLife();
+
+    // Register Service Worker for OTA Cloud updates
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/flutter-life-sim/sw.js', { scope: '/flutter-life-sim/' })
+          .catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
