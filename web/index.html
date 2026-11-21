@@ -330,6 +330,81 @@
       box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
     }
 
+    /* ASSET CATEGORY FILTER & BADGES */
+    .asset-filter-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .asset-filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .asset-filter-btn {
+      flex: 0 0 auto;
+      padding: 7px 11px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #475569;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .asset-filter-btn.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      border-color: #2563EB;
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+    }
+
+    .asset-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: #F1F5F9;
+      color: #475569;
+      border: 1px solid #E2E8F0;
+      margin-top: 3px;
+    }
+
+    .asset-badge.success {
+      background: #ECFDF5;
+      color: #059669;
+      border-color: #A7F3D0;
+    }
+
+    .asset-badge.warning {
+      background: #FFFBEB;
+      color: #D97706;
+      border-color: #FDE68A;
+    }
+
+    .asset-badge.info {
+      background: #EFF6FF;
+      color: #2563EB;
+      border-color: #BFDBFE;
+    }
+
+    .asset-badge.danger {
+      background: #FEF2F2;
+      color: #DC2626;
+      border-color: #FECACA;
+    }
+
     .section-title {
       font-size: 12px;
       font-weight: 700;
@@ -1062,121 +1137,49 @@
               <div class="school-metric-label"><span>Valuable Assets</span> <span id="assetTotalVal">$0</span></div>
               <div class="school-progress-bar"><div class="school-progress-fill fill-blue" id="assetAssetsProgress" style="width: 0%;"></div></div>
             </div>
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Total Debt & Loans</span> <span id="assetTotalDebt">$0</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-yellow" id="assetDebtProgress" style="width: 0%;"></div></div>
+            </div>
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Passive Income</span> <span id="assetPassiveIncome">$0/yr</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-green" id="assetPassiveProgress" style="width: 0%;"></div></div>
+            </div>
           </div>
+        </div>
+
+        <!-- Asset Categories Filter Bar -->
+        <div class="asset-filter-bar">
+          <button class="asset-filter-btn active" id="assetFilterAll" onclick="setAssetFilter('all')">All Assets</button>
+          <button class="asset-filter-btn" id="assetFilterProps" onclick="setAssetFilter('property')">Properties (7)</button>
+          <button class="asset-filter-btn" id="assetFilterVehicles" onclick="setAssetFilter('vehicle')">Vehicles (6)</button>
+          <button class="asset-filter-btn" id="assetFilterInvestments" onclick="setAssetFilter('investment')">Investments (4)</button>
+          <button class="asset-filter-btn" id="assetFilterLuxury" onclick="setAssetFilter('luxury')">Luxury (4)</button>
         </div>
 
         <!-- Owned Assets Inventory -->
         <div class="section-title"><span>📦</span> My Owned Assets (<span id="ownedAssetsCount">0</span>)</div>
-        <div id="ownedAssetsList">
+        <div id="ownedAssetsList" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
           <!-- Dynamically populated by renderAssetsPage() -->
         </div>
 
-        <!-- Real Estate Market -->
-        <div class="section-title"><span>🏠</span> Real Estate Market</div>
+        <!-- Dynamic Marketplace Section -->
+        <div class="section-title"><span id="assetsMarketSectionIcon">🛒</span> <span id="assetsMarketSectionTitle">Marketplace & Dealerships</span></div>
+        <div id="assetsMarketContainer" style="display: flex; flex-direction: column; gap: 8px;">
+          <!-- Dynamically populated by renderAssetsPage() -->
+        </div>
+      </div>
 
-        <div class="interactive-card" onclick="buyAsset('property', 'Studio Apartment', 85000, '🏢')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🏢</div>
-            <div class="card-texts">
-              <h4>Studio Apartment ($85,000)</h4>
-              <p>Modern starter condo in the downtown center.</p>
-            </div>
-          </div>
-          <button class="btn-card-action secondary">Purchase</button>
+      <!-- ================= PAGE: DEDICATED ASSET DETAIL & MANAGEMENT ================= -->
+      <div class="tab-page" id="pageAssetDetail">
+        <div class="page-top-bar">
+          <button class="btn-close-page" onclick="switchTab('pageAssets', 'tabBtnAssets')">← Assets</button>
+          <div class="page-top-title"><span id="assetDetailTopIcon">🏠</span> <span id="assetDetailTopTitle">Asset Details</span></div>
+          <button class="btn-close-page" onclick="closeToFeed()">✕ Feed</button>
         </div>
 
-        <div class="interactive-card" onclick="buyAsset('property', 'Suburban Family Home', 250000, '🏡')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🏡</div>
-            <div class="card-texts">
-              <h4>Suburban Family Home ($250,000)</h4>
-              <p>Cozy 3-bedroom house with a spacious green backyard.</p>
-            </div>
-          </div>
-          <button class="btn-card-action secondary">Purchase</button>
-        </div>
-
-        <div class="interactive-card" onclick="buyAsset('property', 'Luxury Skyline Penthouse', 850000, '🏙️')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🏙️</div>
-            <div class="card-texts">
-              <h4>Luxury Skyline Penthouse ($850,000)</h4>
-              <p>Panoramic skyline view, private elevator & terrace.</p>
-            </div>
-          </div>
-          <button class="btn-card-action secondary">Purchase</button>
-        </div>
-
-        <div class="interactive-card" onclick="buyAsset('property', 'Waterfront Seaside Villa', 2200000, '🏖️')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🏖️</div>
-            <div class="card-texts">
-              <h4>Waterfront Seaside Villa ($2,200,000)</h4>
-              <p>Gated private estate with infinity pool and yacht dock.</p>
-            </div>
-          </div>
-          <button class="btn-card-action secondary">Purchase</button>
-        </div>
-
-        <!-- Automobile Dealership (Vehicles) -->
-        <div class="section-title"><span>🚗</span> Automobile Dealership</div>
-
-        <div class="interactive-card" onclick="buyAsset('vehicle', 'Used Compact Sedan', 6500, '🚗')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🚗</div>
-            <div class="card-texts">
-              <h4>Used Compact Sedan ($6,500)</h4>
-              <p>Reliable daily commuter vehicle. (Age 16+)</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Buy Car</button>
-        </div>
-
-        <div class="interactive-card" onclick="buyAsset('vehicle', 'Electric Luxury SUV', 48000, '🚙')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🚙</div>
-            <div class="card-texts">
-              <h4>Electric Luxury SUV ($48,000)</h4>
-              <p>Dual-motor AWD, autopilot, and zero emissions. (Age 16+)</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Buy SUV</button>
-        </div>
-
-        <div class="interactive-card" onclick="buyAsset('vehicle', 'High-Performance Supercar', 180000, '🏎️')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🏎️</div>
-            <div class="card-texts">
-              <h4>High-Performance Supercar ($180,000)</h4>
-              <p>Twin-turbo V8, blistering acceleration & status. (Age 16+)</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Buy Supercar</button>
-        </div>
-
-        <!-- Luxury Goods & Valuables -->
-        <div class="section-title"><span>💎</span> Luxury Goods & Valuables</div>
-
-        <div class="interactive-card" onclick="buyAsset('luxury', 'Swiss Chronometer Watch', 12000, '⌚')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">⌚</div>
-            <div class="card-texts">
-              <h4>Swiss Chronometer Watch ($12,000)</h4>
-              <p>Handcrafted timepiece of horological prestige.</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Purchase</button>
-        </div>
-
-        <div class="interactive-card" onclick="buyAsset('luxury', 'Diamond Solitaire Ring', 25000, '💍')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">💍</div>
-            <div class="card-texts">
-              <h4>Diamond Solitaire Ring ($25,000)</h4>
-              <p>Flawless 3-carat brilliant cut diamond.</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Purchase</button>
+        <div id="assetDetailContentContainer" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Dynamically populated by renderAssetDetailPage() -->
         </div>
       </div>
 
@@ -1726,6 +1729,7 @@
 
       // Render Page 3: Assets & Net Worth
       renderAssetsPage();
+      renderAssetDetailPage();
 
       // Render Dedicated Job Pages
       renderJobsPage();
@@ -1860,6 +1864,111 @@
         yearNotes.push(`💳 Paid $${debtPmt.toLocaleString()} toward student loan repayment. ($${char.school.studentDebt.toLocaleString()} debt remaining).`);
         if (char.school.studentDebt === 0) {
           yearNotes.push("🎉 HOORAY! I have officially paid off all my student loans!");
+        }
+      }
+
+      // Annual Asset Economics (Appreciation, Depreciation, Rental Income, Mortgages, Auto Loans, Investments)
+      if (char.assets && char.assets.length > 0) {
+        let annualRentalIncome = 0;
+        let totalMortgagePaid = 0;
+        let totalAutoLoanPaid = 0;
+        let totalVehicleUpkeep = 0;
+        let investmentGains = 0;
+
+        char.assets.forEach(asset => {
+          if (asset.type === 'property') {
+            // 1. Natural Market Appreciation (normal cycle: +2% to +6%)
+            const appRate = (0.02 + Math.random() * 0.04) * ((asset.condition || 100) >= 80 ? 1.1 : (asset.condition || 100) < 40 ? 0.6 : 1.0);
+            const appAmount = Math.round(asset.currentPrice * appRate);
+            asset.currentPrice += appAmount;
+
+            // 2. Condition Wear (1-3% per year)
+            asset.condition = Math.max(15, (asset.condition || 100) - (1 + Math.floor(Math.random() * 3)));
+
+            // 3. Rental Income (if leased)
+            if (asset.isRented) {
+              const rent = asset.rentalIncome || Math.round(asset.currentPrice * 0.07);
+              char.money += rent;
+              annualRentalIncome += rent;
+            }
+
+            // 4. Mortgage Payment (if active)
+            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
+              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
+              char.money -= pmt;
+              asset.loanBalance -= pmt;
+              totalMortgagePaid += pmt;
+              if (asset.loanBalance <= 0) {
+                asset.loanBalance = 0;
+                asset.loanAnnualPayment = 0;
+                yearNotes.push(`🎉 MORTGAGE PAID OFF! You now own ${asset.name} 100% free and clear!`);
+              }
+            }
+          } else if (asset.type === 'vehicle') {
+            // 1. Depreciation (6% to 9% per year, min $500 salvage)
+            const depRate = 0.06 + Math.random() * 0.03;
+            asset.currentPrice = Math.max(500, Math.round(asset.currentPrice * (1 - depRate)));
+
+            // 2. Mileage & Wear
+            asset.mileage = (asset.mileage || 0) + (7000 + Math.floor(Math.random() * 6000));
+            asset.condition = Math.max(10, (asset.condition || 100) - (2 + Math.floor(Math.random() * 4)));
+
+            // 3. Upkeep (insurance/fuel/maintenance)
+            const upkeep = asset.annualUpkeep || 500;
+            char.money -= upkeep;
+            totalVehicleUpkeep += upkeep;
+
+            // 4. Auto Loan Payment (if active)
+            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
+              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
+              char.money -= pmt;
+              asset.loanBalance -= pmt;
+              totalAutoLoanPaid += pmt;
+              if (asset.loanBalance <= 0) {
+                asset.loanBalance = 0;
+                asset.loanAnnualPayment = 0;
+                yearNotes.push(`🎉 AUTO LOAN PAID OFF! You fully own your ${asset.name}!`);
+              }
+            }
+          } else if (asset.type === 'investment') {
+            // Investment Yields
+            let returnRate = 0;
+            if (asset.assetClass === 'bond') {
+              returnRate = 0.042; // Guaranteed 4.2%
+            } else if (asset.assetClass === 'index') {
+              returnRate = -0.05 + Math.random() * 0.17; // -5% to +12%
+            } else if (asset.assetClass === 'growth') {
+              returnRate = -0.15 + Math.random() * 0.35; // -15% to +20%
+            } else if (asset.assetClass === 'crypto') {
+              returnRate = -0.35 + Math.random() * 0.75; // -35% to +40%
+            }
+            const gain = Math.round(asset.currentPrice * returnRate);
+            asset.currentPrice = Math.max(50, asset.currentPrice + gain);
+            investmentGains += gain;
+          } else if (asset.type === 'luxury') {
+            // Art and Wine appreciate slightly with age
+            if (asset.name.includes('Painting') || asset.name.includes('Wine')) {
+              asset.currentPrice = Math.round(asset.currentPrice * 1.025);
+            }
+          }
+        });
+
+        if (annualRentalIncome > 0) {
+          yearNotes.push(`🏢 Collected $${annualRentalIncome.toLocaleString()} in passive rental income from your leased properties.`);
+        }
+        if (totalMortgagePaid > 0) {
+          yearNotes.push(`🏠 Paid $${totalMortgagePaid.toLocaleString()} toward active property mortgages.`);
+        }
+        if (totalAutoLoanPaid > 0) {
+          yearNotes.push(`🚗 Paid $${totalAutoLoanPaid.toLocaleString()} toward active auto loans.`);
+        }
+        if (totalVehicleUpkeep > 0) {
+          yearNotes.push(`⛽ Paid $${totalVehicleUpkeep.toLocaleString()} for vehicle insurance and maintenance.`);
+        }
+        if (investmentGains !== 0) {
+          const sign = investmentGains > 0 ? '+' : '-';
+          const verb = investmentGains > 0 ? 'grew' : 'declined';
+          yearNotes.push(`📈 Investment Portfolio ${verb} by ${sign}$${Math.abs(investmentGains).toLocaleString()} this year.`);
         }
       }
 
@@ -3148,13 +3257,279 @@
       `;
     }
 
-    // ASSETS & NET WORTH SYSTEM
+    // =========================================================================
+    // ENHANCED ASSETS, REAL ESTATE, VEHICLES, INVESTMENTS & NET WORTH SYSTEM
+    // =========================================================================
+
+    const ASSET_CATALOG = {
+      properties: [
+        {
+          id: "prop_micro",
+          name: "Starter Micro-Studio",
+          type: "property",
+          price: 45000,
+          icon: "🏢",
+          desc: "Compact 380 sq ft studio downtown. Ideal starter real estate investment.",
+          rentEst: 3600,
+          downPct: 0.20,
+          loanTermYrs: 30
+        },
+        {
+          id: "prop_condo",
+          name: "Downtown 1-Bedroom Condo",
+          type: "property",
+          price: 95000,
+          icon: "🏢",
+          desc: "Modern open-concept condo with balcony in the vibrant city center.",
+          rentEst: 7500,
+          downPct: 0.20,
+          loanTermYrs: 30
+        },
+        {
+          id: "prop_suburban",
+          name: "Suburban 3-Bedroom Family Home",
+          type: "property",
+          price: 260000,
+          icon: "🏡",
+          desc: "Cozy family home with a 2-car garage and a spacious green backyard.",
+          rentEst: 19500,
+          downPct: 0.20,
+          loanTermYrs: 30
+        },
+        {
+          id: "prop_duplex",
+          name: "Multi-Family Duplex (Income Property)",
+          type: "property",
+          price: 450000,
+          icon: "🏘️",
+          desc: "Dual residential units engineered for maximum passive rental cashflow.",
+          rentEst: 36000,
+          downPct: 0.20,
+          loanTermYrs: 30
+        },
+        {
+          id: "prop_penthouse",
+          name: "Skyline Luxury Penthouse",
+          type: "property",
+          price: 920000,
+          icon: "🏙️",
+          desc: "Panoramic 360° skyline vistas, private elevator and rooftop terrace.",
+          rentEst: 70000,
+          downPct: 0.20,
+          loanTermYrs: 30
+        },
+        {
+          id: "prop_villa",
+          name: "Waterfront Seaside Villa",
+          type: "property",
+          price: 2400000,
+          icon: "🏖️",
+          desc: "Private beachfront estate with an infinity pool and private yacht dock.",
+          rentEst: 175000,
+          downPct: 0.20,
+          loanTermYrs: 30
+        },
+        {
+          id: "prop_manor",
+          name: "Historic Royal Countryside Manor",
+          type: "property",
+          price: 5500000,
+          icon: "🏰",
+          desc: "Sprawling 18th-century stone manor with 50-acre manicured equestrian grounds.",
+          rentEst: 380000,
+          downPct: 0.20,
+          loanTermYrs: 30
+        }
+      ],
+      vehicles: [
+        {
+          id: "veh_hatchback",
+          name: "Used Beat-Up Hatchback",
+          type: "vehicle",
+          price: 3200,
+          icon: "🚗",
+          desc: "Old reliable budget hatchback. High mileage and cheap upkeep. (Age 16+)",
+          upkeep: 350,
+          downPct: 0.20,
+          loanTermYrs: 5
+        },
+        {
+          id: "veh_sedan",
+          name: "Reliable Mid-Size Sedan",
+          type: "vehicle",
+          price: 14500,
+          icon: "🚗",
+          desc: "Dependable 4-cylinder commuter sedan with modern safety tech. (Age 16+)",
+          upkeep: 650,
+          downPct: 0.20,
+          loanTermYrs: 5
+        },
+        {
+          id: "veh_suv",
+          name: "Electric Long-Range SUV",
+          type: "vehicle",
+          price: 52000,
+          icon: "🚙",
+          desc: "Dual-motor AWD, autopilot cruise, and zero emissions. (Age 16+)",
+          upkeep: 900,
+          downPct: 0.20,
+          loanTermYrs: 5
+        },
+        {
+          id: "veh_saloon",
+          name: "Executive Sports Saloon",
+          type: "vehicle",
+          price: 88000,
+          icon: "🏎️",
+          desc: "German engineered luxury performance with handcrafted leather. (Age 16+)",
+          upkeep: 1400,
+          downPct: 0.20,
+          loanTermYrs: 5
+        },
+        {
+          id: "veh_supercar",
+          name: "Twin-Turbo Exotic Supercar",
+          type: "vehicle",
+          price: 220000,
+          icon: "🏎️",
+          desc: "Carbon-fiber monocoque, V10 engine, 0-60 MPH in 2.7s. (Age 16+)",
+          upkeep: 3500,
+          downPct: 0.20,
+          loanTermYrs: 5
+        },
+        {
+          id: "veh_boat",
+          name: "Offshore Cruiser Yacht",
+          type: "vehicle",
+          price: 160000,
+          icon: "🛥️",
+          desc: "Twin-engine luxury motor yacht with master stateroom. (Age 18+)",
+          upkeep: 2800,
+          downPct: 0.20,
+          loanTermYrs: 5
+        }
+      ],
+      investments: [
+        {
+          id: "inv_bond",
+          name: "US Treasury Yield Bonds",
+          type: "investment",
+          assetClass: "bond",
+          price: 1000,
+          minAmount: 1000,
+          icon: "📜",
+          desc: "Government-backed guaranteed 4.2% APY annual yield. Zero risk capital preservation.",
+          risk: "Guaranteed (4.2% APY)"
+        },
+        {
+          id: "inv_index",
+          name: "S&P 500 Market Index Fund",
+          type: "investment",
+          assetClass: "index",
+          price: 500,
+          minAmount: 500,
+          icon: "📊",
+          desc: "Broad equity market basket. Compounding wealth with historical ~8% avg annual growth.",
+          risk: "Moderate (~8% avg)"
+        },
+        {
+          id: "inv_growth",
+          name: "Tech Growth Equities Basket",
+          type: "investment",
+          assetClass: "growth",
+          price: 500,
+          minAmount: 500,
+          icon: "💻",
+          desc: "High-flying AI, chipmakers, and software titans. Volatile (-15% to +25% swings).",
+          risk: "High Volatility"
+        },
+        {
+          id: "inv_crypto",
+          name: "Decentralized Crypto Token Fund",
+          type: "investment",
+          assetClass: "crypto",
+          price: 250,
+          minAmount: 250,
+          icon: "🪙",
+          desc: "Speculative digital assets & DeFi tokens. Wild swings (-35% to +55%). High upside or crash.",
+          risk: "Extreme Speculation"
+        }
+      ],
+      luxury: [
+        {
+          id: "lux_watch",
+          name: "Swiss Chronometer Watch",
+          type: "luxury",
+          price: 14000,
+          icon: "⌚",
+          desc: "Handcrafted horological mechanical timepiece of prestige.",
+          looksBoost: 4
+        },
+        {
+          id: "lux_ring",
+          name: "Diamond Solitaire Ring",
+          type: "luxury",
+          price: 28000,
+          icon: "💍",
+          desc: "Flawless 3-carat platinum diamond ring of extraordinary fire.",
+          looksBoost: 6
+        },
+        {
+          id: "lux_art",
+          name: "Rare Fine Art Oil Painting",
+          type: "luxury",
+          price: 85000,
+          icon: "🖼️",
+          desc: "Museum-provenance impressionist masterpiece canvas. Appreciates with age.",
+          looksBoost: 2
+        },
+        {
+          id: "lux_wine",
+          name: "Vintage Fine Wine Cellar",
+          type: "luxury",
+          price: 22000,
+          icon: "🍷",
+          desc: "Curated temperature-controlled collection of Grand Cru vintage wines.",
+          looksBoost: 3
+        }
+      ]
+    };
+
+    let currentAssetFilter = 'all';
+    let selectedAssetId = null;
+
+    function setAssetFilter(filter) {
+      currentAssetFilter = filter;
+      const btnAll = document.getElementById('assetFilterAll');
+      const btnProps = document.getElementById('assetFilterProps');
+      const btnVehicles = document.getElementById('assetFilterVehicles');
+      const btnInv = document.getElementById('assetFilterInvestments');
+      const btnLux = document.getElementById('assetFilterLuxury');
+
+      if (btnAll) btnAll.classList.toggle('active', filter === 'all');
+      if (btnProps) btnProps.classList.toggle('active', filter === 'property');
+      if (btnVehicles) btnVehicles.classList.toggle('active', filter === 'vehicle');
+      if (btnInv) btnInv.classList.toggle('active', filter === 'investment');
+      if (btnLux) btnLux.classList.toggle('active', filter === 'luxury');
+
+      renderAssetsPage();
+    }
+
     function renderAssetsPage() {
       const assets = char.assets || [];
-      const totalAssetValue = assets.reduce((sum, a) => sum + (a.price || 0), 0);
-      const debt = (char.school && char.school.studentDebt) ? char.school.studentDebt : 0;
-      const netWorth = char.money + totalAssetValue - debt;
+      const totalAssetValue = assets.reduce((sum, a) => sum + (a.currentPrice || a.price || 0), 0);
+      const totalLoans = assets.reduce((sum, a) => sum + (a.loanBalance || 0), 0);
+      const studentDebt = (char.school && char.school.studentDebt) ? char.school.studentDebt : 0;
+      const totalDebt = totalLoans + studentDebt;
+      const netWorth = char.money + totalAssetValue - totalDebt;
 
+      const passiveIncome = assets.reduce((sum, a) => {
+        if (a.type === 'property' && a.isRented) return sum + (a.rentalIncome || 0);
+        if (a.type === 'investment' && a.assetClass === 'bond') return sum + Math.round((a.currentPrice || a.price) * 0.042);
+        return sum;
+      }, 0);
+
+      // Top Wealth Card Metrics
       const netWorthDesc = document.getElementById('assetNetWorthDesc');
       if (netWorthDesc) {
         netWorthDesc.innerText = `Total Net Worth: ${(netWorth >= 0 ? '$' : '-$') + Math.abs(netWorth).toLocaleString()}`;
@@ -3167,84 +3542,1157 @@
       if (assetValEl) {
         assetValEl.innerText = `$${totalAssetValue.toLocaleString()}`;
       }
+      const debtValEl = document.getElementById('assetTotalDebt');
+      if (debtValEl) {
+        debtValEl.innerText = totalDebt > 0 ? `-$${totalDebt.toLocaleString()}` : '$0';
+      }
+      const passiveValEl = document.getElementById('assetPassiveIncome');
+      if (passiveValEl) {
+        passiveValEl.innerText = `$${passiveIncome.toLocaleString()}/yr`;
+      }
+
+      // Progress bars
+      const cashBar = document.getElementById('assetCashProgress');
+      if (cashBar) cashBar.style.width = `${clamp(Math.round((Math.max(0, char.money) / Math.max(1, Math.abs(netWorth) || 10000)) * 100), 5, 100)}%`;
+      const assetsBar = document.getElementById('assetAssetsProgress');
+      if (assetsBar) assetsBar.style.width = `${clamp(Math.round((totalAssetValue / Math.max(1, totalAssetValue + Math.max(0, char.money))) * 100), 0, 100)}%`;
 
       const countEl = document.getElementById('ownedAssetsCount');
       if (countEl) countEl.innerText = assets.length;
 
+      // Render Owned Assets
       const listEl = document.getElementById('ownedAssetsList');
       if (listEl) {
-        if (assets.length === 0) {
+        const filteredOwned = currentAssetFilter === 'all' 
+          ? assets 
+          : assets.filter(a => a.type === currentAssetFilter);
+
+        if (filteredOwned.length === 0) {
           listEl.innerHTML = `
-            <div style="text-align:center; padding:16px 12px; font-size:12px; color:#64748B; background:#F8FAFC; border:1px dashed #CBD5E1; border-radius:10px; margin-bottom:10px;">
-              You do not own any properties, vehicles, or luxury assets yet.
+            <div style="text-align:center; padding:16px 12px; font-size:12px; color:#64748B; background:#F8FAFC; border:1px dashed #CBD5E1; border-radius:10px;">
+              ${assets.length === 0 ? 'You do not own any properties, vehicles, or investments yet.' : `No owned assets in the "${currentAssetFilter}" category.`}
             </div>
           `;
         } else {
           let html = '';
-          assets.forEach((a) => {
-            const resale = Math.round(a.price * 0.90);
+          filteredOwned.forEach((a) => {
+            const currentVal = a.currentPrice || a.price || 0;
+            const cond = a.condition != null ? a.condition : 100;
+
+            let badgesHtml = '';
+            if (a.type === 'property') {
+              badgesHtml += `<span class="asset-badge ${cond >= 75 ? 'success' : cond >= 45 ? 'warning' : 'danger'}">Condition: ${cond}%</span> `;
+              if (a.isRented) {
+                badgesHtml += `<span class="asset-badge success">🏢 Rented: $${(a.rentalIncome || 0).toLocaleString()}/yr</span> `;
+              } else {
+                badgesHtml += `<span class="asset-badge warning">Vacant</span> `;
+              }
+              if (a.loanBalance > 0) {
+                badgesHtml += `<span class="asset-badge info">Mortgage: $${a.loanBalance.toLocaleString()}</span> `;
+              }
+            } else if (a.type === 'vehicle') {
+              badgesHtml += `<span class="asset-badge ${cond >= 75 ? 'success' : cond >= 45 ? 'warning' : 'danger'}">Condition: ${cond}%</span> `;
+              if (a.mileage != null) {
+                badgesHtml += `<span class="asset-badge">${a.mileage.toLocaleString()} mi</span> `;
+              }
+              if (a.loanBalance > 0) {
+                badgesHtml += `<span class="asset-badge info">Auto Loan: $${a.loanBalance.toLocaleString()}</span> `;
+              }
+            } else if (a.type === 'investment') {
+              const orig = a.price || 1;
+              const diff = currentVal - orig;
+              const pct = Math.round((diff / orig) * 100);
+              const sign = diff >= 0 ? '+' : '';
+              badgesHtml += `<span class="asset-badge ${diff >= 0 ? 'success' : 'danger'}">${sign}${pct}% (${sign}$${diff.toLocaleString()})</span> `;
+            } else if (a.type === 'luxury') {
+              badgesHtml += `<span class="asset-badge success">Mint Condition</span> `;
+            }
+
             html += `
-              <div class="interactive-card">
+              <div class="interactive-card" onclick="openAssetDetail('${a.id}')">
                 <div class="card-left-group">
                   <div class="card-emoji-box">${a.icon || '📦'}</div>
                   <div class="card-texts">
                     <h4>${a.name}</h4>
-                    <p>Estimated Market: $${a.price.toLocaleString()} • Resale: $${resale.toLocaleString()} (${a.type})</p>
+                    <p>Market Value: $${currentVal.toLocaleString()} • ${a.type.toUpperCase()}</p>
+                    <div style="margin-top: 3px;">${badgesHtml}</div>
                   </div>
                 </div>
-                <button class="btn-card-action secondary" onclick="sellAsset('${a.id}')">Sell</button>
+                <button class="btn-card-action">Manage →</button>
               </div>
             `;
           });
           listEl.innerHTML = html;
         }
       }
+
+      // Render Marketplace
+      const marketEl = document.getElementById('assetsMarketContainer');
+      if (marketEl) {
+        let marketHtml = '';
+
+        if (currentAssetFilter === 'all' || currentAssetFilter === 'property') {
+          if (currentAssetFilter === 'all') {
+            marketHtml += `<div class="section-title"><span>🏠</span> Real Estate & Properties (7)</div>`;
+          }
+          ASSET_CATALOG.properties.forEach(item => {
+            const down = Math.round(item.price * item.downPct);
+            marketHtml += `
+              <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${item.icon}</div>
+                  <div class="card-texts">
+                    <h4>${item.name} ($${item.price.toLocaleString()})</h4>
+                    <p>${item.desc}</p>
+                    <div style="margin-top: 3px;">
+                      <span class="asset-badge info">20% Down: $${down.toLocaleString()}</span>
+                      <span class="asset-badge success">Est. Rent: ~$${item.rentEst.toLocaleString()}/yr</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-card-action">Purchase</button>
+              </div>
+            `;
+          });
+        }
+
+        if (currentAssetFilter === 'all' || currentAssetFilter === 'vehicle') {
+          if (currentAssetFilter === 'all') {
+            marketHtml += `<div class="section-title"><span>🚗</span> Automobile & Yacht Dealership (6)</div>`;
+          }
+          ASSET_CATALOG.vehicles.forEach(item => {
+            const down = Math.round(item.price * item.downPct);
+            marketHtml += `
+              <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${item.icon}</div>
+                  <div class="card-texts">
+                    <h4>${item.name} ($${item.price.toLocaleString()})</h4>
+                    <p>${item.desc}</p>
+                    <div style="margin-top: 3px;">
+                      <span class="asset-badge info">20% Down: $${down.toLocaleString()}</span>
+                      <span class="asset-badge">Upkeep: ~$${item.upkeep.toLocaleString()}/yr</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-card-action">Purchase</button>
+              </div>
+            `;
+          });
+        }
+
+        if (currentAssetFilter === 'all' || currentAssetFilter === 'investment') {
+          if (currentAssetFilter === 'all') {
+            marketHtml += `<div class="section-title"><span>📊</span> Financial Portfolios & Crypto (4)</div>`;
+          }
+          ASSET_CATALOG.investments.forEach(item => {
+            marketHtml += `
+              <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${item.icon}</div>
+                  <div class="card-texts">
+                    <h4>${item.name}</h4>
+                    <p>${item.desc}</p>
+                    <div style="margin-top: 3px;">
+                      <span class="asset-badge info">Min: $${item.minAmount.toLocaleString()}</span>
+                      <span class="asset-badge ${item.risk.includes('Guaranteed') ? 'success' : item.risk.includes('Extreme') ? 'danger' : 'warning'}">${item.risk}</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Invest</button>
+              </div>
+            `;
+          });
+        }
+
+        if (currentAssetFilter === 'all' || currentAssetFilter === 'luxury') {
+          if (currentAssetFilter === 'all') {
+            marketHtml += `<div class="section-title"><span>💎</span> Luxury Goods & Fine Collectibles (4)</div>`;
+          }
+          ASSET_CATALOG.luxury.forEach(item => {
+            marketHtml += `
+              <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${item.icon}</div>
+                  <div class="card-texts">
+                    <h4>${item.name} ($${item.price.toLocaleString()})</h4>
+                    <p>${item.desc}</p>
+                    <div style="margin-top: 3px;">
+                      <span class="asset-badge success">+${item.looksBoost} Looks Prestige</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-card-action">Purchase</button>
+              </div>
+            `;
+          });
+        }
+
+        marketEl.innerHTML = marketHtml;
+      }
     }
 
-    function buyAsset(type, name, price, icon) {
+    // PURCHASE MODAL WITH FINANCING & CASH FLOW OPTIONS
+    function openBuyAssetModal(itemId) {
       if (!char.isAlive) return;
 
-      if (type === 'vehicle' && char.age < 16) {
-        showPopup("You must be at least 16 years old to purchase and operate a motor vehicle!", "Automobile Dealership", "🚗");
+      let item = null;
+      for (const cat in ASSET_CATALOG) {
+        const found = ASSET_CATALOG[cat].find(x => x.id === itemId);
+        if (found) { item = found; break; }
+      }
+      if (!item) return;
+
+      // Age validations
+      if (item.type === 'property' && char.age < 18) {
+        showPopup("You must be at least 18 years old to purchase real estate or execute a mortgage contract!", "Age Restricted", "🏠");
+        return;
+      }
+      if (item.type === 'vehicle' && char.age < 16) {
+        showPopup("You must be at least 16 years old to purchase or finance a motor vehicle!", "Age Restricted", "🚗");
+        return;
+      }
+      if (item.type === 'investment' && char.age < 18) {
+        showPopup("You must be at least 18 years old to open an investment portfolio or trade securities!", "Age Restricted", "📊");
         return;
       }
 
-      if (char.money < price) {
-        showPopup(`You cannot afford this asset! You need $${price.toLocaleString()} but currently have $${char.money.toLocaleString()}.`, "Insufficient Funds", "💸");
+      // INVESTMENTS PURCHASE FLOW
+      if (item.type === 'investment') {
+        const minAmt = item.minAmount;
+        if (char.money < minAmt) {
+          showPopup(`You need at least $${minAmt.toLocaleString()} in liquid cash to invest in ${item.name}! You currently have $${char.money.toLocaleString()}.`, "Insufficient Funds", "💸");
+          return;
+        }
+
+        const bodyHtml = `
+          <div style="text-align:center; margin-bottom:12px;">
+            <div style="font-size:32px;">${item.icon}</div>
+            <div style="font-size:15px; font-weight:700; color:#0F172A; margin-top:4px;">${item.name}</div>
+            <div style="font-size:12px; color:#64748B; margin-top:2px;">${item.desc}</div>
+            <div style="font-size:13px; font-weight:600; color:#2563EB; margin-top:6px;">Risk Level: ${item.risk}</div>
+            <div style="font-size:12.5px; color:#334155; margin-top:4px;">Available Cash: <strong>$${char.money.toLocaleString()}</strong></div>
+          </div>
+          <div style="font-size:12.5px; font-weight:600; margin-bottom:6px; color:#475569;">Select Investment Amount:</div>
+        `;
+
+        const choices = [minAmt, minAmt * 2.5, minAmt * 5, 10000, 25000, char.money]
+          .filter((v, i, a) => v <= char.money && v >= minAmt && a.indexOf(v) === i)
+          .sort((a, b) => a - b);
+
+        let actionsHtml = `<div style="display:flex; flex-direction:column; gap:6px; width:100%;">`;
+        choices.forEach(amt => {
+          actionsHtml += `
+            <button class="modal-btn primary" onclick="executeBuyAsset('${item.id}', 'invest', ${amt})">
+              Invest $${amt.toLocaleString()}
+            </button>
+          `;
+        });
+        actionsHtml += `<button class="modal-btn" onclick="closeModal()">Cancel</button></div>`;
+
+        showCustomModal("Investment Capital Allocation", item.icon, bodyHtml, actionsHtml);
         return;
       }
 
-      showConfirm(`Purchase ${name} for $${price.toLocaleString()}?`, () => {
-        char.money -= price;
-        if (!char.assets) char.assets = [];
+      // REAL ESTATE & VEHICLE PURCHASE FLOW (CASH VS 20% DOWN FINANCING)
+      if (item.type === 'property' || item.type === 'vehicle') {
+        const downPayment = Math.round(item.price * (item.downPct || 0.20));
+        const loanAmount = item.price - downPayment;
+        const isProperty = item.type === 'property';
+        const annualLoanPmt = isProperty ? Math.round(loanAmount * 0.065) : Math.round(loanAmount * 0.24);
+        const termYrs = isProperty ? 30 : 5;
+
+        const isEmployed = char.salary > 0 || char.partTimeJob != null;
+        const canAffordCash = char.money >= item.price;
+        const canAffordDown = char.money >= downPayment;
+
+        const bodyHtml = `
+          <div style="text-align:center; margin-bottom:14px;">
+            <div style="font-size:34px;">${item.icon}</div>
+            <div style="font-size:15px; font-weight:700; color:#0F172A; margin-top:4px;">${item.name}</div>
+            <div style="font-size:14px; font-weight:600; color:#2563EB;">Purchase Price: $${item.price.toLocaleString()}</div>
+            <div style="font-size:12px; color:#64748B; margin-top:3px;">${item.desc}</div>
+            <div style="font-size:12px; color:#334155; margin-top:5px;">Your Liquid Cash: <strong>$${char.money.toLocaleString()}</strong></div>
+          </div>
+
+          <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:10px; margin-bottom:12px; font-size:12px; color:#334155;">
+            <div style="font-weight:700; color:#0F172A; margin-bottom:3px;">🏦 Financing Option (${termYrs}-Year Loan):</div>
+            <div>• Down Payment Required (20%): <strong>$${downPayment.toLocaleString()}</strong></div>
+            <div>• Financed Loan Amount (80%): <strong>$${loanAmount.toLocaleString()}</strong></div>
+            <div>• Estimated Annual Payment: <strong>$${annualLoanPmt.toLocaleString()}/yr</strong></div>
+            <div>• Income Verification: ${isEmployed ? '<span style="color:#16A34A; font-weight:600;">✓ Steady Employment Verified</span>' : '<span style="color:#DC2626; font-weight:600;">✗ Unemployed (Ineligible for loan)</span>'}</div>
+          </div>
+        `;
+
+        let actionsHtml = `<div style="display:flex; flex-direction:column; gap:6px; width:100%;">`;
+
+        if (canAffordCash) {
+          actionsHtml += `
+            <button class="modal-btn primary" onclick="executeBuyAsset('${item.id}', 'cash')">
+              Pay 100% Cash ($${item.price.toLocaleString()})
+            </button>
+          `;
+        } else {
+          actionsHtml += `
+            <button class="modal-btn" disabled style="opacity:0.5; cursor:not-allowed;">
+              Pay Cash ($${item.price.toLocaleString()}) • Need $${(item.price - char.money).toLocaleString()} more
+            </button>
+          `;
+        }
+
+        if (canAffordDown && isEmployed) {
+          actionsHtml += `
+            <button class="modal-btn success" onclick="executeBuyAsset('${item.id}', 'finance')">
+              Finance with 20% Down ($${downPayment.toLocaleString()})
+            </button>
+          `;
+        } else if (!isEmployed) {
+          actionsHtml += `
+            <button class="modal-btn" disabled style="opacity:0.5; cursor:not-allowed;">
+              Finance Declined • Steady Job Required
+            </button>
+          `;
+        } else {
+          actionsHtml += `
+            <button class="modal-btn" disabled style="opacity:0.5; cursor:not-allowed;">
+              Finance Declined • Need $${(downPayment - char.money).toLocaleString()} more for down payment
+            </button>
+          `;
+        }
+
+        actionsHtml += `<button class="modal-btn" onclick="closeModal()">Cancel</button></div>`;
+
+        showCustomModal("Acquisition & Financing", item.icon, bodyHtml, actionsHtml);
+        return;
+      }
+
+      // LUXURY VALUABLES CASH FLOW
+      if (item.type === 'luxury') {
+        if (char.money < item.price) {
+          showPopup(`You cannot afford this luxury valuable! You need $${item.price.toLocaleString()} but currently have $${char.money.toLocaleString()}.`, "Insufficient Funds", "💸");
+          return;
+        }
+
+        showConfirm(`Purchase ${item.name} for $${item.price.toLocaleString()} cash?`, () => {
+          executeBuyAsset(item.id, 'cash');
+        }, "Purchase Luxury Good", item.icon, "Buy Now");
+      }
+    }
+
+    function executeBuyAsset(itemId, mode, customAmount = 0) {
+      closeModal();
+      if (!char.isAlive) return;
+
+      let item = null;
+      for (const cat in ASSET_CATALOG) {
+        const found = ASSET_CATALOG[cat].find(x => x.id === itemId);
+        if (found) { item = found; break; }
+      }
+      if (!item) return;
+
+      if (!char.assets) char.assets = [];
+
+      const newId = "asset_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+
+      if (mode === 'cash') {
+        if (char.money < item.price) {
+          showPopup("Insufficient funds to complete this cash purchase!", "Declined", "💸");
+          return;
+        }
+        char.money -= item.price;
         const newAsset = {
-          id: "asset_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
-          type: type,
-          name: name,
-          price: price,
-          icon: icon
+          id: newId,
+          catalogId: item.id,
+          type: item.type,
+          name: item.name,
+          icon: item.icon,
+          price: item.price,
+          currentPrice: item.price,
+          condition: 100,
+          loanBalance: 0,
+          loanAnnualPayment: 0,
+          isRented: false,
+          rentalIncome: 0,
+          mileage: item.type === 'vehicle' ? 1200 : 0,
+          annualUpkeep: item.upkeep || 0,
+          looksBoost: item.looksBoost || 0
         };
         char.assets.push(newAsset);
 
-        if (type === 'property') {
+        if (item.type === 'property') {
           if (!char.properties) char.properties = [];
-          char.properties.push(name);
+          char.properties.push(item.name);
           char.happiness = clamp(char.happiness + 25, 0, 100);
-          recordAction(`🏡 Purchased ${name} for $${price.toLocaleString()}!`);
-          showPopup(`🎉 Congratulations! You bought ${name} for $${price.toLocaleString()}! You are now a homeowner!`, "Property Acquired! 🏡", "🏡");
-        } else if (type === 'vehicle') {
+          recordAction(`🏡 Purchased ${item.name} in cash for $${item.price.toLocaleString()}!`);
+          showPopup(`🎉 Congratulations! You bought ${item.name} in cash for $${item.price.toLocaleString()}! You own this real estate free and clear!`, "Property Acquired! 🏡", "🏡");
+        } else if (item.type === 'vehicle') {
           char.happiness = clamp(char.happiness + 20, 0, 100);
-          recordAction(`🚗 Purchased ${name} for $${price.toLocaleString()}!`);
-          showPopup(`🎉 Nice ride! You purchased a brand new ${name} for $${price.toLocaleString()}!`, "Vehicle Purchased! 🚗", "🚗");
-        } else {
+          recordAction(`🚗 Purchased ${item.name} in cash for $${item.price.toLocaleString()}!`);
+          showPopup(`🎉 Nice ride! You purchased ${item.name} for $${item.price.toLocaleString()} cash!`, "Vehicle Purchased! 🚗", "🚗");
+        } else if (item.type === 'luxury') {
           char.happiness = clamp(char.happiness + 15, 0, 100);
-          char.looks = clamp(char.looks + 4, 0, 100);
-          recordAction(`💎 Acquired a luxury ${name} for $${price.toLocaleString()}!`);
-          showPopup(`💎 You purchased ${name} for $${price.toLocaleString()}! Looking stylish!`, "Luxury Acquired! 💎", "💎");
+          char.looks = clamp(char.looks + (item.looksBoost || 4), 0, 100);
+          recordAction(`💎 Acquired a luxury ${item.name} for $${item.price.toLocaleString()}!`);
+          showPopup(`💎 You purchased ${item.name} for $${item.price.toLocaleString()}! Looking stylish! (+${item.looksBoost || 4}% Looks)`, "Luxury Acquired! 💎", "💎");
+        }
+      } else if (mode === 'finance') {
+        const downPayment = Math.round(item.price * (item.downPct || 0.20));
+        const loanAmount = item.price - downPayment;
+        const isProperty = item.type === 'property';
+        const annualPmt = isProperty ? Math.round(loanAmount * 0.065) : Math.round(loanAmount * 0.24);
+
+        if (char.money < downPayment) {
+          showPopup("Insufficient funds to pay the 20% down payment!", "Declined", "💸");
+          return;
+        }
+
+        char.money -= downPayment;
+        const newAsset = {
+          id: newId,
+          catalogId: item.id,
+          type: item.type,
+          name: item.name,
+          icon: item.icon,
+          price: item.price,
+          currentPrice: item.price,
+          condition: 100,
+          loanBalance: loanAmount,
+          loanAnnualPayment: annualPmt,
+          isRented: false,
+          rentalIncome: 0,
+          mileage: item.type === 'vehicle' ? 1200 : 0,
+          annualUpkeep: item.upkeep || 0
+        };
+        char.assets.push(newAsset);
+
+        if (item.type === 'property') {
+          if (!char.properties) char.properties = [];
+          char.properties.push(item.name);
+          char.happiness = clamp(char.happiness + 20, 0, 100);
+          recordAction(`🏡 Acquired ${item.name} ($${item.price.toLocaleString()}) with $${downPayment.toLocaleString()} down payment and a 30-year mortgage!`);
+          showPopup(`🎉 Financing approved! You secured ${item.name} with a $${downPayment.toLocaleString()} down payment and an active mortgage of $${loanAmount.toLocaleString()} ($${annualPmt.toLocaleString()}/yr).`, "Homeowner Milestone! 🏡", "🏡");
+        } else if (item.type === 'vehicle') {
+          char.happiness = clamp(char.happiness + 16, 0, 100);
+          recordAction(`🚗 Financed ${item.name} with $${downPayment.toLocaleString()} down payment and a 5-year auto loan!`);
+          showPopup(`🎉 Auto loan approved! You drove off with ${item.name}! Financed $${loanAmount.toLocaleString()} over 5 years.`, "Vehicle Financed! 🚗", "🚗");
+        }
+      } else if (mode === 'invest') {
+        const investAmt = customAmount || item.minAmount;
+        if (char.money < investAmt) {
+          showPopup("Insufficient funds to complete this investment!", "Declined", "💸");
+          return;
+        }
+
+        char.money -= investAmt;
+        const existing = char.assets.find(a => a.type === 'investment' && a.catalogId === item.id);
+        if (existing) {
+          existing.price = (existing.price || 0) + investAmt;
+          existing.currentPrice = (existing.currentPrice || 0) + investAmt;
+          recordAction(`📈 Added $${investAmt.toLocaleString()} to ${item.name} portfolio.`);
+          showPopup(`📈 Successfully deposited an additional $${investAmt.toLocaleString()} into your ${item.name} position!`, "Investment Deposited", "📈");
+        } else {
+          const newAsset = {
+            id: newId,
+            catalogId: item.id,
+            type: 'investment',
+            assetClass: item.assetClass,
+            name: item.name,
+            icon: item.icon,
+            price: investAmt,
+            currentPrice: investAmt,
+            condition: 100,
+            loanBalance: 0,
+            loanAnnualPayment: 0
+          };
+          char.assets.push(newAsset);
+          char.smarts = clamp(char.smarts + 2, 0, 100);
+          recordAction(`📈 Opened an investment position in ${item.name} with $${investAmt.toLocaleString()}!`);
+          showPopup(`🎉 Portfolio Established! You invested $${investAmt.toLocaleString()} into ${item.name}!`, "Investment Opened 📈", "📈");
+        }
+      }
+
+      render();
+    }
+
+    // DEDICATED ASSET DETAIL & MANAGEMENT PAGE
+    function openAssetDetail(assetId) {
+      selectedAssetId = assetId;
+      renderAssetDetailPage();
+      switchTab('pageAssetDetail', 'tabBtnAssets');
+    }
+
+    function renderAssetDetailPage() {
+      const container = document.getElementById('assetDetailContentContainer');
+      if (!container) return;
+
+      const assets = char.assets || [];
+      const asset = assets.find(a => a.id === selectedAssetId);
+
+      if (!asset) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:20px; color:#64748B;">
+            Asset not found or already sold.
+          </div>
+        `;
+        return;
+      }
+
+      const topIcon = document.getElementById('assetDetailTopIcon');
+      const topTitle = document.getElementById('assetDetailTopTitle');
+      if (topIcon) topIcon.innerText = asset.icon || '📦';
+      if (topTitle) topTitle.innerText = asset.name;
+
+      const currentVal = asset.currentPrice || asset.price || 0;
+      const originalPrice = asset.price || currentVal;
+      const loanBal = asset.loanBalance || 0;
+      const equity = currentVal - loanBal;
+      const cond = asset.condition != null ? asset.condition : 100;
+      const condFill = cond >= 75 ? 'fill-green' : cond >= 45 ? 'fill-yellow' : 'fill-red';
+
+      let html = `
+        <!-- Asset Overview Card -->
+        <div class="school-overview-card">
+          <div class="school-overview-header">
+            <div class="school-overview-badge">${asset.icon || '📦'}</div>
+            <div class="school-overview-info">
+              <div class="school-overview-name">${asset.name}</div>
+              <div class="school-overview-desc">${asset.type.toUpperCase()} • Estimated Market Valuation</div>
+            </div>
+          </div>
+          <div class="school-metrics-grid">
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Current Value</span> <span>$${currentVal.toLocaleString()}</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-blue" style="width: 100%;"></div></div>
+            </div>
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Net Equity</span> <span>$${equity.toLocaleString()}</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-green" style="width: ${clamp(Math.round((equity / Math.max(1, currentVal)) * 100), 5, 100)}%;"></div></div>
+            </div>
+            ${asset.type !== 'investment' ? `
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Condition</span> <span>${cond}%</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill ${condFill}" style="width: ${cond}%;"></div></div>
+            </div>
+            ` : `
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Invested Principal</span> <span>$${originalPrice.toLocaleString()}</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-blue" style="width: 100%;"></div></div>
+            </div>
+            `}
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Loan Balance</span> <span>${loanBal > 0 ? '$' + loanBal.toLocaleString() : 'None ($0)'}</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-yellow" style="width: ${clamp(Math.round((loanBal / Math.max(1, currentVal)) * 100), 0, 100)}%;"></div></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // SPECIFIC ACTIONS BY ASSET TYPE
+      if (asset.type === 'property') {
+        const renovateCost = Math.max(1500, Math.round(currentVal * 0.035));
+
+        html += `
+          <div class="section-title"><span>🏢</span> Rental & Tenant Management</div>
+
+          ${asset.isRented ? `
+            <div class="interactive-card">
+              <div class="card-left-group">
+                <div class="card-emoji-box">👤</div>
+                <div class="card-texts">
+                  <h4>Tenant: ${asset.tenantName || 'Arthur Pendelton'}</h4>
+                  <p>Paying $${(asset.rentalIncome || 0).toLocaleString()}/yr • Satisfaction: ${asset.tenantSatisfaction || 85}%</p>
+                </div>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-card-action" onclick="checkTenant('${asset.id}')">Inspect</button>
+                <button class="btn-card-action success" onclick="raisePropertyRent('${asset.id}')">+Rent</button>
+                <button class="btn-card-action secondary" onclick="evictTenant('${asset.id}')">Evict</button>
+              </div>
+            </div>
+          ` : `
+            <div class="interactive-card" onclick="leaseProperty('${asset.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🏢</div>
+                <div class="card-texts">
+                  <h4>Find Tenant & Lease Property</h4>
+                  <p>List on rental market (Est. passive income: ~$${Math.round(currentVal * 0.075).toLocaleString()}/yr)</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Lease</button>
+            </div>
+          `}
+
+          <div class="section-title"><span>🔨</span> Property Upgrades & Maintenance</div>
+
+          <div class="interactive-card" onclick="renovateProperty('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🔨</div>
+              <div class="card-texts">
+                <h4>Renovate & Remodel ($${renovateCost.toLocaleString()})</h4>
+                <p>Modernize interior and appliances (+20% condition, +15% value appreciation)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Renovate</button>
+          </div>
+
+          ${loanBal > 0 ? `
+            <div class="section-title"><span>🏦</span> Mortgage Financing</div>
+
+            <div class="interactive-card" onclick="payOffLoan('${asset.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💳</div>
+                <div class="card-texts">
+                  <h4>Pay Off Mortgage ($${loanBal.toLocaleString()})</h4>
+                  <p>Clear your remaining mortgage balance in full using cash</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Pay Off</button>
+            </div>
+          ` : ''}
+
+          <div class="section-title"><span>🏷️</span> Real Estate Liquidation</div>
+
+          <div class="interactive-card" onclick="sellAssetModal('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💰</div>
+              <div class="card-texts">
+                <h4>Sell Property on Open Market</h4>
+                <p>List with broker (Net proceeds: $${equity.toLocaleString()} after loan payoff)</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Sell Property</button>
+          </div>
+        `;
+      } else if (asset.type === 'vehicle') {
+        const serviceCost = Math.max(250, Math.round(currentVal * 0.04));
+
+        html += `
+          <div class="section-title"><span>🏎️</span> Driving & Automobile Care</div>
+
+          <div class="interactive-card" onclick="joyrideVehicle('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🏎️</div>
+              <div class="card-texts">
+                <h4>Take for a Joyride</h4>
+                <p>Go for an exhilarating cruise down the open highway (+Happiness)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Cruise</button>
+          </div>
+
+          <div class="interactive-card" onclick="serviceVehicle('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🔧</div>
+              <div class="card-texts">
+                <h4>Service & Maintenance ($${serviceCost.toLocaleString()})</h4>
+                <p>Tune engine, fresh oil, and complete brake inspection (Restores condition to 100%)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Service</button>
+          </div>
+
+          <div class="interactive-card" onclick="washVehicle('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">✨</div>
+              <div class="card-texts">
+                <h4>Professional Wash & Detail ($45)</h4>
+                <p>Hand-wash foam polish and interior cleaning (+6% Happiness)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Wash</button>
+          </div>
+
+          ${loanBal > 0 ? `
+            <div class="section-title"><span>🏦</span> Auto Financing</div>
+
+            <div class="interactive-card" onclick="payOffLoan('${asset.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💳</div>
+                <div class="card-texts">
+                  <h4>Pay Off Auto Loan ($${loanBal.toLocaleString()})</h4>
+                  <p>Settle vehicle loan in full and own title outright</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Pay Off</button>
+            </div>
+          ` : ''}
+
+          <div class="section-title"><span>💰</span> Vehicle Disposition</div>
+
+          <div class="interactive-card" onclick="sellAssetModal('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💰</div>
+              <div class="card-texts">
+                <h4>Sell Vehicle to Dealership</h4>
+                <p>Trade in for cash (Net proceeds: $${equity.toLocaleString()} after loan payoff)</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Sell Vehicle</button>
+          </div>
+        `;
+      } else if (asset.type === 'investment') {
+        const diff = currentVal - originalPrice;
+        const pct = Math.round((diff / Math.max(1, originalPrice)) * 100);
+        const sign = diff >= 0 ? '+' : '';
+
+        html += `
+          <div class="section-title"><span>📈</span> Portfolio Performance</div>
+
+          <div class="interactive-card">
+            <div class="card-left-group">
+              <div class="card-emoji-box">${diff >= 0 ? '🟢' : '🔴'}</div>
+              <div class="card-texts">
+                <h4>Unrealized Return: ${sign}${pct}% (${sign}$${diff.toLocaleString()})</h4>
+                <p>Total Capital Invested: $${originalPrice.toLocaleString()} • Current Valuation: $${currentVal.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title"><span>💵</span> Capital Allocation</div>
+
+          <div class="interactive-card">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💵</div>
+              <div class="card-texts">
+                <h4>Invest Additional Capital</h4>
+                <p>Available Liquid Cash: $${char.money.toLocaleString()}</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:5px;">
+              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', 1000)">+$1K</button>
+              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', 5000)">+$5K</button>
+              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', char.money)">Max</button>
+            </div>
+          </div>
+
+          <div class="section-title"><span>🏧</span> Liquidate & Cash Out</div>
+
+          <div class="interactive-card" onclick="withdrawInvestment('${asset.id}', 0.5)">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🏧</div>
+              <div class="card-texts">
+                <h4>Cash Out 50% ($${Math.round(currentVal * 0.5).toLocaleString()})</h4>
+                <p>Withdraw half your position into liquid bank balance</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Cash Out 50%</button>
+          </div>
+
+          <div class="interactive-card" onclick="withdrawInvestment('${asset.id}', 1.0)">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💸</div>
+              <div class="card-texts">
+                <h4>Liquidate Entire Position ($${currentVal.toLocaleString()})</h4>
+                <p>Sell all holdings and transfer full proceeds to cash</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Liquidate All</button>
+          </div>
+        `;
+      } else if (asset.type === 'luxury') {
+        html += `
+          <div class="section-title"><span>💎</span> Luxury Care & Appraisal</div>
+
+          <div class="interactive-card" onclick="appraiseLuxury('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💎</div>
+              <div class="card-texts">
+                <h4>Certified Appraisal & Polish ($150)</h4>
+                <p>Expert horologist/gemologist certification of authenticity (+5% value)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Appraise</button>
+          </div>
+
+          <div class="section-title"><span>🏷️</span> Auction House</div>
+
+          <div class="interactive-card" onclick="sellAssetModal('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💰</div>
+              <div class="card-texts">
+                <h4>Consign to Auction House</h4>
+                <p>Sell item for full market valuation ($${currentVal.toLocaleString()})</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Auction Item</button>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    // PROPERTY TENANT ACTIONS
+    function leaseProperty(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      const currentVal = asset.currentPrice || asset.price || 50000;
+      const rent = Math.round(currentVal * 0.075);
+      const names = ["Arthur Vance", "Elena Rostova", "Marcus Sterling", "Chloe Kensington", "Liam Chen", "Sophia Davenport"];
+      const tenantName = names[Math.floor(Math.random() * names.length)];
+
+      showConfirm(`Lease ${asset.name} to tenant ${tenantName} for $${rent.toLocaleString()}/year?`, () => {
+        asset.isRented = true;
+        asset.tenantName = tenantName;
+        asset.rentalIncome = rent;
+        asset.tenantSatisfaction = 85;
+
+        recordAction(`🏢 Leased ${asset.name} to ${tenantName} for $${rent.toLocaleString()}/year!`);
+        showPopup(`🎉 Lease Executed! ${tenantName} has signed a residential lease for $${rent.toLocaleString()}/year. You will receive passive rent annually!`, "Property Leased! 🏢", "🏢");
+        render();
+        renderAssetDetailPage();
+      }, "Lease Property", "🏢", "Sign Lease");
+    }
+
+    function checkTenant(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || !asset.isRented) return;
+
+      asset.tenantSatisfaction = clamp((asset.tenantSatisfaction || 85) + 5, 0, 100);
+      char.happiness = clamp(char.happiness + 4, 0, 100);
+      recordAction(`🏢 Inspected ${asset.name}. Tenant ${asset.tenantName} is satisfied and keeping the home in good order.`);
+      showPopup(`You stopped by ${asset.name} to inspect the premises. ${asset.tenantName} is very happy with the property! (Tenant Satisfaction: ${asset.tenantSatisfaction}%)`, "Tenant Inspection", "🏢");
+      render();
+      renderAssetDetailPage();
+    }
+
+    function raisePropertyRent(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || !asset.isRented) return;
+
+      const oldRent = asset.rentalIncome || 10000;
+      const newRent = Math.round(oldRent * 1.10);
+
+      showConfirm(`Raise rent by 10% from $${oldRent.toLocaleString()}/yr to $${newRent.toLocaleString()}/yr?`, () => {
+        const roll = Math.random();
+        if (roll < 0.85) {
+          asset.rentalIncome = newRent;
+          asset.tenantSatisfaction = clamp((asset.tenantSatisfaction || 85) - 10, 20, 100);
+          recordAction(`🏢 Raised rent on ${asset.name} to $${newRent.toLocaleString()}/year. ${asset.tenantName} accepted.`);
+          showPopup(`Success! ${asset.tenantName} accepted the rent increase to $${newRent.toLocaleString()}/year.`, "Rent Increased! 📈", "📈");
+        } else {
+          const tenant = asset.tenantName;
+          asset.isRented = false;
+          asset.tenantName = null;
+          asset.rentalIncome = 0;
+          recordAction(`🏢 ${tenant} refused the rent increase and vacated ${asset.name}. The property is now vacant.`);
+          showPopup(`${tenant} refused the rent increase and moved out! The property is now vacant.`, "Tenant Vacated 📦", "📦");
+        }
+        render();
+        renderAssetDetailPage();
+      }, "Increase Rent", "📈", "Raise Rent");
+    }
+
+    function evictTenant(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || !asset.isRented) return;
+
+      showConfirm(`Evict ${asset.tenantName} and terminate the lease on ${asset.name}?`, () => {
+        const tenant = asset.tenantName;
+        asset.isRented = false;
+        asset.tenantName = null;
+        asset.rentalIncome = 0;
+        recordAction(`🚪 Evicted ${tenant} from ${asset.name}.`);
+        showPopup(`You legally served eviction papers. ${tenant} has vacated the property. It is now ready for a new tenant.`, "Tenant Evicted", "🚪");
+        render();
+        renderAssetDetailPage();
+      }, "Evict Tenant", "🚪", "Evict Tenant");
+    }
+
+    function renovateProperty(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      const cond = asset.condition != null ? asset.condition : 100;
+      if (cond >= 100) {
+        showPopup("This property is already in immaculate 100% factory-fresh condition!", "Immaculate Condition", "✨");
+        return;
+      }
+
+      const currentVal = asset.currentPrice || asset.price || 50000;
+      const cost = Math.max(1500, Math.round(currentVal * 0.035));
+
+      if (char.money < cost) {
+        showPopup(`You need $${cost.toLocaleString()} to renovate ${asset.name}, but you only have $${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      showConfirm(`Renovate and remodel ${asset.name} for $${cost.toLocaleString()}?`, () => {
+        char.money -= cost;
+        asset.condition = 100;
+        const apprec = Math.round(currentVal * 0.14);
+        asset.currentPrice = currentVal + apprec;
+        char.happiness = clamp(char.happiness + 12, 0, 100);
+
+        recordAction(`🔨 Renovated ${asset.name} for $${cost.toLocaleString()}! Condition restored to 100% and market value increased to $${asset.currentPrice.toLocaleString()}!`);
+        showPopup(`🔨 Renovation complete! You remodeled the kitchen, hardwood floors, and bathrooms. Value increased by $${apprec.toLocaleString()} (+14%)!`, "Renovation Complete! ✨", "✨");
+        render();
+        renderAssetDetailPage();
+      }, "Renovate Property", "🔨", "Start Renovation");
+    }
+
+    // VEHICLE ACTIONS
+    function joyrideVehicle(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      asset.mileage = (asset.mileage || 0) + (60 + Math.floor(Math.random() * 80));
+      asset.condition = Math.max(10, (asset.condition != null ? asset.condition : 100) - 1);
+      char.happiness = clamp(char.happiness + 12, 0, 100);
+
+      const events = [
+        {
+          title: "Scenic Coastal Drive",
+          desc: "You rolled the windows down on the open coastal highway, breathing the fresh ocean air as the exhaust roared! (+15% Happiness)",
+          icon: "🌊"
+        },
+        {
+          title: "Speedway Sprint",
+          desc: "You opened up the throttle on a clear stretch of interstate! Pure adrenaline rushing through your veins! (+12% Happiness)",
+          icon: "🏎️"
+        },
+        {
+          title: "Enthusiast Thumbs Up",
+          desc: "At a red light, another car enthusiast rolled their window down to compliment your ride! (+10% Happiness)",
+          icon: "👍"
+        },
+        {
+          title: "Speed Radar Trap",
+          desc: "Caught by a speed camera doing 78 in a 60 MPH zone! You received a $150 municipal traffic citation.",
+          icon: "📸",
+          fine: 150
+        }
+      ];
+
+      const ev = events[Math.floor(Math.random() * events.length)];
+      if (ev.fine) {
+        char.money = Math.max(0, char.money - ev.fine);
+        recordAction(`🏎️ Took ${asset.name} for a joyride. Got a speeding ticket (-$${ev.fine}).`);
+      } else {
+        recordAction(`🏎️ Took ${asset.name} for a joyride. ${ev.title}!`);
+      }
+
+      showPopup(ev.desc, ev.title, ev.icon);
+      render();
+      renderAssetDetailPage();
+    }
+
+    function serviceVehicle(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      const cond = asset.condition != null ? asset.condition : 100;
+      if (cond >= 100) {
+        showPopup("Your vehicle is already in pristine 100% mechanical health!", "Pristine Condition", "🚗");
+        return;
+      }
+
+      const currentVal = asset.currentPrice || asset.price || 10000;
+      const cost = Math.max(250, Math.round(currentVal * 0.04));
+
+      if (char.money < cost) {
+        showPopup(`Mechanic service costs $${cost.toLocaleString()}, but you have $${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      showConfirm(`Take ${asset.name} to the service center for $${cost.toLocaleString()}?`, () => {
+        char.money -= cost;
+        asset.condition = 100;
+        char.happiness = clamp(char.happiness + 6, 0, 100);
+        recordAction(`🔧 Fully serviced ${asset.name} at the dealership for $${cost.toLocaleString()}. Condition restored to 100%.`);
+        showPopup(`🔧 Full tune-up completed! Synthetic oil change, new brake pads, and clean filters. Your ${asset.name} runs like new!`, "Service Complete 🔧", "🔧");
+        render();
+        renderAssetDetailPage();
+      }, "Service Vehicle", "🔧", "Pay Service");
+    }
+
+    function washVehicle(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      if (char.money < 45) {
+        showPopup("You need $45 for a professional wash & detail!", "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= 45;
+      char.happiness = clamp(char.happiness + 6, 0, 100);
+      recordAction(`✨ Cleaned and detailed ${asset.name} (-$45, +Happiness).`);
+      showPopup(`✨ Your ${asset.name} has been hand-washed and detailed with a mirror wax finish! Looking sharp!`, "Car Washed ✨", "✨");
+      render();
+      renderAssetDetailPage();
+    }
+
+    // INVESTMENT ACTIONS
+    function depositInvestment(assetId, amount) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      const amt = Math.min(amount, char.money);
+      if (amt <= 0) {
+        showPopup("You have no liquid cash available to invest!", "No Cash", "💸");
+        return;
+      }
+
+      char.money -= amt;
+      asset.price = (asset.price || 0) + amt;
+      asset.currentPrice = (asset.currentPrice || 0) + amt;
+      char.smarts = clamp(char.smarts + 1, 0, 100);
+
+      recordAction(`📈 Deposited $${amt.toLocaleString()} into ${asset.name}. Total valuation now $${asset.currentPrice.toLocaleString()}.`);
+      showPopup(`Successfully invested $${amt.toLocaleString()} into your ${asset.name} portfolio!`, "Capital Deposited 📈", "📈");
+      render();
+      renderAssetDetailPage();
+    }
+
+    function withdrawInvestment(assetId, pct) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      const currentVal = asset.currentPrice || asset.price || 0;
+      const withdrawAmt = Math.round(currentVal * pct);
+
+      showConfirm(`Withdraw $${withdrawAmt.toLocaleString()} (${Math.round(pct * 100)}%) from your ${asset.name} portfolio into liquid cash?`, () => {
+        char.money += withdrawAmt;
+
+        if (pct >= 0.99) {
+          // Liquidated entirely
+          const idx = char.assets.findIndex(a => a.id === assetId);
+          if (idx !== -1) char.assets.splice(idx, 1);
+          recordAction(`💰 Fully liquidated ${asset.name} for $${withdrawAmt.toLocaleString()} cash.`);
+          showPopup(`You liquidated your entire position in ${asset.name} and received $${withdrawAmt.toLocaleString()} into your bank balance.`, "Portfolio Liquidated 💰", "💰");
+          switchTab('pageAssets', 'tabBtnAssets');
+        } else {
+          asset.currentPrice = Math.max(0, currentVal - withdrawAmt);
+          asset.price = Math.max(0, (asset.price || currentVal) - withdrawAmt);
+          recordAction(`💰 Withdrew $${withdrawAmt.toLocaleString()} from ${asset.name}. Remaining valuation: $${asset.currentPrice.toLocaleString()}.`);
+          showPopup(`Withdrew $${withdrawAmt.toLocaleString()} from ${asset.name} into your cash balance.`, "Cash Withdrawn 💰", "💰");
+          renderAssetDetailPage();
         }
 
         render();
-      }, "Purchase Asset", icon, "Buy Now");
+      }, "Withdraw Capital", "🏧", "Confirm Withdrawal");
+    }
+
+    // LUXURY APPRAISAL ACTION
+    function appraiseLuxury(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      if (char.money < 150) {
+        showPopup("Appraisal fee is $150!", "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= 150;
+      const boost = Math.round((asset.currentPrice || asset.price) * 0.05);
+      asset.currentPrice = (asset.currentPrice || asset.price) + boost;
+      char.looks = clamp(char.looks + 1, 0, 100);
+
+      recordAction(`💎 Appraised ${asset.name}. Certificate issued (+5% market value: $${asset.currentPrice.toLocaleString()}).`);
+      showPopup(`💎 Certified appraiser examined your ${asset.name}. Verified museum-quality provenance! Value increased by $${boost.toLocaleString()}!`, "Appraisal Certified 💎", "💎");
+      render();
+      renderAssetDetailPage();
+    }
+
+    // LOAN REPAYMENT ACTION
+    function payOffLoan(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || !asset.loanBalance || asset.loanBalance <= 0) return;
+
+      const payoff = asset.loanBalance;
+      if (char.money < payoff) {
+        showPopup(`You need $${payoff.toLocaleString()} to pay off this loan balance, but you have $${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      showConfirm(`Pay off remaining loan balance of $${payoff.toLocaleString()} in full using cash?`, () => {
+        char.money -= payoff;
+        asset.loanBalance = 0;
+        asset.loanAnnualPayment = 0;
+        char.happiness = clamp(char.happiness + 15, 0, 100);
+
+        recordAction(`🎉 Paid off remaining $${payoff.toLocaleString()} loan on ${asset.name}! Owned 100% free and clear!`);
+        showPopup(`🎉 Congratulations! You have fully satisfied the loan on ${asset.name}! No more annual debt payments!`, "Loan Paid in Full! 🎉", "🎉");
+        render();
+        renderAssetDetailPage();
+      }, "Pay Off Debt", "💳", "Pay In Full");
+    }
+
+    // SELL ASSET MODAL & EXECUTION
+    function sellAssetModal(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset) return;
+
+      const currentVal = asset.currentPrice || asset.price || 0;
+      const loanBal = asset.loanBalance || 0;
+      const netCash = currentVal - loanBal;
+
+      if (netCash < 0 && char.money < Math.abs(netCash)) {
+        showPopup(`You are underwater on this loan by $${Math.abs(netCash).toLocaleString()}! You do not have enough cash to cover the deficit to sell.`, "Underwater Loan", "⚠️");
+        return;
+      }
+
+      const confirmMsg = loanBal > 0
+        ? `Sell ${asset.name} for $${currentVal.toLocaleString()}? $${loanBal.toLocaleString()} will pay off the loan balance, netting you $${netCash.toLocaleString()} in cash.`
+        : `Sell ${asset.name} on the open market for $${currentVal.toLocaleString()} cash?`;
+
+      showConfirm(confirmMsg, () => {
+        executeSellAsset(assetId);
+      }, `Sell ${asset.name}`, "💰", "Confirm Sale");
+    }
+
+    function executeSellAsset(assetId) {
+      if (!char.isAlive || !char.assets) return;
+      const idx = char.assets.findIndex(a => a.id === assetId);
+      if (idx === -1) return;
+
+      const asset = char.assets[idx];
+      const currentVal = asset.currentPrice || asset.price || 0;
+      const loanBal = asset.loanBalance || 0;
+      const netCash = currentVal - loanBal;
+
+      char.money += netCash;
+      char.assets.splice(idx, 1);
+
+      if (asset.type === 'property' && char.properties) {
+        const pIdx = char.properties.indexOf(asset.name);
+        if (pIdx !== -1) char.properties.splice(pIdx, 1);
+      }
+
+      recordAction(`💰 Sold ${asset.name} on the market for $${currentVal.toLocaleString()} (Net cash proceeds: $${netCash.toLocaleString()}).`);
+      showPopup(`You successfully sold ${asset.name}! Net proceeds of $${netCash.toLocaleString()} deposited into your cash balance.`, "Asset Sold 💰", "💰");
+
+      switchTab('pageAssets', 'tabBtnAssets');
+      render();
+    }
+
+    // LEGACY COMPATIBILITY BRIDGES
+    function buyAsset(type, name, price, icon) {
+      let catalogItem = null;
+      for (const cat in ASSET_CATALOG) {
+        const found = ASSET_CATALOG[cat].find(x => x.name.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(x.name.toLowerCase()));
+        if (found) { catalogItem = found; break; }
+      }
+      if (catalogItem) {
+        openBuyAssetModal(catalogItem.id);
+      } else {
+        openBuyAssetModal('prop_micro');
+      }
     }
 
     function buyProperty(name, price) {
@@ -3252,23 +4700,7 @@
     }
 
     function sellAsset(assetId) {
-      if (!char.isAlive || !char.assets) return;
-      const idx = char.assets.findIndex(a => a.id === assetId);
-      if (idx === -1) return;
-      const asset = char.assets[idx];
-      const resale = Math.round(asset.price * 0.90);
-
-      showConfirm(`Sell your ${asset.name} for $${resale.toLocaleString()} cash (90% market value)?`, () => {
-        char.money += resale;
-        char.assets.splice(idx, 1);
-        if (asset.type === 'property' && char.properties) {
-          const pIdx = char.properties.indexOf(asset.name);
-          if (pIdx !== -1) char.properties.splice(pIdx, 1);
-        }
-        recordAction(`💰 Sold ${asset.name} for $${resale.toLocaleString()} cash.`);
-        showPopup(`You sold your ${asset.name} and received $${resale.toLocaleString()} into your bank balance.`, "Asset Sold 💰", "💰");
-        render();
-      }, "Sell Asset", "💰", "Sell Asset");
+      sellAssetModal(assetId);
     }
 
     function doUniversity() {
