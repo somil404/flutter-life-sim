@@ -815,7 +815,9 @@
     // Register PWA Service Worker for mobile installation
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
+        navigator.serviceWorker.register('/flutter-life-sim/sw.js', { scope: '/flutter-life-sim/' })
+          .then((reg) => console.log('SW Registered', reg))
+          .catch((err) => console.error('SW Error', err));
       });
     }
   </script>
