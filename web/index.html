@@ -303,6 +303,33 @@
       background: #F1F5F9;
     }
 
+    .jobs-filter-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .jobs-filter-btn {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #475569;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .jobs-filter-btn.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      border-color: #2563EB;
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+    }
+
     .section-title {
       font-size: 12px;
       font-weight: 700;
@@ -958,6 +985,55 @@
 
         <div id="schoolContentContainer" style="display: flex; flex-direction: column; gap: 9px;">
           <!-- Dynamically populated based on stage & age -->
+        </div>
+      </div>
+
+      <!-- ================= PAGE: DEDICATED JOB MARKET ================= -->
+      <div class="tab-page" id="pageJobs">
+        <div class="page-top-bar">
+          <div class="page-top-title"><span>💼</span> Job Market & Careers</div>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-close-page" onclick="switchTab('pageSchool', 'tabBtnRole')">← Career</button>
+            <button class="btn-close-page" onclick="closeToFeed()">✕ Feed</button>
+          </div>
+        </div>
+
+        <!-- Current Employment Overview Card -->
+        <div class="school-overview-card" style="margin-bottom: 12px;">
+          <div class="school-overview-header">
+            <div class="school-overview-badge" id="jobStatusBadge">💼</div>
+            <div class="school-overview-info">
+              <div class="school-overview-name" id="jobStatusTitle">Full-Time: Unemployed</div>
+              <div class="school-overview-desc" id="jobStatusSub">Part-Time: None</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Segmented Tabs -->
+        <div class="jobs-filter-bar">
+          <button class="jobs-filter-btn active" id="filterBtnAll" onclick="setJobsFilter('all')">All Positions</button>
+          <button class="jobs-filter-btn" id="filterBtnFullTime" onclick="setJobsFilter('fulltime')">Full-Time (7)</button>
+          <button class="jobs-filter-btn" id="filterBtnPartTime" onclick="setJobsFilter('parttime')">Part-Time (6)</button>
+        </div>
+
+        <!-- Dynamic Jobs Listings -->
+        <div id="jobsListContainer" style="display: flex; flex-direction: column; gap: 9px;">
+          <!-- Dynamically populated by renderJobsPage() -->
+        </div>
+      </div>
+
+      <!-- ================= PAGE: DEDICATED CURRENT JOB DASHBOARD ================= -->
+      <div class="tab-page" id="pageMyJob">
+        <div class="page-top-bar">
+          <div class="page-top-title"><span id="myJobTopIcon">💼</span> <span id="myJobTopTitle">Career Dashboard</span></div>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-close-page" onclick="switchTab('pageSchool', 'tabBtnRole')">← Career</button>
+            <button class="btn-close-page" onclick="closeToFeed()">✕ Feed</button>
+          </div>
+        </div>
+
+        <div id="myJobContentContainer" style="display: flex; flex-direction: column; gap: 9px;">
+          <!-- Dynamically populated by renderMyJobPage() -->
         </div>
       </div>
 
@@ -1650,6 +1726,10 @@
 
       // Render Page 3: Assets & Net Worth
       renderAssetsPage();
+
+      // Render Dedicated Job Pages
+      renderJobsPage();
+      renderMyJobPage();
 
       // Render Page 4: Family Relationships
       renderRelationships();
@@ -2840,23 +2920,232 @@
     }
 
     function openPartTimeJobsModal() {
-      if (!char.isAlive) return;
-      let html = '<div class="modal-sublist">';
-      PART_TIME_JOBS.forEach(j => {
-        const isCurrent = char.partTimeJob && char.partTimeJob.title === j.title;
-        html += `
-          <div class="modal-subitem" onclick="applyPartTimeJob('${j.title}', ${j.pay}, ${j.minAge}, ${j.reqSmarts}, '${j.icon}')">
-            <span class="modal-subitem-icon">${j.icon}</span>
-            <div class="modal-subitem-info">
-              <div class="modal-subitem-title">${j.title} ($${j.pay.toLocaleString()}/yr)</div>
-              <div class="modal-subitem-sub">Age ${j.minAge}+ • Smarts ≥ ${j.reqSmarts}% • ${j.desc}</div>
+      openJobsPage('parttime');
+    }
+
+    // DEDICATED JOB MARKET & CURRENT JOB PAGE SYSTEM
+    let currentJobsFilter = 'all';
+
+    function setJobsFilter(filter) {
+      currentJobsFilter = filter;
+      const btnAll = document.getElementById('filterBtnAll');
+      const btnFT = document.getElementById('filterBtnFullTime');
+      const btnPT = document.getElementById('filterBtnPartTime');
+      if (btnAll) btnAll.classList.toggle('active', filter === 'all');
+      if (btnFT) btnFT.classList.toggle('active', filter === 'fulltime');
+      if (btnPT) btnPT.classList.toggle('active', filter === 'parttime');
+      renderJobsPage();
+    }
+
+    function openJobsPage(filter = 'all') {
+      currentJobsFilter = filter;
+      const btnAll = document.getElementById('filterBtnAll');
+      const btnFT = document.getElementById('filterBtnFullTime');
+      const btnPT = document.getElementById('filterBtnPartTime');
+      if (btnAll) btnAll.classList.toggle('active', filter === 'all');
+      if (btnFT) btnFT.classList.toggle('active', filter === 'fulltime');
+      if (btnPT) btnPT.classList.toggle('active', filter === 'parttime');
+      renderJobsPage();
+      switchTab('pageJobs', 'tabBtnRole');
+    }
+
+    function openMyJobPage() {
+      renderMyJobPage();
+      switchTab('pageMyJob', 'tabBtnRole');
+    }
+
+    function renderJobsPage() {
+      const container = document.getElementById('jobsListContainer');
+      if (!container) return;
+
+      const statusBadge = document.getElementById('jobStatusBadge');
+      const statusTitle = document.getElementById('jobStatusTitle');
+      const statusSub = document.getElementById('jobStatusSub');
+      if (statusBadge) statusBadge.innerText = char.salary > 0 ? (char.occIcon || '💼') : '🛋️';
+      if (statusTitle) {
+        statusTitle.innerText = char.salary > 0 
+          ? `Full-Time: ${char.occupation} ($${char.salary.toLocaleString()}/yr)`
+          : 'Full-Time: Currently Unemployed';
+      }
+      if (statusSub) {
+        statusSub.innerText = char.partTimeJob
+          ? `Side Gig: ${char.partTimeJob.icon} ${char.partTimeJob.title} ($${char.partTimeJob.pay.toLocaleString()}/yr)`
+          : 'Side Gig: None (Tap below to apply)';
+      }
+
+      let html = '';
+
+      if (currentJobsFilter === 'all' || currentJobsFilter === 'fulltime') {
+        html += `<div class="section-title"><span>💼</span> Full-Time Career Positions</div>`;
+
+        const fullTimeList = [
+          { title: 'Fast Food Worker', pay: 18000, reqEdu: 0, reqSmarts: 10, icon: '🍔', desc: 'No education required • Entry level' },
+          { title: 'Retail Sales Associate', pay: 28000, reqEdu: 1, reqSmarts: 20, icon: '🛍️', desc: 'Requires HS Diploma or GED • Smarts ≥ 20%' },
+          { title: 'Graphic Designer', pay: 42000, reqEdu: 1, reqSmarts: 30, icon: '🎨', desc: 'Requires HS Diploma or GED • Smarts ≥ 30%' },
+          { title: 'Software Engineer', pay: 98000, reqEdu: 2, reqSmarts: 60, icon: '💻', desc: "Requires Bachelor's Degree • Smarts ≥ 60%" },
+          { title: 'Corporate Lawyer', pay: 165000, reqEdu: 3, reqSmarts: 70, icon: '⚖️', desc: 'Requires Law Degree (J.D.) • Smarts ≥ 70%' },
+          { title: 'Medical Surgeon', pay: 185000, reqEdu: 3, reqSmarts: 80, icon: '🩺', desc: 'Requires Medical Degree (M.D.) • Smarts ≥ 80%' },
+          { title: 'Corporate CEO', pay: 420000, reqEdu: 3, reqSmarts: 90, icon: '👑', desc: 'Requires MBA or Degree + Smarts ≥ 90%' }
+        ];
+
+        fullTimeList.forEach(j => {
+          const isCurrent = char.occupation === j.title && char.salary > 0;
+          html += `
+            <div class="interactive-card" onclick="applyJob('${j.title}', ${j.pay}, ${j.reqEdu}, ${j.reqSmarts}, '${j.icon}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">${j.icon}</div>
+                <div class="card-texts">
+                  <h4>${j.title} ($${j.pay.toLocaleString()}/yr)</h4>
+                  <p>${j.desc}</p>
+                </div>
+              </div>
+              <button class="btn-card-action ${isCurrent ? 'secondary' : ''}">${isCurrent ? 'Current' : 'Apply'}</button>
             </div>
-            <button class="modal-subitem-action">${isCurrent ? 'Current' : 'Apply'}</button>
+          `;
+        });
+      }
+
+      if (currentJobsFilter === 'all' || currentJobsFilter === 'parttime') {
+        html += `<div class="section-title"><span>🕒</span> Part-Time Jobs & Side Gigs</div>`;
+
+        PART_TIME_JOBS.forEach(j => {
+          const isCurrent = char.partTimeJob && char.partTimeJob.title === j.title;
+          html += `
+            <div class="interactive-card" onclick="applyPartTimeJob('${j.title}', ${j.pay}, ${j.minAge}, ${j.reqSmarts}, '${j.icon}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">${j.icon}</div>
+                <div class="card-texts">
+                  <h4>${j.title} ($${j.pay.toLocaleString()}/yr)</h4>
+                  <p>Min Age ${j.minAge}+ • Smarts ≥ ${j.reqSmarts}% • ${j.desc}</p>
+                </div>
+              </div>
+              <button class="btn-card-action ${isCurrent ? 'secondary' : 'success'}">${isCurrent ? 'Current' : 'Apply'}</button>
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderMyJobPage() {
+      const container = document.getElementById('myJobContentContainer');
+      if (!container) return;
+
+      if (char.salary <= 0) {
+        container.innerHTML = `
+          <div class="school-overview-card">
+            <div class="school-overview-header">
+              <div class="school-overview-badge">🛋️</div>
+              <div class="school-overview-info">
+                <div class="school-overview-name">Currently Unemployed</div>
+                <div class="school-overview-desc">You do not currently hold a full-time position.</div>
+              </div>
+            </div>
+          </div>
+          <div class="interactive-card" onclick="openJobsPage()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💼</div>
+              <div class="card-texts">
+                <h4>Browse Job Market</h4>
+                <p>Apply for entry-level, tech, medical, legal, or corporate careers</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Browse Jobs</button>
           </div>
         `;
-      });
-      html += '</div>';
-      showCustomModal("Part-Time Jobs & Side Gigs", "🕒", html, `<button class="modal-btn" onclick="closeModal()">Close</button>`);
+        return;
+      }
+
+      const perf = char.school ? (char.school.jobPerformance || 65) : 65;
+      const perfFill = perf >= 80 ? 'fill-green' : perf >= 60 ? 'fill-blue' : 'fill-yellow';
+      const perfStanding = perf >= 85 ? 'Outstanding (Promotion Ready)' : perf >= 70 ? 'Good Standing (Raise Ready)' : 'Needs Improvement';
+
+      const iconEl = document.getElementById('myJobTopIcon');
+      const titleEl = document.getElementById('myJobTopTitle');
+      if (iconEl) iconEl.innerText = char.occIcon || '💼';
+      if (titleEl) titleEl.innerText = char.occupation;
+
+      container.innerHTML = `
+        <div class="school-overview-card">
+          <div class="school-overview-header">
+            <div class="school-overview-badge">${char.occIcon || '💼'}</div>
+            <div class="school-overview-info">
+              <div class="school-overview-name">${char.occupation}</div>
+              <div class="school-overview-desc">Salary: $${char.salary.toLocaleString()}/yr • Full-Time Position</div>
+            </div>
+          </div>
+          <div class="school-metrics-grid">
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Job Performance</span> <span>${perf}%</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill ${perfFill}" style="width: ${perf}%;"></div></div>
+            </div>
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Standing</span> <span style="font-size:10px;">${perfStanding}</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-blue" style="width: 100%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title"><span>⚡</span> Workplace Actions</div>
+
+        <div class="interactive-card" onclick="doWorkOvertime()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">💼</div>
+            <div class="card-texts">
+              <h4>Work Overtime & Upskill</h4>
+              <p>Put in extra hours on company projects (+Job Performance)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Overtime</button>
+        </div>
+
+        <div class="interactive-card" onclick="doAskRaise()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">💰</div>
+            <div class="card-texts">
+              <h4>Ask for a Salary Raise</h4>
+              <p>Request +15% salary increase (Requires Performance ≥ 70%)</p>
+            </div>
+          </div>
+          <button class="btn-card-action success">Ask Raise</button>
+        </div>
+
+        <div class="interactive-card" onclick="doAskPromotion()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">📈</div>
+            <div class="card-texts">
+              <h4>Ask for Promotion</h4>
+              <p>Advance to senior job tier (Requires Performance ≥ 85%)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Promotion</button>
+        </div>
+
+        <div class="interactive-card" onclick="doCoworkerChat()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">☕</div>
+            <div class="card-texts">
+              <h4>Chat with Coworkers</h4>
+              <p>Bond with colleagues in the breakroom (+Happiness)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Socialize</button>
+        </div>
+
+        <div class="section-title"><span>🚪</span> Resignation</div>
+
+        <div class="interactive-card" onclick="doQuitJob()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🚪</div>
+            <div class="card-texts">
+              <h4>Resign from Job</h4>
+              <p>Hand in two weeks notice and leave this career</p>
+            </div>
+          </div>
+          <button class="btn-card-action secondary">Resign</button>
+        </div>
+      `;
     }
 
     // ASSETS & NET WORTH SYSTEM
@@ -3896,7 +4185,7 @@
               <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
             </div>
           ` : `
-            <div class="interactive-card" onclick="openPartTimeJobsModal()">
+            <div class="interactive-card" onclick="openJobsPage('parttime')">
               <div class="card-left-group">
                 <div class="card-emoji-box">🕒</div>
                 <div class="card-texts">
@@ -3959,28 +4248,17 @@
               </div>
               <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
             </div>
-          ` : `
-            <div class="interactive-card" onclick="openPartTimeJobsModal()">
-              <div class="card-left-group">
-                <div class="card-emoji-box">🕒</div>
-                <div class="card-texts">
-                  <h4>Part-Time Jobs & Side Gigs</h4>
-                  <p>Flexible work available without diploma</p>
-                </div>
-              </div>
-              <button class="btn-card-action">Browse Gigs</button>
-            </div>
-          `}
+          ` : ''}
 
-          <div class="interactive-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
+          <div class="interactive-card" onclick="openJobsPage('all')">
             <div class="card-left-group">
-              <div class="card-emoji-box">🍔</div>
+              <div class="card-emoji-box">💼</div>
               <div class="card-texts">
-                <h4>Fast Food Worker ($18,000/yr)</h4>
-                <p>Entry-level job with no diploma required</p>
+                <h4>Browse Job Market</h4>
+                <p>Explore entry-level careers and flexible side gigs</p>
               </div>
             </div>
-            <button class="btn-card-action">Apply</button>
+            <button class="btn-card-action">Browse Jobs</button>
           </div>
         `;
       } else if (char.school && char.school.stage === "University") {
@@ -4048,7 +4326,7 @@
               <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
             </div>
           ` : `
-            <div class="interactive-card" onclick="openPartTimeJobsModal()">
+            <div class="interactive-card" onclick="openJobsPage('all')">
               <div class="card-left-group">
                 <div class="card-emoji-box">🕒</div>
                 <div class="card-texts">
@@ -4164,7 +4442,7 @@
                 <div class="school-overview-badge">${char.occIcon || '💼'}</div>
                 <div class="school-overview-info">
                   <div class="school-overview-name">${char.occupation}</div>
-                  <div class="school-overview-desc">Salary: $${char.salary.toLocaleString()}/yr • Full-Time Career</div>
+                  <div class="school-overview-desc">Salary: $${char.salary.toLocaleString()}/yr • Full-Time Position</div>
                 </div>
               </div>
               <div class="school-metrics-grid">
@@ -4179,59 +4457,17 @@
               </div>
             </div>
 
-            <div class="interactive-card" onclick="doWorkOvertime()">
-              <div class="card-left-group">
-                <div class="card-emoji-box">💼</div>
-                <div class="card-texts">
-                  <h4>Work Overtime & Upskill</h4>
-                  <p>Put in extra hours on company projects (+Job Performance)</p>
-                </div>
-              </div>
-              <button class="btn-card-action">Overtime</button>
-            </div>
+            <div class="section-title"><span>🏢</span> My Active Career</div>
 
-            <div class="interactive-card" onclick="doAskRaise()">
+            <div class="interactive-card" onclick="openMyJobPage()">
               <div class="card-left-group">
-                <div class="card-emoji-box">💰</div>
+                <div class="card-emoji-box">${char.occIcon || '💼'}</div>
                 <div class="card-texts">
-                  <h4>Ask for a Salary Raise</h4>
-                  <p>Request +15% salary increase (Requires Performance ≥ 70%)</p>
+                  <h4>${char.occupation}</h4>
+                  <p>Work overtime, ask for raise, seek promotion & coworkers</p>
                 </div>
               </div>
-              <button class="btn-card-action success">Ask Raise</button>
-            </div>
-
-            <div class="interactive-card" onclick="doAskPromotion()">
-              <div class="card-left-group">
-                <div class="card-emoji-box">📈</div>
-                <div class="card-texts">
-                  <h4>Ask for Promotion</h4>
-                  <p>Advance to senior job tier (Requires Performance ≥ 85%)</p>
-                </div>
-              </div>
-              <button class="btn-card-action">Promotion</button>
-            </div>
-
-            <div class="interactive-card" onclick="doCoworkerChat()">
-              <div class="card-left-group">
-                <div class="card-emoji-box">☕</div>
-                <div class="card-texts">
-                  <h4>Chat with Coworkers</h4>
-                  <p>Bond with colleagues in the breakroom (+Happiness)</p>
-                </div>
-              </div>
-              <button class="btn-card-action">Socialize</button>
-            </div>
-
-            <div class="interactive-card" onclick="doQuitJob()">
-              <div class="card-left-group">
-                <div class="card-emoji-box">🚪</div>
-                <div class="card-texts">
-                  <h4>Resign from Job</h4>
-                  <p>Hand in two weeks notice and leave this career</p>
-                </div>
-              </div>
-              <button class="btn-card-action secondary">Resign</button>
+              <button class="btn-card-action">Manage</button>
             </div>
           `;
         } else {
@@ -4240,8 +4476,8 @@
               <div class="school-overview-header">
                 <div class="school-overview-badge">🛋️</div>
                 <div class="school-overview-info">
-                  <div class="school-overview-name">Currently Unemployed (Full-Time)</div>
-                  <div class="school-overview-desc">Browse full-time career positions or side gigs below</div>
+                  <div class="school-overview-name">Currently Unemployed</div>
+                  <div class="school-overview-desc">Browse open positions in the Job Market or pursue education</div>
                 </div>
               </div>
             </div>
@@ -4251,7 +4487,7 @@
         // Active Part-Time Gig Status
         if (char.partTimeJob) {
           html += `
-            <div class="section-title"><span>🕒</span> Active Part-Time Gig</div>
+            <div class="section-title"><span>🕒</span> Active Side Gig</div>
             <div class="interactive-card">
               <div class="card-left-group">
                 <div class="card-emoji-box">${char.partTimeJob.icon}</div>
@@ -4265,153 +4501,19 @@
           `;
         }
 
-        // Full-Time Career Market (Careers ONLY)
+        // Dedicated Job Market Tab / Card in Careers!
         html += `
-          <div class="section-title"><span>💼</span> Full-Time Career Market</div>
+          <div class="section-title"><span>💼</span> Job Center</div>
 
-          <div class="interactive-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
+          <div class="interactive-card" onclick="openJobsPage()">
             <div class="card-left-group">
-              <div class="card-emoji-box">🍔</div>
+              <div class="card-emoji-box">💼</div>
               <div class="card-texts">
-                <h4>Fast Food Worker ($18,000/yr)</h4>
-                <p>No education requirements. Entry level.</p>
+                <h4>Job Market & Openings</h4>
+                <p>Browse full-time careers & part-time side gigs</p>
               </div>
             </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyJob('Retail Sales Associate', 28000, 1, 20, '🛍️')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🛍️</div>
-              <div class="card-texts">
-                <h4>Retail Sales Associate ($28,000/yr)</h4>
-                <p>Requires HS Diploma or GED & Smarts ≥ 20.</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyJob('Graphic Designer', 42000, 1, 30, '🎨')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🎨</div>
-              <div class="card-texts">
-                <h4>Graphic Designer ($42,000/yr)</h4>
-                <p>Requires High School diploma or GED & Smarts ≥ 30.</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyJob('Software Engineer', 98000, 2, 60, '💻')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">💻</div>
-              <div class="card-texts">
-                <h4>Software Engineer ($98,000/yr)</h4>
-                <p>Requires University degree (Bachelor's) & Smarts ≥ 60.</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyJob('Corporate Lawyer', 165000, 3, 70, '⚖️')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">⚖️</div>
-              <div class="card-texts">
-                <h4>Corporate Lawyer ($165,000/yr)</h4>
-                <p>Requires Law School degree (J.D.) & Smarts ≥ 70.</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyJob('Medical Surgeon', 185000, 3, 80, '🩺')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🩺</div>
-              <div class="card-texts">
-                <h4>Medical Surgeon ($185,000/yr)</h4>
-                <p>Requires Medical School degree (M.D.) & Smarts ≥ 80.</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyJob('Corporate CEO', 420000, 3, 90, '👑')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">👑</div>
-              <div class="card-texts">
-                <h4>Corporate CEO ($420,000/yr)</h4>
-                <p>Requires Business School (MBA) or Degree & Smarts ≥ 90.</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="section-title"><span>🕒</span> Part-Time Jobs & Side Gigs</div>
-
-          <div class="interactive-card" onclick="applyPartTimeJob('Dog Walker', 3600, 14, 0, '🐶')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🐶</div>
-              <div class="card-texts">
-                <h4>Dog Walker ($3,600/yr)</h4>
-                <p>Walk local neighborhood pets. (Age 14+)</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyPartTimeJob('Babysitter', 4800, 14, 10, '👶')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">👶</div>
-              <div class="card-texts">
-                <h4>Babysitter ($4,800/yr)</h4>
-                <p>Watch neighborhood children in the evenings. (Age 14+)</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyPartTimeJob('Grocery Cashier', 6200, 15, 15, '🛒')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🛒</div>
-              <div class="card-texts">
-                <h4>Grocery Cashier ($6,200/yr)</h4>
-                <p>Operate supermarket register and bag goods. (Age 15+)</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyPartTimeJob('Cafe Barista', 7400, 16, 25, '☕')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">☕</div>
-              <div class="card-texts">
-                <h4>Cafe Barista ($7,400/yr)</h4>
-                <p>Craft espresso drinks and serve morning rush. (Age 16+)</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyPartTimeJob('Warehouse Stocker', 9200, 18, 20, '📦')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">📦</div>
-              <div class="card-texts">
-                <h4>Warehouse Stocker ($9,200/yr)</h4>
-                <p>Night-shift inventory sorting and boxes. (Age 18+)</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
-          </div>
-
-          <div class="interactive-card" onclick="applyPartTimeJob('Freelance Tech Support', 12000, 18, 50, '💻')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">💻</div>
-              <div class="card-texts">
-                <h4>Freelance Tech Support ($12,000/yr)</h4>
-                <p>Troubleshoot PCs, routers & setups. (Age 18+, Smarts ≥ 50)</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Apply</button>
+            <button class="btn-card-action success">Browse Jobs</button>
           </div>
         `;
 
