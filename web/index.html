@@ -686,7 +686,14 @@
     <!-- 3. MULTI-PAGE TAB VIEWPORT -->
     <main class="tab-viewport">
 
-      <!-- ================= PAGE 1: SCHOOL & OCCUPATION ================= -->
+      <!-- ================= PAGE 1: STORY / LIFE FEED ================= -->
+      <div class="tab-page active" id="pageFeed">
+        <div id="lifeFeedContainer" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Pure Life Story & Year Cards only -->
+        </div>
+      </div>
+
+      <!-- ================= PAGE 2: SCHOOL & EDUCATION ================= -->
       <div class="tab-page" id="pageSchool">
         <div class="section-title"><span id="schoolStageEmoji">🎒</span> <span id="schoolStageTitle">Primary School</span></div>
 
@@ -723,27 +730,22 @@
           <button class="btn-card-action success">Socialize</button>
         </div>
 
-        <div class="section-title"><span>📜</span> Year Journal & Life Events</div>
-        <div id="schoolEventsFeed" style="display: flex; flex-direction: column; gap: 10px;">
-          <!-- Year cards rendered here -->
-        </div>
-      </div>
+        <div class="section-title"><span>🎓</span> Higher Education</div>
 
-      <!-- ================= PAGE 2: ASSETS & CAREERS ================= -->
-      <div class="tab-page" id="pageAssets">
-        <div class="section-title"><span>🎓</span> Education</div>
-        
         <div class="interactive-card" onclick="doUniversity()">
           <div class="card-left-group">
             <div class="card-emoji-box">🎓</div>
             <div class="card-texts">
               <h4>University Degree ($12,000)</h4>
-              <p>Requires Smarts ≥ 50. Unlocks high-income career tiers.</p>
+              <p>Requires Smarts ≥ 50. Unlocks executive positions.</p>
             </div>
           </div>
           <button class="btn-card-action">Enroll</button>
         </div>
+      </div>
 
+      <!-- ================= PAGE 3: ASSETS & CAREERS ================= -->
+      <div class="tab-page" id="pageAssets">
         <div class="section-title"><span>💼</span> Jobs & Careers</div>
 
         <div class="interactive-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
@@ -980,16 +982,16 @@
       </div>
     </section>
 
-    <!-- 5. 5-TAB BOTTOM NAVIGATION DOCK (School/Career, Assets, Age, Activities, Tasks) -->
+    <!-- 5. 5-TAB BOTTOM NAVIGATION DOCK (Feed, School, Age, Assets, Activities) -->
     <footer class="bottom-dock">
-      <button class="tab-nav-btn active" id="tabBtnSchool" onclick="switchTab('pageSchool', 'tabBtnSchool')">
-        <span class="nav-icon" id="bottomNavRoleIcon">🎒</span>
-        <span id="bottomNavRoleText">School</span>
+      <button class="tab-nav-btn active" id="tabBtnFeed" onclick="switchTab('pageFeed', 'tabBtnFeed')">
+        <span class="nav-icon">📖</span>
+        <span>Life</span>
       </button>
 
-      <button class="tab-nav-btn" id="tabBtnAssets" onclick="switchTab('pageAssets', 'tabBtnAssets')">
-        <span class="nav-icon">💼</span>
-        <span>Assets</span>
+      <button class="tab-nav-btn" id="tabBtnSchool" onclick="switchTab('pageSchool', 'tabBtnSchool')">
+        <span class="nav-icon" id="bottomNavRoleIcon">🎒</span>
+        <span id="bottomNavRoleText">School</span>
       </button>
 
       <!-- Center Big Hero Age Button -->
@@ -998,14 +1000,14 @@
         <span class="hero-age-text">Age</span>
       </button>
 
+      <button class="tab-nav-btn" id="tabBtnAssets" onclick="switchTab('pageAssets', 'tabBtnAssets')">
+        <span class="nav-icon">💼</span>
+        <span>Assets</span>
+      </button>
+
       <button class="tab-nav-btn" id="tabBtnActivities" onclick="switchTab('pageActivities', 'tabBtnActivities')">
         <span class="nav-icon">🎡</span>
         <span>Activities</span>
-      </button>
-
-      <button class="tab-nav-btn" id="tabBtnTasks" onclick="switchTab('pageTasks', 'tabBtnTasks')">
-        <span class="nav-icon">🎯</span>
-        <span>Tasks</span>
       </button>
     </footer>
 
@@ -1107,7 +1109,7 @@
         }
       ];
 
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1185,10 +1187,8 @@
       updateStatBar('fillSmarts', 'valSmarts', char.smarts);
       updateStatBar('fillLooks', 'valLooks', char.looks);
 
-      // Render Page 1: School & Career Dashboard
-      updateSchoolDashboard();
-
-      const feed = document.getElementById('schoolEventsFeed');
+      // Render Page 1: Life Story Feed (Clean, pure chronological story only)
+      const feed = document.getElementById('lifeFeedContainer');
       feed.innerHTML = '';
       for (let i = char.events.length - 1; i >= 0; i--) {
         const item = char.events[i];
@@ -1209,6 +1209,9 @@
 
         feed.appendChild(card);
       }
+
+      // Render Page 2: Dedicated School Page Dashboard
+      updateSchoolDashboard();
 
       // Render Page 4: Family Relationships
       renderRelationships();
@@ -1462,7 +1465,7 @@
       char.smarts += 5 + Math.floor(Math.random() * 5);
       char.happiness -= 2;
       recordAction("📚 I spent hours studying diligently in the library. (+Smarts)");
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1473,7 +1476,7 @@
       char.happiness += 4;
       char.money -= 30;
       recordAction("🏋️ Completed an intense workout session at the gym. (+Health, +Looks)");
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1486,7 +1489,7 @@
       if (char.age >= 18) char.money -= 250;
       char.health += 25 + Math.floor(Math.random() * 15);
       recordAction("🩺 The doctor treated my ailments thoroughly. (+Health)");
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1500,7 +1503,7 @@
       char.happiness += 35;
       char.health += 5;
       recordAction("🏖️ Flew first-class on vacation to Hawaii. (+Happiness)");
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1525,7 +1528,7 @@
       } else {
         recordAction("The lottery ticket was not a winner.");
       }
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1543,7 +1546,7 @@
       char.happiness += 20;
       char.looks += 3;
       recordAction("🪩 Partied all night at an upscale nightclub with friends! (+Happiness, +Looks)");
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1568,7 +1571,7 @@
       char.occupation = "College Graduate";
       char.occIcon = "🎓";
       recordAction("🎓 Graduated with honors from University! Executive careers unlocked.");
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1592,7 +1595,7 @@
       char.salary = pay;
       char.happiness += 12;
       recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1610,7 +1613,7 @@
       char.properties.push(propertyName);
       char.happiness += 25;
       recordAction(`🏡 Successfully purchased a ${propertyName} for $${price.toLocaleString()}!`);
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1618,7 +1621,7 @@
     function spendFamily(who) {
       char.happiness += 12;
       recordAction(`I spent quality time chatting and bonding with my ${who}. (+Happiness)`);
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
@@ -1640,7 +1643,7 @@
         char.happiness += 25;
         recordAction(`💘 I started dating ${char.partner.name}, a wonderful ${char.partner.job}!`);
       }
-      switchTab('pageSchool', 'tabBtnSchool');
+      switchTab('pageFeed', 'tabBtnFeed');
       render();
     }
 
