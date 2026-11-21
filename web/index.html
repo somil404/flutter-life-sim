@@ -1122,9 +1122,9 @@
         <!-- Net Worth & Wealth Overview Card -->
         <div class="school-overview-card" style="margin-bottom: 12px;">
           <div class="school-overview-header">
-            <div class="school-overview-badge">🏛️</div>
+            <div class="school-overview-badge" id="assetWealthBadge">🏛️</div>
             <div class="school-overview-info">
-              <div class="school-overview-name">Net Worth & Wealth</div>
+              <div class="school-overview-name" id="assetWealthTierTitle">Working Class</div>
               <div class="school-overview-desc" id="assetNetWorthDesc">Total Net Worth: $0</div>
             </div>
           </div>
@@ -1142,18 +1142,23 @@
               <div class="school-progress-bar"><div class="school-progress-fill fill-yellow" id="assetDebtProgress" style="width: 0%;"></div></div>
             </div>
             <div class="school-metric-box">
-              <div class="school-metric-label"><span>Passive Income</span> <span id="assetPassiveIncome">$0/yr</span></div>
+              <div class="school-metric-label"><span>Annual Cashflow</span> <span id="assetPassiveIncome">$0/yr</span></div>
               <div class="school-progress-bar"><div class="school-progress-fill fill-green" id="assetPassiveProgress" style="width: 0%;"></div></div>
             </div>
+          </div>
+          <div id="assetCashflowBreakdown" style="font-size: 11px; color: #64748B; margin-top: 8px; border-top: 1px dashed #E2E8F0; padding-top: 6px; display: flex; justify-content: space-between;">
+            <span>💰 Annual Cashflow:</span>
+            <span id="assetCashflowDetails">$0/yr</span>
           </div>
         </div>
 
         <!-- Asset Categories Filter Bar -->
         <div class="asset-filter-bar">
           <button class="asset-filter-btn active" id="assetFilterAll" onclick="setAssetFilter('all')">All Assets</button>
-          <button class="asset-filter-btn" id="assetFilterProps" onclick="setAssetFilter('property')">Properties (7)</button>
+          <button class="asset-filter-btn" id="assetFilterStocks" onclick="setAssetFilter('stock')">Stocks & Crypto (9)</button>
+          <button class="asset-filter-btn" id="assetFilterBusiness" onclick="setAssetFilter('business')">Businesses (6)</button>
+          <button class="asset-filter-btn" id="assetFilterProps" onclick="setAssetFilter('property')">Real Estate (7)</button>
           <button class="asset-filter-btn" id="assetFilterVehicles" onclick="setAssetFilter('vehicle')">Vehicles (6)</button>
-          <button class="asset-filter-btn" id="assetFilterInvestments" onclick="setAssetFilter('investment')">Investments (4)</button>
           <button class="asset-filter-btn" id="assetFilterLuxury" onclick="setAssetFilter('luxury')">Luxury (4)</button>
         </div>
 
@@ -1524,7 +1529,9 @@
       { id: "college", title: "Higher Education", desc: "Graduate from University with a bachelor's degree.", done: false, reward: 2000 },
       { id: "job50k", title: "Career Climber", desc: "Land any career earning over $50,000/yr.", done: false, reward: 1500 },
       { id: "house", title: "Homeowner", desc: "Purchase your first property.", done: false, reward: 5000 },
-      { id: "wealth100k", title: "Six-Figure Wealth", desc: "Accumulate $100,000 in your bank balance.", done: false, reward: 10000 },
+      { id: "wealth100k", title: "Six-Figure Wealth", desc: "Accumulate $100,000 in your bank balance or net worth.", done: false, reward: 10000 },
+      { id: "millionaire", title: "Self-Made Millionaire", desc: "Reach a Total Net Worth of $1,000,000.", done: false, reward: 50000 },
+      { id: "tycoon", title: "Business Tycoon", desc: "Acquire a commercial franchise business or surpass $10,000,000 Net Worth.", done: false, reward: 100000 },
       { id: "age70", title: "Golden Years", desc: "Live a long healthy life and reach age 70.", done: false, reward: 8000 }
     ];
 
@@ -1640,13 +1647,16 @@
     }
 
     function checkMilestones() {
+      const netWorth = typeof getNetWorth === 'function' ? getNetWorth() : char.money;
       tasks.forEach(t => {
         if (!t.done) {
           if (t.id === "reach18" && char.age >= 18) completeTask(t);
           if (t.id === "college" && char.educationLevel >= 2) completeTask(t);
           if (t.id === "job50k" && char.salary >= 50000) completeTask(t);
-          if (t.id === "house" && char.properties.length > 0) completeTask(t);
-          if (t.id === "wealth100k" && char.money >= 100000) completeTask(t);
+          if (t.id === "house" && char.properties && char.properties.length > 0) completeTask(t);
+          if (t.id === "wealth100k" && (char.money >= 100000 || netWorth >= 100000)) completeTask(t);
+          if (t.id === "millionaire" && netWorth >= 1000000) completeTask(t);
+          if (t.id === "tycoon" && (netWorth >= 10000000 || (char.assets && char.assets.some(a => a.type === 'business')))) completeTask(t);
           if (t.id === "age70" && char.age >= 70) completeTask(t);
         }
       });
@@ -1867,29 +1877,39 @@
         }
       }
 
-      // Annual Asset Economics (Appreciation, Depreciation, Rental Income, Mortgages, Auto Loans, Investments)
+      // Annual Asset Economics (Appreciation, Depreciation, Rental Income, Mortgages, Auto Loans, Business Profits, Dividends, Investments)
       if (char.assets && char.assets.length > 0) {
         let annualRentalIncome = 0;
+        let annualBusinessProfit = 0;
+        let annualDividends = 0;
         let totalMortgagePaid = 0;
         let totalAutoLoanPaid = 0;
+        let totalBusinessLoanPaid = 0;
         let totalVehicleUpkeep = 0;
         let investmentGains = 0;
 
+        // Macro Market Climate for the year
+        const marketRoll = Math.random();
+        const isBullRun = marketRoll > 0.85; // 15% super bull run
+        const isCorrection = marketRoll < 0.20; // 20% correction/dip
+        // 65% normal healthy growth
+
         char.assets.forEach(asset => {
           if (asset.type === 'property') {
-            // 1. Natural Market Appreciation (normal cycle: +2% to +6%)
-            const appRate = (0.02 + Math.random() * 0.04) * ((asset.condition || 100) >= 80 ? 1.1 : (asset.condition || 100) < 40 ? 0.6 : 1.0);
+            // 1. Natural Market Appreciation (normal cycle: +2% to +6%, bonus if high condition)
+            const appRate = (0.02 + Math.random() * 0.04) * ((asset.condition || 100) >= 80 ? 1.15 : (asset.condition || 100) < 40 ? 0.6 : 1.0);
             const appAmount = Math.round(asset.currentPrice * appRate);
             asset.currentPrice += appAmount;
 
-            // 2. Condition Wear (1-3% per year)
-            asset.condition = Math.max(15, (asset.condition || 100) - (1 + Math.floor(Math.random() * 3)));
+            // 2. Condition Wear (Airbnb has slightly more foot traffic)
+            const wear = asset.isAirbnb ? (2 + Math.floor(Math.random() * 3)) : (1 + Math.floor(Math.random() * 3));
+            asset.condition = Math.max(15, (asset.condition || 100) - wear);
 
-            // 3. Rental Income (if leased)
+            // 3. Rental / Airbnb Income
             if (asset.isRented) {
-              const rent = asset.rentalIncome || Math.round(asset.currentPrice * 0.07);
-              char.money += rent;
-              annualRentalIncome += rent;
+              const baseRent = asset.rentalIncome || Math.round(asset.currentPrice * (asset.isAirbnb ? 0.115 : 0.075));
+              char.money += baseRent;
+              annualRentalIncome += baseRent;
             }
 
             // 4. Mortgage Payment (if active)
@@ -1902,6 +1922,34 @@
                 asset.loanBalance = 0;
                 asset.loanAnnualPayment = 0;
                 yearNotes.push(`🎉 MORTGAGE PAID OFF! You now own ${asset.name} 100% free and clear!`);
+              }
+            }
+          } else if (asset.type === 'business') {
+            // 1. Business Operating Profit
+            const profit = asset.annualProfit || Math.round((asset.currentPrice || asset.price) * 0.25);
+            char.money += profit;
+            annualBusinessProfit += profit;
+
+            // 2. Business Health & General Manager
+            if (asset.hasGeneralManager) {
+              asset.condition = 100; // GM keeps business in 100% order
+              // Small GM salary deducted
+              const gmFee = Math.round(profit * 0.10);
+              char.money = Math.max(0, char.money - gmFee);
+            } else {
+              asset.condition = Math.max(20, (asset.condition || 100) - (2 + Math.floor(Math.random() * 4)));
+            }
+
+            // 3. Commercial Loan Payment (if active)
+            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
+              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
+              char.money -= pmt;
+              asset.loanBalance -= pmt;
+              totalBusinessLoanPaid += pmt;
+              if (asset.loanBalance <= 0) {
+                asset.loanBalance = 0;
+                asset.loanAnnualPayment = 0;
+                yearNotes.push(`🎉 COMMERCIAL LOAN PAID OFF! You fully own ${asset.name} with zero debt!`);
               }
             }
           } else if (asset.type === 'vehicle') {
@@ -1930,17 +1978,30 @@
                 yearNotes.push(`🎉 AUTO LOAN PAID OFF! You fully own your ${asset.name}!`);
               }
             }
-          } else if (asset.type === 'investment') {
-            // Investment Yields
+          } else if (asset.type === 'stock' || asset.type === 'crypto' || asset.type === 'investment') {
+            // 1. Cash Dividend Distributions
+            if (asset.dividendYield && asset.dividendYield > 0) {
+              const div = Math.round((asset.currentPrice || asset.price) * asset.dividendYield);
+              if (div > 0) {
+                char.money += div;
+                annualDividends += div;
+              }
+            }
+
+            // 2. Market Fluctuations
             let returnRate = 0;
             if (asset.assetClass === 'bond') {
               returnRate = 0.042; // Guaranteed 4.2%
+            } else if (asset.assetClass === 'gold') {
+              returnRate = isCorrection ? 0.08 : (0.03 + Math.random() * 0.05); // Gold shines during corrections
             } else if (asset.assetClass === 'index') {
-              returnRate = -0.05 + Math.random() * 0.17; // -5% to +12%
-            } else if (asset.assetClass === 'growth') {
-              returnRate = -0.15 + Math.random() * 0.35; // -15% to +20%
-            } else if (asset.assetClass === 'crypto') {
-              returnRate = -0.35 + Math.random() * 0.75; // -35% to +40%
+              returnRate = isBullRun ? (0.16 + Math.random() * 0.14) : isCorrection ? (-0.08 + Math.random() * 0.05) : (0.05 + Math.random() * 0.09);
+            } else if (asset.assetClass === 'growth' || asset.type === 'stock') {
+              returnRate = isBullRun ? (0.24 + Math.random() * 0.20) : isCorrection ? (-0.14 + Math.random() * 0.08) : (0.08 + Math.random() * 0.12);
+            } else if (asset.assetClass === 'crypto' || asset.type === 'crypto') {
+              returnRate = isBullRun ? (0.75 + Math.random() * 0.90) : isCorrection ? (-0.35 + Math.random() * 0.15) : (0.15 + Math.random() * 0.45);
+            } else if (asset.assetClass === 'venture') {
+              returnRate = Math.random() > 0.4 ? (0.30 + Math.random() * 0.80) : (-0.20);
             }
             const gain = Math.round(asset.currentPrice * returnRate);
             asset.currentPrice = Math.max(50, asset.currentPrice + gain);
@@ -1954,10 +2015,19 @@
         });
 
         if (annualRentalIncome > 0) {
-          yearNotes.push(`🏢 Collected $${annualRentalIncome.toLocaleString()} in passive rental income from your leased properties.`);
+          yearNotes.push(`🏢 Real Estate: Collected $${annualRentalIncome.toLocaleString()} in passive rental & Airbnb cashflow.`);
+        }
+        if (annualBusinessProfit > 0) {
+          yearNotes.push(`🏪 Business Franchises: Earned $${annualBusinessProfit.toLocaleString()} in net owner operating profits.`);
+        }
+        if (annualDividends > 0) {
+          yearNotes.push(`💵 Cash Dividends: Received $${annualDividends.toLocaleString()} in stock & ETF dividend payouts.`);
         }
         if (totalMortgagePaid > 0) {
           yearNotes.push(`🏠 Paid $${totalMortgagePaid.toLocaleString()} toward active property mortgages.`);
+        }
+        if (totalBusinessLoanPaid > 0) {
+          yearNotes.push(`🏦 Paid $${totalBusinessLoanPaid.toLocaleString()} toward commercial business loans.`);
         }
         if (totalAutoLoanPaid > 0) {
           yearNotes.push(`🚗 Paid $${totalAutoLoanPaid.toLocaleString()} toward active auto loans.`);
@@ -1967,8 +2037,8 @@
         }
         if (investmentGains !== 0) {
           const sign = investmentGains > 0 ? '+' : '-';
-          const verb = investmentGains > 0 ? 'grew' : 'declined';
-          yearNotes.push(`📈 Investment Portfolio ${verb} by ${sign}$${Math.abs(investmentGains).toLocaleString()} this year.`);
+          const verb = investmentGains > 0 ? 'surged' : 'contracted';
+          yearNotes.push(`📈 Financial Portfolios: Holdings ${verb} by ${sign}$${Math.abs(investmentGains).toLocaleString()} this year.`);
         }
       }
 
@@ -3258,10 +3328,190 @@
     }
 
     // =========================================================================
-    // ENHANCED ASSETS, REAL ESTATE, VEHICLES, INVESTMENTS & NET WORTH SYSTEM
+    // ENHANCED ASSETS, WEALTH TIERS, STOCKS, BUSINESSES & EMPIRE SYSTEM
     // =========================================================================
 
     const ASSET_CATALOG = {
+      stocks: [
+        {
+          id: "stock_sp500",
+          name: "S&P 500 Market Index (VOO)",
+          type: "stock",
+          assetClass: "index",
+          price: 500,
+          minAmount: 500,
+          dividendYield: 0.018,
+          icon: "📊",
+          desc: "Broad equity market basket of America's 500 largest corporations. Long-term compounding (~8.5% avg) + 1.8% annual cash dividend.",
+          risk: "Moderate Growth (1.8% Div)"
+        },
+        {
+          id: "stock_schd",
+          name: "Dividend Aristocrats ETF (SCHD)",
+          type: "stock",
+          assetClass: "growth",
+          price: 500,
+          minAmount: 500,
+          dividendYield: 0.045,
+          icon: "💵",
+          desc: "High-yield portfolio of rock-solid dividend payers. Provides 4.5% annual cash distributions paid straight to your bank account.",
+          risk: "High Cashflow (4.5% Div)"
+        },
+        {
+          id: "stock_msft",
+          name: "MacroSoft Corporation (MSFT)",
+          type: "stock",
+          assetClass: "growth",
+          price: 1000,
+          minAmount: 1000,
+          dividendYield: 0.012,
+          icon: "💻",
+          desc: "Global software, cloud computing and AI conglomerate. High growth titan (~14% avg) + 1.2% dividend.",
+          risk: "Blue Chip Tech"
+        },
+        {
+          id: "stock_aapl",
+          name: "Fruit Global Technologies (AAPL)",
+          type: "stock",
+          assetClass: "growth",
+          price: 1000,
+          minAmount: 1000,
+          dividendYield: 0.010,
+          icon: "📱",
+          desc: "Dominant consumer hardware and digital services ecosystem with exceptional cash reserves. (~12.5% avg growth).",
+          risk: "Consumer Tech Titan"
+        },
+        {
+          id: "stock_gold",
+          name: "Physical Gold Bullion Vault (GLD)",
+          type: "stock",
+          assetClass: "gold",
+          price: 2600,
+          minAmount: 2600,
+          dividendYield: 0,
+          icon: "🥇",
+          desc: "Physical allocated 1-oz 99.99% pure gold bullion stored in secure vaults. Safe haven inflation defense.",
+          risk: "Safe Haven (Inflation Hedge)"
+        },
+        {
+          id: "stock_silver",
+          name: "Physical Silver Vault Bars (SLV)",
+          type: "stock",
+          assetClass: "gold",
+          price: 500,
+          minAmount: 500,
+          dividendYield: 0,
+          icon: "🥈",
+          desc: "Physical 100-oz fine silver bullion bars. High industrial demand commodity metal.",
+          risk: "Commodity Metal"
+        }
+      ],
+      crypto: [
+        {
+          id: "crypto_btc",
+          name: "Bitcoin Digital Reserve (BTC)",
+          type: "crypto",
+          assetClass: "crypto",
+          price: 500,
+          minAmount: 500,
+          dividendYield: 0,
+          icon: "₿",
+          desc: "Scarcity-based decentralized digital monetary network. High-volatility cyclical asset (-25% to +65% swings).",
+          risk: "Digital Gold"
+        },
+        {
+          id: "crypto_eth",
+          name: "Ethereum Smart Contracts (ETH)",
+          type: "crypto",
+          assetClass: "crypto",
+          price: 250,
+          minAmount: 250,
+          dividendYield: 0.038,
+          icon: "⟠",
+          desc: "Decentralized computation and smart contracts engine. Generates 3.8% annual proof-of-stake cashflow yield.",
+          risk: "Layer-1 + 3.8% Staking"
+        },
+        {
+          id: "crypto_meme",
+          name: "Doge Shiba Meme Coin (MEME)",
+          type: "crypto",
+          assetClass: "crypto",
+          price: 100,
+          minAmount: 100,
+          dividendYield: 0,
+          icon: "🐕",
+          desc: "Viral internet culture speculative meme token. Wild mania swings (-70% to +250% moonshots!).",
+          risk: "Extreme Degenerate Speculation"
+        }
+      ],
+      businesses: [
+        {
+          id: "biz_coffee",
+          name: "Corner Artisan Coffee Kiosk",
+          type: "business",
+          price: 45000,
+          downPct: 0.20,
+          loanTermYrs: 10,
+          annualProfit: 14000,
+          icon: "☕",
+          desc: "High-traffic pedestrian espresso kiosk. Serves morning commuters with a 31% annual cash-on-cash return."
+        },
+        {
+          id: "biz_laundry",
+          name: "Self-Serve Laundromat",
+          type: "business",
+          price: 95000,
+          downPct: 0.20,
+          loanTermYrs: 10,
+          annualProfit: 24000,
+          icon: "🧺",
+          desc: "Turnkey commercial coin & digital card washers. Recession-proof passive local cashflow."
+        },
+        {
+          id: "biz_fastfood",
+          name: "Fast-Food Burger Franchise",
+          type: "business",
+          price: 260000,
+          downPct: 0.20,
+          loanTermYrs: 10,
+          annualProfit: 68000,
+          icon: "🍔",
+          desc: "High-volume drive-thru fast-casual franchise location with established national branding."
+        },
+        {
+          id: "biz_gym",
+          name: "24/7 Fitness Club & Gym",
+          type: "business",
+          price: 580000,
+          downPct: 0.20,
+          loanTermYrs: 10,
+          annualProfit: 135000,
+          icon: "🏋️",
+          desc: "12,000 sq ft modern strength and cardio facility with 1,800 recurring monthly dues-paying members."
+        },
+        {
+          id: "biz_dealership",
+          name: "Luxury European Auto Dealership",
+          type: "business",
+          price: 1950000,
+          downPct: 0.20,
+          loanTermYrs: 10,
+          annualProfit: 420000,
+          icon: "🏎️",
+          desc: "Authorized luxury vehicle sales showroom and certified repair garage with high ticket margins."
+        },
+        {
+          id: "biz_saas",
+          name: "Enterprise Cloud SaaS Software",
+          type: "business",
+          price: 4900000,
+          downPct: 0.20,
+          loanTermYrs: 10,
+          annualProfit: 1250000,
+          icon: "☁️",
+          desc: "B2B enterprise automation software with 85% gross margins and recurring global enterprise contracts."
+        }
+      ],
       properties: [
         {
           id: "prop_micro",
@@ -3271,6 +3521,7 @@
           icon: "🏢",
           desc: "Compact 380 sq ft studio downtown. Ideal starter real estate investment.",
           rentEst: 3600,
+          airbnbEst: 5400,
           downPct: 0.20,
           loanTermYrs: 30
         },
@@ -3282,6 +3533,7 @@
           icon: "🏢",
           desc: "Modern open-concept condo with balcony in the vibrant city center.",
           rentEst: 7500,
+          airbnbEst: 11500,
           downPct: 0.20,
           loanTermYrs: 30
         },
@@ -3293,6 +3545,7 @@
           icon: "🏡",
           desc: "Cozy family home with a 2-car garage and a spacious green backyard.",
           rentEst: 19500,
+          airbnbEst: 29000,
           downPct: 0.20,
           loanTermYrs: 30
         },
@@ -3304,6 +3557,7 @@
           icon: "🏘️",
           desc: "Dual residential units engineered for maximum passive rental cashflow.",
           rentEst: 36000,
+          airbnbEst: 54000,
           downPct: 0.20,
           loanTermYrs: 30
         },
@@ -3315,6 +3569,7 @@
           icon: "🏙️",
           desc: "Panoramic 360° skyline vistas, private elevator and rooftop terrace.",
           rentEst: 70000,
+          airbnbEst: 105000,
           downPct: 0.20,
           loanTermYrs: 30
         },
@@ -3326,6 +3581,7 @@
           icon: "🏖️",
           desc: "Private beachfront estate with an infinity pool and private yacht dock.",
           rentEst: 175000,
+          airbnbEst: 260000,
           downPct: 0.20,
           loanTermYrs: 30
         },
@@ -3337,6 +3593,7 @@
           icon: "🏰",
           desc: "Sprawling 18th-century stone manor with 50-acre manicured equestrian grounds.",
           rentEst: 380000,
+          airbnbEst: 550000,
           downPct: 0.20,
           loanTermYrs: 30
         }
@@ -3409,52 +3666,6 @@
           loanTermYrs: 5
         }
       ],
-      investments: [
-        {
-          id: "inv_bond",
-          name: "US Treasury Yield Bonds",
-          type: "investment",
-          assetClass: "bond",
-          price: 1000,
-          minAmount: 1000,
-          icon: "📜",
-          desc: "Government-backed guaranteed 4.2% APY annual yield. Zero risk capital preservation.",
-          risk: "Guaranteed (4.2% APY)"
-        },
-        {
-          id: "inv_index",
-          name: "S&P 500 Market Index Fund",
-          type: "investment",
-          assetClass: "index",
-          price: 500,
-          minAmount: 500,
-          icon: "📊",
-          desc: "Broad equity market basket. Compounding wealth with historical ~8% avg annual growth.",
-          risk: "Moderate (~8% avg)"
-        },
-        {
-          id: "inv_growth",
-          name: "Tech Growth Equities Basket",
-          type: "investment",
-          assetClass: "growth",
-          price: 500,
-          minAmount: 500,
-          icon: "💻",
-          desc: "High-flying AI, chipmakers, and software titans. Volatile (-15% to +25% swings).",
-          risk: "High Volatility"
-        },
-        {
-          id: "inv_crypto",
-          name: "Decentralized Crypto Token Fund",
-          type: "investment",
-          assetClass: "crypto",
-          price: 250,
-          minAmount: 250,
-          icon: "🪙",
-          desc: "Speculative digital assets & DeFi tokens. Wild swings (-35% to +55%). High upside or crash.",
-          risk: "Extreme Speculation"
-        }
-      ],
       luxury: [
         {
           id: "lux_watch",
@@ -3498,18 +3709,40 @@
     let currentAssetFilter = 'all';
     let selectedAssetId = null;
 
+    function getNetWorth() {
+      const assets = char.assets || [];
+      const totalAssetValue = assets.reduce((sum, a) => sum + (a.currentPrice || a.price || 0), 0);
+      const totalLoans = assets.reduce((sum, a) => sum + (a.loanBalance || 0), 0);
+      const studentDebt = (char.school && char.school.studentDebt) ? char.school.studentDebt : 0;
+      return char.money + totalAssetValue - totalLoans - studentDebt;
+    }
+
+    function getWealthTier(netWorth) {
+      if (netWorth >= 1000000000) return { title: "Billionaire Oligarch 🪐", badge: "🪐" };
+      if (netWorth >= 100000000) return { title: "Centimillionaire Titan 🚀", badge: "🚀" };
+      if (netWorth >= 10000000) return { title: "Multi-Millionaire Tycoon 👑", badge: "👑" };
+      if (netWorth >= 1000000) return { title: "Self-Made Millionaire 💎", badge: "💎" };
+      if (netWorth >= 500000) return { title: "High Net Worth Tycoon 🏛️", badge: "🏛️" };
+      if (netWorth >= 100000) return { title: "Affluent Investor 💰", badge: "💰" };
+      if (netWorth >= 25000) return { title: "Comfortable Starter 💼", badge: "💼" };
+      if (netWorth >= 0) return { title: "Working Class 🪙", badge: "🪙" };
+      return { title: "In Debt & Deficit ⚠️", badge: "⚠️" };
+    }
+
     function setAssetFilter(filter) {
       currentAssetFilter = filter;
       const btnAll = document.getElementById('assetFilterAll');
+      const btnStocks = document.getElementById('assetFilterStocks');
+      const btnBiz = document.getElementById('assetFilterBusiness');
       const btnProps = document.getElementById('assetFilterProps');
       const btnVehicles = document.getElementById('assetFilterVehicles');
-      const btnInv = document.getElementById('assetFilterInvestments');
       const btnLux = document.getElementById('assetFilterLuxury');
 
       if (btnAll) btnAll.classList.toggle('active', filter === 'all');
+      if (btnStocks) btnStocks.classList.toggle('active', filter === 'stock');
+      if (btnBiz) btnBiz.classList.toggle('active', filter === 'business');
       if (btnProps) btnProps.classList.toggle('active', filter === 'property');
       if (btnVehicles) btnVehicles.classList.toggle('active', filter === 'vehicle');
-      if (btnInv) btnInv.classList.toggle('active', filter === 'investment');
       if (btnLux) btnLux.classList.toggle('active', filter === 'luxury');
 
       renderAssetsPage();
@@ -3523,13 +3756,19 @@
       const totalDebt = totalLoans + studentDebt;
       const netWorth = char.money + totalAssetValue - totalDebt;
 
-      const passiveIncome = assets.reduce((sum, a) => {
-        if (a.type === 'property' && a.isRented) return sum + (a.rentalIncome || 0);
-        if (a.type === 'investment' && a.assetClass === 'bond') return sum + Math.round((a.currentPrice || a.price) * 0.042);
-        return sum;
-      }, 0);
+      const rentalCashflow = assets.reduce((sum, a) => a.type === 'property' && a.isRented ? sum + (a.rentalIncome || 0) : sum, 0);
+      const businessCashflow = assets.reduce((sum, a) => a.type === 'business' ? sum + (a.annualProfit || 0) : sum, 0);
+      const dividendCashflow = assets.reduce((sum, a) => (a.type === 'stock' || a.type === 'crypto' || a.type === 'investment') && a.dividendYield ? sum + Math.round((a.currentPrice || a.price) * a.dividendYield) : sum, 0);
+      const totalCashflow = rentalCashflow + businessCashflow + dividendCashflow;
+
+      const tier = getWealthTier(netWorth);
 
       // Top Wealth Card Metrics
+      const wealthBadge = document.getElementById('assetWealthBadge');
+      if (wealthBadge) wealthBadge.innerText = tier.badge;
+      const wealthTitle = document.getElementById('assetWealthTierTitle');
+      if (wealthTitle) wealthTitle.innerText = tier.title;
+
       const netWorthDesc = document.getElementById('assetNetWorthDesc');
       if (netWorthDesc) {
         netWorthDesc.innerText = `Total Net Worth: ${(netWorth >= 0 ? '$' : '-$') + Math.abs(netWorth).toLocaleString()}`;
@@ -3548,7 +3787,12 @@
       }
       const passiveValEl = document.getElementById('assetPassiveIncome');
       if (passiveValEl) {
-        passiveValEl.innerText = `$${passiveIncome.toLocaleString()}/yr`;
+        passiveValEl.innerText = `$${totalCashflow.toLocaleString()}/yr`;
+      }
+
+      const cashflowDetails = document.getElementById('assetCashflowDetails');
+      if (cashflowDetails) {
+        cashflowDetails.innerText = `$${rentalCashflow.toLocaleString()} Rent • $${businessCashflow.toLocaleString()} Business • $${dividendCashflow.toLocaleString()} Divs`;
       }
 
       // Progress bars
@@ -3565,12 +3809,14 @@
       if (listEl) {
         const filteredOwned = currentAssetFilter === 'all' 
           ? assets 
+          : currentAssetFilter === 'stock'
+          ? assets.filter(a => a.type === 'stock' || a.type === 'crypto' || a.type === 'investment')
           : assets.filter(a => a.type === currentAssetFilter);
 
         if (filteredOwned.length === 0) {
           listEl.innerHTML = `
             <div style="text-align:center; padding:16px 12px; font-size:12px; color:#64748B; background:#F8FAFC; border:1px dashed #CBD5E1; border-radius:10px;">
-              ${assets.length === 0 ? 'You do not own any properties, vehicles, or investments yet.' : `No owned assets in the "${currentAssetFilter}" category.`}
+              ${assets.length === 0 ? 'You do not own any stocks, businesses, properties, or vehicles yet.' : `No owned assets in this category.`}
             </div>
           `;
         } else {
@@ -3581,29 +3827,42 @@
 
             let badgesHtml = '';
             if (a.type === 'property') {
-              badgesHtml += `<span class="asset-badge ${cond >= 75 ? 'success' : cond >= 45 ? 'warning' : 'danger'}">Condition: ${cond}%</span> `;
+              badgesHtml += `<span class="asset-badge ${cond >= 75 ? 'success' : cond >= 45 ? 'warning' : 'danger'}">Cond: ${cond}%</span> `;
               if (a.isRented) {
-                badgesHtml += `<span class="asset-badge success">🏢 Rented: $${(a.rentalIncome || 0).toLocaleString()}/yr</span> `;
+                badgesHtml += `<span class="asset-badge success">${a.isAirbnb ? '🏖️ Airbnb' : '🏢 Leased'}: $${(a.rentalIncome || 0).toLocaleString()}/yr</span> `;
               } else {
                 badgesHtml += `<span class="asset-badge warning">Vacant</span> `;
               }
               if (a.loanBalance > 0) {
                 badgesHtml += `<span class="asset-badge info">Mortgage: $${a.loanBalance.toLocaleString()}</span> `;
               }
-            } else if (a.type === 'vehicle') {
-              badgesHtml += `<span class="asset-badge ${cond >= 75 ? 'success' : cond >= 45 ? 'warning' : 'danger'}">Condition: ${cond}%</span> `;
-              if (a.mileage != null) {
-                badgesHtml += `<span class="asset-badge">${a.mileage.toLocaleString()} mi</span> `;
+            } else if (a.type === 'business') {
+              badgesHtml += `<span class="asset-badge success">Profit: $${(a.annualProfit || 0).toLocaleString()}/yr</span> `;
+              if (a.hasGeneralManager) {
+                badgesHtml += `<span class="asset-badge info">GM Managed</span> `;
+              } else {
+                badgesHtml += `<span class="asset-badge">Owner-Operated</span> `;
               }
               if (a.loanBalance > 0) {
-                badgesHtml += `<span class="asset-badge info">Auto Loan: $${a.loanBalance.toLocaleString()}</span> `;
+                badgesHtml += `<span class="asset-badge warning">Loan: $${a.loanBalance.toLocaleString()}</span> `;
               }
-            } else if (a.type === 'investment') {
+            } else if (a.type === 'stock' || a.type === 'crypto' || a.type === 'investment') {
               const orig = a.price || 1;
               const diff = currentVal - orig;
               const pct = Math.round((diff / orig) * 100);
               const sign = diff >= 0 ? '+' : '';
               badgesHtml += `<span class="asset-badge ${diff >= 0 ? 'success' : 'danger'}">${sign}${pct}% (${sign}$${diff.toLocaleString()})</span> `;
+              if (a.dividendYield && a.dividendYield > 0) {
+                badgesHtml += `<span class="asset-badge success">Div: ${Math.round(a.dividendYield * 100 * 10) / 10}%</span> `;
+              }
+            } else if (a.type === 'vehicle') {
+              badgesHtml += `<span class="asset-badge ${cond >= 75 ? 'success' : cond >= 45 ? 'warning' : 'danger'}">Cond: ${cond}%</span> `;
+              if (a.mileage != null) {
+                badgesHtml += `<span class="asset-badge">${a.mileage.toLocaleString()} mi</span> `;
+              }
+              if (a.loanBalance > 0) {
+                badgesHtml += `<span class="asset-badge info">Loan: $${a.loanBalance.toLocaleString()}</span> `;
+              }
             } else if (a.type === 'luxury') {
               badgesHtml += `<span class="asset-badge success">Mint Condition</span> `;
             }
@@ -3631,10 +3890,76 @@
       if (marketEl) {
         let marketHtml = '';
 
+        // Stocks & Crypto Section
+        if (currentAssetFilter === 'all' || currentAssetFilter === 'stock') {
+          marketHtml += `<div class="section-title"><span>📊</span> Wall Street Equities & Precious Metals (6)</div>`;
+          ASSET_CATALOG.stocks.forEach(item => {
+            marketHtml += `
+              <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${item.icon}</div>
+                  <div class="card-texts">
+                    <h4>${item.name}</h4>
+                    <p>${item.desc}</p>
+                    <div style="margin-top: 3px;">
+                      <span class="asset-badge info">Min: $${item.minAmount.toLocaleString()}</span>
+                      <span class="asset-badge success">${item.risk}</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Trade</button>
+              </div>
+            `;
+          });
+
+          marketHtml += `<div class="section-title"><span>🪙</span> Cryptocurrency & Digital Assets (3)</div>`;
+          ASSET_CATALOG.crypto.forEach(item => {
+            marketHtml += `
+              <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${item.icon}</div>
+                  <div class="card-texts">
+                    <h4>${item.name}</h4>
+                    <p>${item.desc}</p>
+                    <div style="margin-top: 3px;">
+                      <span class="asset-badge info">Min: $${item.minAmount.toLocaleString()}</span>
+                      <span class="asset-badge ${item.risk.includes('Degenerate') ? 'danger' : 'warning'}">${item.risk}</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Buy Coin</button>
+              </div>
+            `;
+          });
+        }
+
+        // Franchises & Businesses Section
+        if (currentAssetFilter === 'all' || currentAssetFilter === 'business') {
+          marketHtml += `<div class="section-title"><span>🏪</span> Commercial Franchises & Businesses (6)</div>`;
+          ASSET_CATALOG.businesses.forEach(item => {
+            const down = Math.round(item.price * item.downPct);
+            marketHtml += `
+              <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${item.icon}</div>
+                  <div class="card-texts">
+                    <h4>${item.name} ($${item.price.toLocaleString()})</h4>
+                    <p>${item.desc}</p>
+                    <div style="margin-top: 3px;">
+                      <span class="asset-badge info">20% Down: $${down.toLocaleString()}</span>
+                      <span class="asset-badge success">Net Profit: ~$${item.annualProfit.toLocaleString()}/yr</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-card-action">Acquire</button>
+              </div>
+            `;
+          });
+        }
+
+        // Real Estate Section
         if (currentAssetFilter === 'all' || currentAssetFilter === 'property') {
-          if (currentAssetFilter === 'all') {
-            marketHtml += `<div class="section-title"><span>🏠</span> Real Estate & Properties (7)</div>`;
-          }
+          marketHtml += `<div class="section-title"><span>🏠</span> Real Estate & Properties (7)</div>`;
           ASSET_CATALOG.properties.forEach(item => {
             const down = Math.round(item.price * item.downPct);
             marketHtml += `
@@ -3647,6 +3972,7 @@
                     <div style="margin-top: 3px;">
                       <span class="asset-badge info">20% Down: $${down.toLocaleString()}</span>
                       <span class="asset-badge success">Est. Rent: ~$${item.rentEst.toLocaleString()}/yr</span>
+                      <span class="asset-badge">Airbnb: ~$${item.airbnbEst.toLocaleString()}/yr</span>
                     </div>
                   </div>
                 </div>
@@ -3656,10 +3982,9 @@
           });
         }
 
+        // Vehicles Section
         if (currentAssetFilter === 'all' || currentAssetFilter === 'vehicle') {
-          if (currentAssetFilter === 'all') {
-            marketHtml += `<div class="section-title"><span>🚗</span> Automobile & Yacht Dealership (6)</div>`;
-          }
+          marketHtml += `<div class="section-title"><span>🚗</span> Automobile & Yacht Dealership (6)</div>`;
           ASSET_CATALOG.vehicles.forEach(item => {
             const down = Math.round(item.price * item.downPct);
             marketHtml += `
@@ -3681,34 +4006,9 @@
           });
         }
 
-        if (currentAssetFilter === 'all' || currentAssetFilter === 'investment') {
-          if (currentAssetFilter === 'all') {
-            marketHtml += `<div class="section-title"><span>📊</span> Financial Portfolios & Crypto (4)</div>`;
-          }
-          ASSET_CATALOG.investments.forEach(item => {
-            marketHtml += `
-              <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
-                <div class="card-left-group">
-                  <div class="card-emoji-box">${item.icon}</div>
-                  <div class="card-texts">
-                    <h4>${item.name}</h4>
-                    <p>${item.desc}</p>
-                    <div style="margin-top: 3px;">
-                      <span class="asset-badge info">Min: $${item.minAmount.toLocaleString()}</span>
-                      <span class="asset-badge ${item.risk.includes('Guaranteed') ? 'success' : item.risk.includes('Extreme') ? 'danger' : 'warning'}">${item.risk}</span>
-                    </div>
-                  </div>
-                </div>
-                <button class="btn-card-action success">Invest</button>
-              </div>
-            `;
-          });
-        }
-
+        // Luxury Goods Section
         if (currentAssetFilter === 'all' || currentAssetFilter === 'luxury') {
-          if (currentAssetFilter === 'all') {
-            marketHtml += `<div class="section-title"><span>💎</span> Luxury Goods & Fine Collectibles (4)</div>`;
-          }
+          marketHtml += `<div class="section-title"><span>💎</span> Luxury Goods & Fine Collectibles (4)</div>`;
           ASSET_CATALOG.luxury.forEach(item => {
             marketHtml += `
               <div class="interactive-card" onclick="openBuyAssetModal('${item.id}')">
@@ -3732,7 +4032,7 @@
       }
     }
 
-    // PURCHASE MODAL WITH FINANCING & CASH FLOW OPTIONS
+    // PURCHASE MODAL WITH FINANCING & CAPITAL ALLOCATION
     function openBuyAssetModal(itemId) {
       if (!char.isAlive) return;
 
@@ -3744,39 +4044,40 @@
       if (!item) return;
 
       // Age validations
-      if (item.type === 'property' && char.age < 18) {
-        showPopup("You must be at least 18 years old to purchase real estate or execute a mortgage contract!", "Age Restricted", "🏠");
+      if ((item.type === 'property' || item.type === 'business') && char.age < 18) {
+        showPopup("You must be at least 18 years old to execute commercial contracts, real estate deeds, or business loans!", "Age Restricted", "🏠");
+        return;
+      }
+      if ((item.type === 'stock' || item.type === 'crypto' || item.type === 'investment') && char.age < 18) {
+        showPopup("You must be at least 18 years old to open a brokerage account or trade digital assets!", "Age Restricted", "📊");
         return;
       }
       if (item.type === 'vehicle' && char.age < 16) {
         showPopup("You must be at least 16 years old to purchase or finance a motor vehicle!", "Age Restricted", "🚗");
         return;
       }
-      if (item.type === 'investment' && char.age < 18) {
-        showPopup("You must be at least 18 years old to open an investment portfolio or trade securities!", "Age Restricted", "📊");
-        return;
-      }
 
-      // INVESTMENTS PURCHASE FLOW
-      if (item.type === 'investment') {
+      // STOCKS & CRYPTO CAPITAL ALLOCATION
+      if (item.type === 'stock' || item.type === 'crypto' || item.type === 'investment') {
         const minAmt = item.minAmount;
         if (char.money < minAmt) {
-          showPopup(`You need at least $${minAmt.toLocaleString()} in liquid cash to invest in ${item.name}! You currently have $${char.money.toLocaleString()}.`, "Insufficient Funds", "💸");
+          showPopup(`You need at least $${minAmt.toLocaleString()} in cash to invest in ${item.name}! You currently have $${char.money.toLocaleString()}.`, "Insufficient Funds", "💸");
           return;
         }
 
         const bodyHtml = `
           <div style="text-align:center; margin-bottom:12px;">
-            <div style="font-size:32px;">${item.icon}</div>
+            <div style="font-size:34px;">${item.icon}</div>
             <div style="font-size:15px; font-weight:700; color:#0F172A; margin-top:4px;">${item.name}</div>
             <div style="font-size:12px; color:#64748B; margin-top:2px;">${item.desc}</div>
-            <div style="font-size:13px; font-weight:600; color:#2563EB; margin-top:6px;">Risk Level: ${item.risk}</div>
-            <div style="font-size:12.5px; color:#334155; margin-top:4px;">Available Cash: <strong>$${char.money.toLocaleString()}</strong></div>
+            <div style="font-size:13px; font-weight:600; color:#2563EB; margin-top:6px;">Rating: ${item.risk}</div>
+            ${item.dividendYield ? `<div style="font-size:12px; font-weight:600; color:#16A34A; margin-top:2px;">Annual Cash Dividend: ${Math.round(item.dividendYield * 100 * 10) / 10}%</div>` : ''}
+            <div style="font-size:12.5px; color:#334155; margin-top:6px;">Available Liquid Cash: <strong>$${char.money.toLocaleString()}</strong></div>
           </div>
-          <div style="font-size:12.5px; font-weight:600; margin-bottom:6px; color:#475569;">Select Investment Amount:</div>
+          <div style="font-size:12.5px; font-weight:600; margin-bottom:6px; color:#475569;">Select Allocation Amount:</div>
         `;
 
-        const choices = [minAmt, minAmt * 2.5, minAmt * 5, 10000, 25000, char.money]
+        const choices = [minAmt, minAmt * 2, minAmt * 5, 10000, 25000, 50000, 100000, char.money]
           .filter((v, i, a) => v <= char.money && v >= minAmt && a.indexOf(v) === i)
           .sort((a, b) => a - b);
 
@@ -3790,19 +4091,24 @@
         });
         actionsHtml += `<button class="modal-btn" onclick="closeModal()">Cancel</button></div>`;
 
-        showCustomModal("Investment Capital Allocation", item.icon, bodyHtml, actionsHtml);
+        showCustomModal("Portfolio Capital Allocation", item.icon, bodyHtml, actionsHtml);
         return;
       }
 
-      // REAL ESTATE & VEHICLE PURCHASE FLOW (CASH VS 20% DOWN FINANCING)
-      if (item.type === 'property' || item.type === 'vehicle') {
+      // BUSINESSES, REAL ESTATE & VEHICLES (CASH VS 20% DOWN FINANCING)
+      if (item.type === 'property' || item.type === 'business' || item.type === 'vehicle') {
         const downPayment = Math.round(item.price * (item.downPct || 0.20));
         const loanAmount = item.price - downPayment;
         const isProperty = item.type === 'property';
-        const annualLoanPmt = isProperty ? Math.round(loanAmount * 0.065) : Math.round(loanAmount * 0.24);
-        const termYrs = isProperty ? 30 : 5;
+        const isBusiness = item.type === 'business';
+        const annualLoanPmt = isProperty 
+          ? Math.round(loanAmount * 0.065) 
+          : isBusiness 
+          ? Math.round(loanAmount * 0.135) 
+          : Math.round(loanAmount * 0.24);
+        const termYrs = isProperty ? 30 : isBusiness ? 10 : 5;
 
-        const isEmployed = char.salary > 0 || char.partTimeJob != null;
+        const isEmployed = char.salary > 0 || char.partTimeJob != null || (char.assets && char.assets.some(a => a.type === 'business'));
         const canAffordCash = char.money >= item.price;
         const canAffordDown = char.money >= downPayment;
 
@@ -3810,8 +4116,10 @@
           <div style="text-align:center; margin-bottom:14px;">
             <div style="font-size:34px;">${item.icon}</div>
             <div style="font-size:15px; font-weight:700; color:#0F172A; margin-top:4px;">${item.name}</div>
-            <div style="font-size:14px; font-weight:600; color:#2563EB;">Purchase Price: $${item.price.toLocaleString()}</div>
+            <div style="font-size:14px; font-weight:600; color:#2563EB;">Acquisition Price: $${item.price.toLocaleString()}</div>
             <div style="font-size:12px; color:#64748B; margin-top:3px;">${item.desc}</div>
+            ${item.annualProfit ? `<div style="font-size:12.5px; font-weight:700; color:#16A34A; margin-top:3px;">Estimated Net Annual Profit: $${item.annualProfit.toLocaleString()}/yr</div>` : ''}
+            ${item.rentEst ? `<div style="font-size:12.5px; font-weight:700; color:#16A34A; margin-top:3px;">Long-Term Rent: ~$${item.rentEst.toLocaleString()}/yr • Airbnb: ~$${item.airbnbEst.toLocaleString()}/yr</div>` : ''}
             <div style="font-size:12px; color:#334155; margin-top:5px;">Your Liquid Cash: <strong>$${char.money.toLocaleString()}</strong></div>
           </div>
 
@@ -3819,8 +4127,8 @@
             <div style="font-weight:700; color:#0F172A; margin-bottom:3px;">🏦 Financing Option (${termYrs}-Year Loan):</div>
             <div>• Down Payment Required (20%): <strong>$${downPayment.toLocaleString()}</strong></div>
             <div>• Financed Loan Amount (80%): <strong>$${loanAmount.toLocaleString()}</strong></div>
-            <div>• Estimated Annual Payment: <strong>$${annualLoanPmt.toLocaleString()}/yr</strong></div>
-            <div>• Income Verification: ${isEmployed ? '<span style="color:#16A34A; font-weight:600;">✓ Steady Employment Verified</span>' : '<span style="color:#DC2626; font-weight:600;">✗ Unemployed (Ineligible for loan)</span>'}</div>
+            <div>• Estimated Annual Debt Service: <strong>$${annualLoanPmt.toLocaleString()}/yr</strong></div>
+            <div>• Underwriter Verification: ${isEmployed ? '<span style="color:#16A34A; font-weight:600;">✓ Income/Employment Verified</span>' : '<span style="color:#DC2626; font-weight:600;">✗ Ineligible (Requires Employment/Business Income)</span>'}</div>
           </div>
         `;
 
@@ -3849,7 +4157,7 @@
         } else if (!isEmployed) {
           actionsHtml += `
             <button class="modal-btn" disabled style="opacity:0.5; cursor:not-allowed;">
-              Finance Declined • Steady Job Required
+              Finance Declined • Steady Income Required
             </button>
           `;
         } else {
@@ -3862,14 +4170,14 @@
 
         actionsHtml += `<button class="modal-btn" onclick="closeModal()">Cancel</button></div>`;
 
-        showCustomModal("Acquisition & Financing", item.icon, bodyHtml, actionsHtml);
+        showCustomModal("Acquisition & Capital Structure", item.icon, bodyHtml, actionsHtml);
         return;
       }
 
-      // LUXURY VALUABLES CASH FLOW
+      // LUXURY GOODS CASH FLOW
       if (item.type === 'luxury') {
         if (char.money < item.price) {
-          showPopup(`You cannot afford this luxury valuable! You need $${item.price.toLocaleString()} but currently have $${char.money.toLocaleString()}.`, "Insufficient Funds", "💸");
+          showPopup(`You cannot afford this luxury item! You need $${item.price.toLocaleString()} but currently have $${char.money.toLocaleString()}.`, "Insufficient Funds", "💸");
           return;
         }
 
@@ -3912,14 +4220,21 @@
           loanBalance: 0,
           loanAnnualPayment: 0,
           isRented: false,
+          isAirbnb: false,
           rentalIncome: 0,
+          annualProfit: item.annualProfit || 0,
+          hasGeneralManager: false,
           mileage: item.type === 'vehicle' ? 1200 : 0,
           annualUpkeep: item.upkeep || 0,
           looksBoost: item.looksBoost || 0
         };
         char.assets.push(newAsset);
 
-        if (item.type === 'property') {
+        if (item.type === 'business') {
+          char.happiness = clamp(char.happiness + 30, 0, 100);
+          recordAction(`🏪 Acquired ${item.name} in cash for $${item.price.toLocaleString()}! Generates $${item.annualProfit.toLocaleString()}/yr net profit!`);
+          showPopup(`🎉 Business Acquired! You purchased ${item.name} in cash! It will generate an estimated $${item.annualProfit.toLocaleString()}/year in net operating profits!`, "Franchise Owner! 🏪", "🏪");
+        } else if (item.type === 'property') {
           if (!char.properties) char.properties = [];
           char.properties.push(item.name);
           char.happiness = clamp(char.happiness + 25, 0, 100);
@@ -3939,7 +4254,12 @@
         const downPayment = Math.round(item.price * (item.downPct || 0.20));
         const loanAmount = item.price - downPayment;
         const isProperty = item.type === 'property';
-        const annualPmt = isProperty ? Math.round(loanAmount * 0.065) : Math.round(loanAmount * 0.24);
+        const isBusiness = item.type === 'business';
+        const annualPmt = isProperty 
+          ? Math.round(loanAmount * 0.065) 
+          : isBusiness 
+          ? Math.round(loanAmount * 0.135) 
+          : Math.round(loanAmount * 0.24);
 
         if (char.money < downPayment) {
           showPopup("Insufficient funds to pay the 20% down payment!", "Declined", "💸");
@@ -3959,13 +4279,20 @@
           loanBalance: loanAmount,
           loanAnnualPayment: annualPmt,
           isRented: false,
+          isAirbnb: false,
           rentalIncome: 0,
+          annualProfit: item.annualProfit || 0,
+          hasGeneralManager: false,
           mileage: item.type === 'vehicle' ? 1200 : 0,
           annualUpkeep: item.upkeep || 0
         };
         char.assets.push(newAsset);
 
-        if (item.type === 'property') {
+        if (item.type === 'business') {
+          char.happiness = clamp(char.happiness + 25, 0, 100);
+          recordAction(`🏪 Financed acquisition of ${item.name} with $${downPayment.toLocaleString()} down payment and 10-year commercial loan!`);
+          showPopup(`🎉 Commercial Financing Approved! You took ownership of ${item.name} with a $${downPayment.toLocaleString()} down payment! Net profit: $${item.annualProfit.toLocaleString()}/yr.`, "Business Acquired! 🏪", "🏪");
+        } else if (item.type === 'property') {
           if (!char.properties) char.properties = [];
           char.properties.push(item.name);
           char.happiness = clamp(char.happiness + 20, 0, 100);
@@ -3984,22 +4311,23 @@
         }
 
         char.money -= investAmt;
-        const existing = char.assets.find(a => a.type === 'investment' && a.catalogId === item.id);
+        const existing = char.assets.find(a => a.catalogId === item.id);
         if (existing) {
           existing.price = (existing.price || 0) + investAmt;
           existing.currentPrice = (existing.currentPrice || 0) + investAmt;
-          recordAction(`📈 Added $${investAmt.toLocaleString()} to ${item.name} portfolio.`);
-          showPopup(`📈 Successfully deposited an additional $${investAmt.toLocaleString()} into your ${item.name} position!`, "Investment Deposited", "📈");
+          recordAction(`📈 Added $${investAmt.toLocaleString()} to ${item.name} portfolio position.`);
+          showPopup(`📈 Successfully deposited an additional $${investAmt.toLocaleString()} into your ${item.name} holdings!`, "Capital Deposited", "📈");
         } else {
           const newAsset = {
             id: newId,
             catalogId: item.id,
-            type: 'investment',
+            type: item.type,
             assetClass: item.assetClass,
             name: item.name,
             icon: item.icon,
             price: investAmt,
             currentPrice: investAmt,
+            dividendYield: item.dividendYield || 0,
             condition: 100,
             loanBalance: 0,
             loanAnnualPayment: 0
@@ -4007,7 +4335,7 @@
           char.assets.push(newAsset);
           char.smarts = clamp(char.smarts + 2, 0, 100);
           recordAction(`📈 Opened an investment position in ${item.name} with $${investAmt.toLocaleString()}!`);
-          showPopup(`🎉 Portfolio Established! You invested $${investAmt.toLocaleString()} into ${item.name}!`, "Investment Opened 📈", "📈");
+          showPopup(`🎉 Position Established! You invested $${investAmt.toLocaleString()} into ${item.name}!`, "Portfolio Asset Established 📈", "📈");
         }
       }
 
@@ -4031,7 +4359,7 @@
       if (!asset) {
         container.innerHTML = `
           <div style="text-align:center; padding:20px; color:#64748B;">
-            Asset not found or already sold.
+            Asset not found or already liquidated.
           </div>
         `;
         return;
@@ -4056,7 +4384,7 @@
             <div class="school-overview-badge">${asset.icon || '📦'}</div>
             <div class="school-overview-info">
               <div class="school-overview-name">${asset.name}</div>
-              <div class="school-overview-desc">${asset.type.toUpperCase()} • Estimated Market Valuation</div>
+              <div class="school-overview-desc">${asset.type.toUpperCase()} • Asset Valuation & Financials</div>
             </div>
           </div>
           <div class="school-metrics-grid">
@@ -4068,19 +4396,24 @@
               <div class="school-metric-label"><span>Net Equity</span> <span>$${equity.toLocaleString()}</span></div>
               <div class="school-progress-bar"><div class="school-progress-fill fill-green" style="width: ${clamp(Math.round((equity / Math.max(1, currentVal)) * 100), 5, 100)}%;"></div></div>
             </div>
-            ${asset.type !== 'investment' ? `
+            ${asset.type === 'business' ? `
             <div class="school-metric-box">
-              <div class="school-metric-label"><span>Condition</span> <span>${cond}%</span></div>
-              <div class="school-progress-bar"><div class="school-progress-fill ${condFill}" style="width: ${cond}%;"></div></div>
+              <div class="school-metric-label"><span>Annual Net Profit</span> <span>$${(asset.annualProfit || 0).toLocaleString()}/yr</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-green" style="width: 100%;"></div></div>
             </div>
-            ` : `
+            ` : asset.type === 'stock' || asset.type === 'crypto' || asset.type === 'investment' ? `
             <div class="school-metric-box">
               <div class="school-metric-label"><span>Invested Principal</span> <span>$${originalPrice.toLocaleString()}</span></div>
               <div class="school-progress-bar"><div class="school-progress-fill fill-blue" style="width: 100%;"></div></div>
             </div>
+            ` : `
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Condition</span> <span>${cond}%</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill ${condFill}" style="width: ${cond}%;"></div></div>
+            </div>
             `}
             <div class="school-metric-box">
-              <div class="school-metric-label"><span>Loan Balance</span> <span>${loanBal > 0 ? '$' + loanBal.toLocaleString() : 'None ($0)'}</span></div>
+              <div class="school-metric-label"><span>Loan Balance</span> <span>${loanBal > 0 ? '$' + loanBal.toLocaleString() : 'Zero Debt'}</span></div>
               <div class="school-progress-bar"><div class="school-progress-fill fill-yellow" style="width: ${clamp(Math.round((loanBal / Math.max(1, currentVal)) * 100), 0, 100)}%;"></div></div>
             </div>
           </div>
@@ -4088,7 +4421,79 @@
       `;
 
       // SPECIFIC ACTIONS BY ASSET TYPE
-      if (asset.type === 'property') {
+
+      // 1. BUSINESSES / COMMERCIAL FRANCHISES
+      if (asset.type === 'business') {
+        const reinvestCost = Math.max(2500, Math.round(currentVal * 0.08));
+
+        html += `
+          <div class="section-title"><span>🏪</span> Operations & Expansion</div>
+
+          <div class="interactive-card" onclick="reinvestBusiness('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🚀</div>
+              <div class="card-texts">
+                <h4>Reinvest in Marketing & Equipment ($${reinvestCost.toLocaleString()})</h4>
+                <p>Modernize tools and run ad campaigns (+18% annual profit, +15% company valuation)</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Reinvest</button>
+          </div>
+
+          <div class="interactive-card" onclick="hireGeneralManager('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">👔</div>
+              <div class="card-texts">
+                <h4>${asset.hasGeneralManager ? 'General Manager on Staff (100% Autopilot)' : 'Hire General Manager (Automate Operations)'}</h4>
+                <p>${asset.hasGeneralManager ? 'Operations running perfectly. 10% profit fee deducted annually.' : 'Hire an executive manager so business runs on 100% passive autopilot'}</p>
+              </div>
+            </div>
+            <button class="btn-card-action ${asset.hasGeneralManager ? 'secondary' : ''}">${asset.hasGeneralManager ? 'Active' : 'Hire GM'}</button>
+          </div>
+
+          <div class="interactive-card" onclick="drawBusinessProfits('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💵</div>
+              <div class="card-texts">
+                <h4>Take Owner Dividend Draw ($${Math.round(asset.annualProfit * 0.5).toLocaleString()})</h4>
+                <p>Withdraw mid-year distribution from business retained earnings</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Draw Cash</button>
+          </div>
+
+          ${loanBal > 0 ? `
+            <div class="section-title"><span>🏦</span> Commercial Debt</div>
+
+            <div class="interactive-card" onclick="payOffLoan('${asset.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💳</div>
+                <div class="card-texts">
+                  <h4>Pay Off Commercial Loan ($${loanBal.toLocaleString()})</h4>
+                  <p>Clear all remaining business debt using liquid cash</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Pay Off</button>
+            </div>
+          ` : ''}
+
+          <div class="section-title"><span>💰</span> Business Disposition</div>
+
+          <div class="interactive-card" onclick="sellAssetModal('${asset.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💰</div>
+              <div class="card-texts">
+                <h4>Sell Business on Market (${Math.round(currentVal / Math.max(1, asset.annualProfit))}x Multiple)</h4>
+                <p>Sale valuation: $${currentVal.toLocaleString()} (Net cash: $${equity.toLocaleString()} after loan payoff)</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Sell Business</button>
+          </div>
+        `;
+      }
+
+      // 2. REAL ESTATE & PROPERTIES
+      else if (asset.type === 'property') {
         const renovateCost = Math.max(1500, Math.round(currentVal * 0.035));
 
         html += `
@@ -4097,16 +4502,15 @@
           ${asset.isRented ? `
             <div class="interactive-card">
               <div class="card-left-group">
-                <div class="card-emoji-box">👤</div>
+                <div class="card-emoji-box">${asset.isAirbnb ? '🏖️' : '👤'}</div>
                 <div class="card-texts">
-                  <h4>Tenant: ${asset.tenantName || 'Arthur Pendelton'}</h4>
-                  <p>Paying $${(asset.rentalIncome || 0).toLocaleString()}/yr • Satisfaction: ${asset.tenantSatisfaction || 85}%</p>
+                  <h4>${asset.isAirbnb ? 'Vacation Airbnb Rental' : 'Long-Term Tenant: ' + (asset.tenantName || 'Arthur Pendelton')}</h4>
+                  <p>Cashflow: $${(asset.rentalIncome || 0).toLocaleString()}/yr ${asset.isAirbnb ? '(Short-Term Guests)' : '• Satisfaction: ' + (asset.tenantSatisfaction || 85) + '%'}</p>
                 </div>
               </div>
-              <div style="display:flex; gap:6px;">
-                <button class="btn-card-action" onclick="checkTenant('${asset.id}')">Inspect</button>
-                <button class="btn-card-action success" onclick="raisePropertyRent('${asset.id}')">+Rent</button>
-                <button class="btn-card-action secondary" onclick="evictTenant('${asset.id}')">Evict</button>
+              <div style="display:flex; gap:5px;">
+                ${!asset.isAirbnb ? `<button class="btn-card-action success" onclick="raisePropertyRent('${asset.id}')">+Rent</button>` : ''}
+                <button class="btn-card-action secondary" onclick="evictTenant('${asset.id}')">${asset.isAirbnb ? 'End Airbnb' : 'Evict'}</button>
               </div>
             </div>
           ` : `
@@ -4114,43 +4518,67 @@
               <div class="card-left-group">
                 <div class="card-emoji-box">🏢</div>
                 <div class="card-texts">
-                  <h4>Find Tenant & Lease Property</h4>
-                  <p>List on rental market (Est. passive income: ~$${Math.round(currentVal * 0.075).toLocaleString()}/yr)</p>
+                  <h4>Lease to Long-Term Tenant</h4>
+                  <p>1-year residential lease (Est. cashflow: ~$${Math.round(currentVal * 0.075).toLocaleString()}/yr)</p>
                 </div>
               </div>
               <button class="btn-card-action success">Lease</button>
             </div>
+
+            <div class="interactive-card" onclick="toggleAirbnb('${asset.id}', true)">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🏖️</div>
+                <div class="card-texts">
+                  <h4>Convert to Vacation Airbnb Rental</h4>
+                  <p>Furnish for vacation travelers (+50% higher cashflow: ~$${Math.round(currentVal * 0.115).toLocaleString()}/yr)</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Start Airbnb</button>
+            </div>
           `}
 
-          <div class="section-title"><span>🔨</span> Property Upgrades & Maintenance</div>
+          <div class="section-title"><span>🔨</span> Property Upgrades & Value Creation</div>
 
           <div class="interactive-card" onclick="renovateProperty('${asset.id}')">
             <div class="card-left-group">
               <div class="card-emoji-box">🔨</div>
               <div class="card-texts">
                 <h4>Renovate & Remodel ($${renovateCost.toLocaleString()})</h4>
-                <p>Modernize interior and appliances (+20% condition, +15% value appreciation)</p>
+                <p>Modernize finishes and fixtures (+20% condition, +14% value appreciation)</p>
               </div>
             </div>
             <button class="btn-card-action">Renovate</button>
           </div>
 
+          ${cond >= 95 ? `
+            <div class="interactive-card" onclick="flipProperty('${asset.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">⚡</div>
+                <div class="card-texts">
+                  <h4>Execute Quick Property Flip (+15% Buyer Premium)</h4>
+                  <p>Sell to an eager cash buyer at a premium because the house is in pristine condition</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Flip Home</button>
+            </div>
+          ` : ''}
+
           ${loanBal > 0 ? `
-            <div class="section-title"><span>🏦</span> Mortgage Financing</div>
+            <div class="section-title"><span>🏦</span> Mortgage Debt</div>
 
             <div class="interactive-card" onclick="payOffLoan('${asset.id}')">
               <div class="card-left-group">
                 <div class="card-emoji-box">💳</div>
                 <div class="card-texts">
                   <h4>Pay Off Mortgage ($${loanBal.toLocaleString()})</h4>
-                  <p>Clear your remaining mortgage balance in full using cash</p>
+                  <p>Clear remaining home loan balance in full using cash</p>
                 </div>
               </div>
               <button class="btn-card-action success">Pay Off</button>
             </div>
           ` : ''}
 
-          <div class="section-title"><span>🏷️</span> Real Estate Liquidation</div>
+          <div class="section-title"><span>🏷️</span> Liquidation</div>
 
           <div class="interactive-card" onclick="sellAssetModal('${asset.id}')">
             <div class="card-left-group">
@@ -4163,7 +4591,85 @@
             <button class="btn-card-action secondary">Sell Property</button>
           </div>
         `;
-      } else if (asset.type === 'vehicle') {
+      }
+
+      // 3. STOCKS, CRYPTO & INVESTMENTS
+      else if (asset.type === 'stock' || asset.type === 'crypto' || asset.type === 'investment') {
+        const diff = currentVal - originalPrice;
+        const pct = Math.round((diff / Math.max(1, originalPrice)) * 100);
+        const sign = diff >= 0 ? '+' : '';
+
+        html += `
+          <div class="section-title"><span>📈</span> Portfolio Performance</div>
+
+          <div class="interactive-card">
+            <div class="card-left-group">
+              <div class="card-emoji-box">${diff >= 0 ? '🟢' : '🔴'}</div>
+              <div class="card-texts">
+                <h4>Unrealized Return: ${sign}${pct}% (${sign}$${diff.toLocaleString()})</h4>
+                <p>Total Capital Invested: $${originalPrice.toLocaleString()} • Current Valuation: $${currentVal.toLocaleString()}</p>
+                ${asset.dividendYield ? `<div style="font-size:11.5px; color:#16A34A; margin-top:2px; font-weight:600;">Annual Dividend Cashflow: $${Math.round(currentVal * asset.dividendYield).toLocaleString()}/yr (${Math.round(asset.dividendYield * 100 * 10) / 10}%)</div>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title"><span>💵</span> Capital Allocation</div>
+
+          <div class="interactive-card">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💵</div>
+              <div class="card-texts">
+                <h4>Invest Additional Capital</h4>
+                <p>Available Liquid Cash: $${char.money.toLocaleString()}</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', 1000)">+$1K</button>
+              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', 5000)">+$5K</button>
+              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', 25000)">+$25K</button>
+              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', char.money)">Max</button>
+            </div>
+          </div>
+
+          <div class="section-title"><span>🏧</span> Liquidate & Cash Out</div>
+
+          <div class="interactive-card" onclick="withdrawInvestment('${asset.id}', 0.25)">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🏧</div>
+              <div class="card-texts">
+                <h4>Cash Out 25% ($${Math.round(currentVal * 0.25).toLocaleString()})</h4>
+                <p>Take partial profits into cash</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Cash Out 25%</button>
+          </div>
+
+          <div class="interactive-card" onclick="withdrawInvestment('${asset.id}', 0.50)">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🏧</div>
+              <div class="card-texts">
+                <h4>Cash Out 50% ($${Math.round(currentVal * 0.50).toLocaleString()})</h4>
+                <p>Withdraw half your position into cash</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Cash Out 50%</button>
+          </div>
+
+          <div class="interactive-card" onclick="withdrawInvestment('${asset.id}', 1.0)">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💸</div>
+              <div class="card-texts">
+                <h4>Liquidate Entire Position ($${currentVal.toLocaleString()})</h4>
+                <p>Sell all holdings and transfer full proceeds to liquid cash</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Liquidate All</button>
+          </div>
+        `;
+      }
+
+      // 4. VEHICLES
+      else if (asset.type === 'vehicle') {
         const serviceCost = Math.max(250, Math.round(currentVal * 0.04));
 
         html += `
@@ -4230,66 +4736,10 @@
             <button class="btn-card-action secondary">Sell Vehicle</button>
           </div>
         `;
-      } else if (asset.type === 'investment') {
-        const diff = currentVal - originalPrice;
-        const pct = Math.round((diff / Math.max(1, originalPrice)) * 100);
-        const sign = diff >= 0 ? '+' : '';
+      }
 
-        html += `
-          <div class="section-title"><span>📈</span> Portfolio Performance</div>
-
-          <div class="interactive-card">
-            <div class="card-left-group">
-              <div class="card-emoji-box">${diff >= 0 ? '🟢' : '🔴'}</div>
-              <div class="card-texts">
-                <h4>Unrealized Return: ${sign}${pct}% (${sign}$${diff.toLocaleString()})</h4>
-                <p>Total Capital Invested: $${originalPrice.toLocaleString()} • Current Valuation: $${currentVal.toLocaleString()}</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="section-title"><span>💵</span> Capital Allocation</div>
-
-          <div class="interactive-card">
-            <div class="card-left-group">
-              <div class="card-emoji-box">💵</div>
-              <div class="card-texts">
-                <h4>Invest Additional Capital</h4>
-                <p>Available Liquid Cash: $${char.money.toLocaleString()}</p>
-              </div>
-            </div>
-            <div style="display:flex; gap:5px;">
-              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', 1000)">+$1K</button>
-              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', 5000)">+$5K</button>
-              <button class="btn-card-action success" onclick="depositInvestment('${asset.id}', char.money)">Max</button>
-            </div>
-          </div>
-
-          <div class="section-title"><span>🏧</span> Liquidate & Cash Out</div>
-
-          <div class="interactive-card" onclick="withdrawInvestment('${asset.id}', 0.5)">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🏧</div>
-              <div class="card-texts">
-                <h4>Cash Out 50% ($${Math.round(currentVal * 0.5).toLocaleString()})</h4>
-                <p>Withdraw half your position into liquid bank balance</p>
-              </div>
-            </div>
-            <button class="btn-card-action">Cash Out 50%</button>
-          </div>
-
-          <div class="interactive-card" onclick="withdrawInvestment('${asset.id}', 1.0)">
-            <div class="card-left-group">
-              <div class="card-emoji-box">💸</div>
-              <div class="card-texts">
-                <h4>Liquidate Entire Position ($${currentVal.toLocaleString()})</h4>
-                <p>Sell all holdings and transfer full proceeds to cash</p>
-              </div>
-            </div>
-            <button class="btn-card-action secondary">Liquidate All</button>
-          </div>
-        `;
-      } else if (asset.type === 'luxury') {
+      // 5. LUXURY GOODS
+      else if (asset.type === 'luxury') {
         html += `
           <div class="section-title"><span>💎</span> Luxury Care & Appraisal</div>
 
@@ -4298,7 +4748,7 @@
               <div class="card-emoji-box">💎</div>
               <div class="card-texts">
                 <h4>Certified Appraisal & Polish ($150)</h4>
-                <p>Expert horologist/gemologist certification of authenticity (+5% value)</p>
+                <p>Expert certification of authenticity and valuation (+5% value)</p>
               </div>
             </div>
             <button class="btn-card-action">Appraise</button>
@@ -4322,6 +4772,141 @@
       container.innerHTML = html;
     }
 
+    // BUSINESS SPECIFIC ACTIONS
+    function reinvestBusiness(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || asset.type !== 'business') return;
+
+      const currentVal = asset.currentPrice || asset.price || 50000;
+      const cost = Math.max(2500, Math.round(currentVal * 0.08));
+
+      if (char.money < cost) {
+        showPopup(`You need $${cost.toLocaleString()} to reinvest in ${asset.name}, but you only have $${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      showConfirm(`Reinvest $${cost.toLocaleString()} into marketing and upgraded equipment for ${asset.name}?`, () => {
+        char.money -= cost;
+        const profitBoost = Math.round((asset.annualProfit || 10000) * 0.18);
+        asset.annualProfit = (asset.annualProfit || 10000) + profitBoost;
+        const valBoost = Math.round(currentVal * 0.15);
+        asset.currentPrice = currentVal + valBoost;
+        asset.condition = 100;
+        char.happiness = clamp(char.happiness + 15, 0, 100);
+
+        recordAction(`🏪 Reinvested $${cost.toLocaleString()} into ${asset.name}! Annual profits grew to $${asset.annualProfit.toLocaleString()}/yr and company valuation rose to $${asset.currentPrice.toLocaleString()}!`);
+        showPopup(`🚀 Growth Initiative Succeeded! New customer acquisition and upgraded equipment boosted annual profits by +$${profitBoost.toLocaleString()}/year! Business valuation is now $${asset.currentPrice.toLocaleString()}!`, "Expansion Complete! 🚀", "🚀");
+        render();
+        renderAssetDetailPage();
+      }, "Reinvest in Business", "🚀", "Reinvest Capital");
+    }
+
+    function hireGeneralManager(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || asset.type !== 'business') return;
+
+      if (asset.hasGeneralManager) {
+        showPopup("A qualified General Manager is already running daily operations on complete autopilot!", "Manager on Staff", "👔");
+        return;
+      }
+
+      const gmNames = ["Marcus Thorne, MBA", "Victoria Sterling", "David K. Henderson", "Rachel Vance"];
+      const gmName = gmNames[Math.floor(Math.random() * gmNames.length)];
+
+      showConfirm(`Hire ${gmName} as General Manager? (Deducts 10% of annual profits as executive compensation, but ensures 100% operational excellence on autopilot).`, () => {
+        asset.hasGeneralManager = true;
+        asset.condition = 100;
+        char.happiness = clamp(char.happiness + 10, 0, 100);
+
+        recordAction(`👔 Hired ${gmName} as General Manager for ${asset.name}. Operations automated.`);
+        showPopup(`👔 ${gmName} has assumed management of ${asset.name}! Your business will now run seamlessly on 100% passive autopilot!`, "General Manager Hired! 👔", "👔");
+        render();
+        renderAssetDetailPage();
+      }, "Hire Executive Manager", "👔", "Hire Manager");
+    }
+
+    function drawBusinessProfits(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || asset.type !== 'business') return;
+
+      const drawAmt = Math.max(1000, Math.round((asset.annualProfit || 10000) * 0.45));
+      char.money += drawAmt;
+      char.happiness = clamp(char.happiness + 8, 0, 100);
+
+      recordAction(`💵 Took an owner dividend distribution of $${drawAmt.toLocaleString()} from ${asset.name}.`);
+      showPopup(`💵 You withdrew an owner dividend distribution of $${drawAmt.toLocaleString()} from ${asset.name} into your personal liquid account!`, "Owner Dividend Paid 💵", "💵");
+      render();
+      renderAssetDetailPage();
+    }
+
+    // REAL ESTATE AIRBNB & FLIPPING ACTIONS
+    function toggleAirbnb(assetId, enable) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || asset.type !== 'property') return;
+
+      const currentVal = asset.currentPrice || asset.price || 50000;
+
+      if (enable) {
+        showConfirm(`Convert ${asset.name} into a premier vacation Airbnb rental? (Earns ~$${Math.round(currentVal * 0.115).toLocaleString()}/yr in short-term bookings).`, () => {
+          asset.isRented = true;
+          asset.isAirbnb = true;
+          asset.tenantName = "Airbnb Vacation Guests";
+          asset.rentalIncome = Math.round(currentVal * 0.115);
+          char.happiness = clamp(char.happiness + 8, 0, 100);
+
+          recordAction(`🏖️ Converted ${asset.name} into a high-yield vacation Airbnb rental! Projected cashflow: $${asset.rentalIncome.toLocaleString()}/yr.`);
+          showPopup(`🏖️ Airbnb Listing Live! Your property is booked for vacation travelers! Projected annual cashflow: $${asset.rentalIncome.toLocaleString()}/year!`, "Airbnb Active 🏖️", "🏖️");
+          render();
+          renderAssetDetailPage();
+        }, "Start Airbnb", "🏖️", "Launch Airbnb");
+      } else {
+        showConfirm(`End short-term Airbnb hosting on ${asset.name}? The property will become vacant.`, () => {
+          asset.isRented = false;
+          asset.isAirbnb = false;
+          asset.tenantName = null;
+          asset.rentalIncome = 0;
+
+          recordAction(`🏠 Deactivated Airbnb hosting on ${asset.name}. Property is now vacant.`);
+          showPopup(`Airbnb hosting ended. ${asset.name} is now vacant and ready for long-term lease.`, "Airbnb Deactivated", "🏠");
+          render();
+          renderAssetDetailPage();
+        }, "End Airbnb", "🏠", "End Hosting");
+      }
+    }
+
+    function flipProperty(assetId) {
+      if (!char.isAlive) return;
+      const asset = (char.assets || []).find(a => a.id === assetId);
+      if (!asset || asset.type !== 'property') return;
+
+      const currentVal = asset.currentPrice || asset.price || 50000;
+      const flipPrice = Math.round(currentVal * 1.15); // 15% buyer flip premium
+      const loanBal = asset.loanBalance || 0;
+      const netProceeds = flipPrice - loanBal;
+
+      showConfirm(`Accept all-cash buyout offer of $${flipPrice.toLocaleString()} (+15% flip premium)? Net proceeds after loan payoff: $${netProceeds.toLocaleString()}.`, () => {
+        char.money += netProceeds;
+        const idx = char.assets.findIndex(a => a.id === assetId);
+        if (idx !== -1) char.assets.splice(idx, 1);
+
+        if (char.properties) {
+          const pIdx = char.properties.indexOf(asset.name);
+          if (pIdx !== -1) char.properties.splice(pIdx, 1);
+        }
+
+        char.happiness = clamp(char.happiness + 25, 0, 100);
+        recordAction(`⚡ EXECUTED PROPERTY FLIP: Sold ${asset.name} for $${flipPrice.toLocaleString()} with a +15% buyer premium! Net cash: $${netProceeds.toLocaleString()}!`);
+        showPopup(`⚡ Successful Real Estate Flip! You sold ${asset.name} to an all-cash buyer for $${flipPrice.toLocaleString()}! Net proceeds of $${netProceeds.toLocaleString()} deposited into your cash balance!`, "Property Flipped! ⚡", "⚡");
+
+        switchTab('pageAssets', 'tabBtnAssets');
+        render();
+      }, "Execute Real Estate Flip", "⚡", "Accept Buyout");
+    }
+
     // PROPERTY TENANT ACTIONS
     function leaseProperty(assetId) {
       if (!char.isAlive) return;
@@ -4335,6 +4920,7 @@
 
       showConfirm(`Lease ${asset.name} to tenant ${tenantName} for $${rent.toLocaleString()}/year?`, () => {
         asset.isRented = true;
+        asset.isAirbnb = false;
         asset.tenantName = tenantName;
         asset.rentalIncome = rent;
         asset.tenantSatisfaction = 85;
@@ -4395,13 +4981,14 @@
       showConfirm(`Evict ${asset.tenantName} and terminate the lease on ${asset.name}?`, () => {
         const tenant = asset.tenantName;
         asset.isRented = false;
+        asset.isAirbnb = false;
         asset.tenantName = null;
         asset.rentalIncome = 0;
-        recordAction(`🚪 Evicted ${tenant} from ${asset.name}.`);
-        showPopup(`You legally served eviction papers. ${tenant} has vacated the property. It is now ready for a new tenant.`, "Tenant Evicted", "🚪");
+        recordAction(`🚪 Terminated lease on ${asset.name}.`);
+        showPopup(`The lease has been terminated. The property is now vacant and ready for new occupants.`, "Lease Ended", "🚪");
         render();
         renderAssetDetailPage();
-      }, "Evict Tenant", "🚪", "Evict Tenant");
+      }, "End Lease", "🚪", "Terminate Lease");
     }
 
     function renovateProperty(assetId) {
@@ -4532,7 +5119,7 @@
       renderAssetDetailPage();
     }
 
-    // INVESTMENT ACTIONS
+    // STOCKS & CRYPTO ACTIONS
     function depositInvestment(assetId, amount) {
       if (!char.isAlive) return;
       const asset = (char.assets || []).find(a => a.id === assetId);
@@ -4567,11 +5154,10 @@
         char.money += withdrawAmt;
 
         if (pct >= 0.99) {
-          // Liquidated entirely
           const idx = char.assets.findIndex(a => a.id === assetId);
           if (idx !== -1) char.assets.splice(idx, 1);
           recordAction(`💰 Fully liquidated ${asset.name} for $${withdrawAmt.toLocaleString()} cash.`);
-          showPopup(`You liquidated your entire position in ${asset.name} and received $${withdrawAmt.toLocaleString()} into your bank balance.`, "Portfolio Liquidated 💰", "💰");
+          showPopup(`You liquidated your entire position in ${asset.name} and received $${withdrawAmt.toLocaleString()} into your bank balance.`, "Position Liquidated 💰", "💰");
           switchTab('pageAssets', 'tabBtnAssets');
         } else {
           asset.currentPrice = Math.max(0, currentVal - withdrawAmt);
