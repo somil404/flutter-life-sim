@@ -961,103 +961,146 @@
         </div>
       </div>
 
-      <!-- ================= PAGE 3: ASSETS & CAREERS ================= -->
+      <!-- ================= PAGE 2: ASSETS & NET WORTH ================= -->
       <div class="tab-page" id="pageAssets">
         <div class="page-top-bar">
-          <div class="page-top-title"><span>🏠</span> Assets & Careers</div>
+          <div class="page-top-title"><span>🏠</span> Assets & Net Worth</div>
           <button class="btn-close-page" onclick="closeToFeed()">✕ Close</button>
         </div>
 
-        <div class="section-title"><span>💼</span> Jobs & Careers</div>
-
-        <div class="interactive-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🍔</div>
-            <div class="card-texts">
-              <h4>Fast Food Worker ($18,000/yr)</h4>
-              <p>No education requirements. Entry level.</p>
+        <!-- Net Worth & Wealth Overview Card -->
+        <div class="school-overview-card" style="margin-bottom: 12px;">
+          <div class="school-overview-header">
+            <div class="school-overview-badge">🏛️</div>
+            <div class="school-overview-info">
+              <div class="school-overview-name">Net Worth & Wealth</div>
+              <div class="school-overview-desc" id="assetNetWorthDesc">Total Net Worth: $0</div>
             </div>
           </div>
-          <button class="btn-card-action">Apply</button>
-        </div>
-
-        <div class="interactive-card" onclick="applyJob('Graphic Designer', 42000, 1, 30, '🎨')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🎨</div>
-            <div class="card-texts">
-              <h4>Graphic Designer ($42,000/yr)</h4>
-              <p>Requires High School diploma or GED & Smarts ≥ 30.</p>
+          <div class="school-metrics-grid">
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Liquid Cash</span> <span id="assetLiquidCash">$0</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-green" id="assetCashProgress" style="width: 25%;"></div></div>
+            </div>
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Valuable Assets</span> <span id="assetTotalVal">$0</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-blue" id="assetAssetsProgress" style="width: 0%;"></div></div>
             </div>
           </div>
-          <button class="btn-card-action">Apply</button>
         </div>
 
-        <div class="interactive-card" onclick="applyJob('Software Engineer', 98000, 2, 60, '💻')">
+        <!-- Owned Assets Inventory -->
+        <div class="section-title"><span>📦</span> My Owned Assets (<span id="ownedAssetsCount">0</span>)</div>
+        <div id="ownedAssetsList">
+          <!-- Dynamically populated by renderAssetsPage() -->
+        </div>
+
+        <!-- Real Estate Market -->
+        <div class="section-title"><span>🏠</span> Real Estate Market</div>
+
+        <div class="interactive-card" onclick="buyAsset('property', 'Studio Apartment', 85000, '🏢')">
           <div class="card-left-group">
-            <div class="card-emoji-box">💻</div>
+            <div class="card-emoji-box">🏢</div>
             <div class="card-texts">
-              <h4>Software Engineer ($98,000/yr)</h4>
-              <p>Requires University degree (Bachelor's) & Smarts ≥ 60.</p>
+              <h4>Studio Apartment ($85,000)</h4>
+              <p>Modern starter condo in the downtown center.</p>
             </div>
           </div>
-          <button class="btn-card-action">Apply</button>
+          <button class="btn-card-action secondary">Purchase</button>
         </div>
 
-        <div class="interactive-card" onclick="applyJob('Corporate Lawyer', 165000, 3, 70, '⚖️')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">⚖️</div>
-            <div class="card-texts">
-              <h4>Corporate Lawyer ($165,000/yr)</h4>
-              <p>Requires Law School degree (J.D.) & Smarts ≥ 70.</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Apply</button>
-        </div>
-
-        <div class="interactive-card" onclick="applyJob('Medical Surgeon', 185000, 3, 80, '🩺')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🩺</div>
-            <div class="card-texts">
-              <h4>Medical Surgeon ($185,000/yr)</h4>
-              <p>Requires Medical School degree (M.D.) & Smarts ≥ 80.</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Apply</button>
-        </div>
-
-        <div class="interactive-card" onclick="applyJob('Corporate CEO', 420000, 3, 90, '👑')">
-          <div class="card-left-group">
-            <div class="card-emoji-box">👑</div>
-            <div class="card-texts">
-              <h4>Corporate CEO ($420,000/yr)</h4>
-              <p>Requires Business School (MBA) or Degree & Smarts ≥ 90.</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Apply</button>
-        </div>
-
-        <div class="section-title"><span>🏠</span> Real Estate & Properties</div>
-
-        <div class="interactive-card" onclick="buyProperty('Suburban House', 250000)">
+        <div class="interactive-card" onclick="buyAsset('property', 'Suburban Family Home', 250000, '🏡')">
           <div class="card-left-group">
             <div class="card-emoji-box">🏡</div>
             <div class="card-texts">
-              <h4>Suburban House ($250,000)</h4>
-              <p>A cozy family home with a spacious green backyard.</p>
+              <h4>Suburban Family Home ($250,000)</h4>
+              <p>Cozy 3-bedroom house with a spacious green backyard.</p>
             </div>
           </div>
           <button class="btn-card-action secondary">Purchase</button>
         </div>
 
-        <div class="interactive-card" onclick="buyProperty('Luxury Penthouse', 850000)">
+        <div class="interactive-card" onclick="buyAsset('property', 'Luxury Skyline Penthouse', 850000, '🏙️')">
           <div class="card-left-group">
             <div class="card-emoji-box">🏙️</div>
             <div class="card-texts">
-              <h4>Luxury Penthouse ($850,000)</h4>
-              <p>Skyline view, private elevator, and rooftop swimming pool.</p>
+              <h4>Luxury Skyline Penthouse ($850,000)</h4>
+              <p>Panoramic skyline view, private elevator & terrace.</p>
             </div>
           </div>
           <button class="btn-card-action secondary">Purchase</button>
+        </div>
+
+        <div class="interactive-card" onclick="buyAsset('property', 'Waterfront Seaside Villa', 2200000, '🏖️')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🏖️</div>
+            <div class="card-texts">
+              <h4>Waterfront Seaside Villa ($2,200,000)</h4>
+              <p>Gated private estate with infinity pool and yacht dock.</p>
+            </div>
+          </div>
+          <button class="btn-card-action secondary">Purchase</button>
+        </div>
+
+        <!-- Automobile Dealership (Vehicles) -->
+        <div class="section-title"><span>🚗</span> Automobile Dealership</div>
+
+        <div class="interactive-card" onclick="buyAsset('vehicle', 'Used Compact Sedan', 6500, '🚗')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🚗</div>
+            <div class="card-texts">
+              <h4>Used Compact Sedan ($6,500)</h4>
+              <p>Reliable daily commuter vehicle. (Age 16+)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Buy Car</button>
+        </div>
+
+        <div class="interactive-card" onclick="buyAsset('vehicle', 'Electric Luxury SUV', 48000, '🚙')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🚙</div>
+            <div class="card-texts">
+              <h4>Electric Luxury SUV ($48,000)</h4>
+              <p>Dual-motor AWD, autopilot, and zero emissions. (Age 16+)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Buy SUV</button>
+        </div>
+
+        <div class="interactive-card" onclick="buyAsset('vehicle', 'High-Performance Supercar', 180000, '🏎️')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🏎️</div>
+            <div class="card-texts">
+              <h4>High-Performance Supercar ($180,000)</h4>
+              <p>Twin-turbo V8, blistering acceleration & status. (Age 16+)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Buy Supercar</button>
+        </div>
+
+        <!-- Luxury Goods & Valuables -->
+        <div class="section-title"><span>💎</span> Luxury Goods & Valuables</div>
+
+        <div class="interactive-card" onclick="buyAsset('luxury', 'Swiss Chronometer Watch', 12000, '⌚')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">⌚</div>
+            <div class="card-texts">
+              <h4>Swiss Chronometer Watch ($12,000)</h4>
+              <p>Handcrafted timepiece of horological prestige.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Purchase</button>
+        </div>
+
+        <div class="interactive-card" onclick="buyAsset('luxury', 'Diamond Solitaire Ring', 25000, '💍')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">💍</div>
+            <div class="card-texts">
+              <h4>Diamond Solitaire Ring ($25,000)</h4>
+              <p>Flawless 3-carat brilliant cut diamond.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Purchase</button>
         </div>
       </div>
 
@@ -1304,6 +1347,8 @@
       isAlive: true,
       partner: null,
       properties: [],
+      assets: [],
+      partTimeJob: null,
       father: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
       mother: { name: "Emma McCartney", job: "Grocer", age: 40 },
       sister: { name: "Madison McCartney", age: 8 },
@@ -1433,6 +1478,8 @@
       char.isAlive = true;
       char.partner = null;
       char.properties = [];
+      char.assets = [];
+      char.partTimeJob = null;
 
       initSchoolState();
 
@@ -1601,6 +1648,9 @@
       // Render Page 2: Dedicated School Page Dashboard
       updateSchoolDashboard();
 
+      // Render Page 3: Assets & Net Worth
+      renderAssetsPage();
+
       // Render Page 4: Family Relationships
       renderRelationships();
 
@@ -1714,6 +1764,12 @@
         const livingCost = Math.round(char.salary * 0.32) + 750;
         const net = char.salary - livingCost;
         char.money += net;
+      }
+
+      // Part-time job income
+      if (char.partTimeJob) {
+        char.money += char.partTimeJob.pay;
+        yearNotes.push(`💵 Earned $${char.partTimeJob.pay.toLocaleString()} from my part-time job as a ${char.partTimeJob.title}.`);
       }
 
       // Annual Student Debt Repayments (if not currently in college/grad school)
@@ -1882,9 +1938,9 @@
       render();
       setTimeout(() => scrollViewportToBottom(true), 60);
 
-      // Occasional dilemmas
-      if (char.isAlive && char.age >= 10 && Math.random() < 0.30) {
-        setTimeout(popupDilemma, 320);
+      // Situations & Contextual Dilemmas (~45% annual rate if alive and age >= 10)
+      if (char.isAlive && char.age >= 10 && Math.random() < 0.45) {
+        setTimeout(triggerContextualSituation, 350);
       }
     }
 
@@ -1913,65 +1969,541 @@
       }
     }
 
-    // DILEMMAS & CHOICES
-    function popupDilemma() {
-      const dilemmas = [
-        {
-          icon: "🐶",
-          title: "Abandoned Puppy",
-          desc: "You found a shivering puppy abandoned under a park bench.",
+    // DYNAMIC SITUATION POPUPS & DILEMMAS ENGINE
+    function triggerContextualSituation() {
+      if (!char.isAlive) return;
+
+      const pool = [];
+
+      // 1. Workplace Situations (if employed full-time)
+      if (char.salary > 0) {
+        pool.push({
+          icon: "😤",
+          title: "Credit Thief",
+          desc: "Your colleague Greg claimed full credit for your 3-week project in front of senior management.",
           choices: [
-            { text: "Adopt the puppy ($100)", fn: () => { char.happiness += 18; char.money -= 100; recordAction("I adopted the cute puppy and named him Buster!"); } },
-            { text: "Take it to the animal shelter", fn: () => { char.happiness += 6; recordAction("I safely dropped the puppy off at a no-kill animal shelter."); } },
-            { text: "Walk away", fn: () => { char.happiness -= 8; recordAction("I walked away from the puppy feeling guilty."); } }
-          ]
-        },
-        {
-          icon: "👊",
-          title: "School Bully",
-          desc: "A confrontational classmate tries to intimidate you in the hallway.",
-          choices: [
-            { text: "Stand your ground and fight back", fn: () => { char.health -= 10; char.looks += 4; char.happiness += 12; recordAction("I stood up to the bully! Got a bruise but earned total respect."); } },
-            { text: "Report them to the principal", fn: () => { char.smarts += 4; recordAction("I reported the bully and they received detention."); } },
-            { text: "Give in and walk away", fn: () => { char.happiness -= 10; recordAction("I backed down and felt frustrated."); } }
-          ]
-        },
-        {
-          icon: "📈",
-          title: "Crypto Opportunity",
-          desc: "A tech friend shares an early-stage cryptocurrency tip.",
-          choices: [
-            { text: "Invest $500", fn: () => {
-              if (Math.random() > 0.45) {
-                char.money += 2500; char.happiness += 20; recordAction("The crypto coin skyrocketed! I earned $2,500 profit.");
-              } else {
-                char.money -= 500; char.happiness -= 15; recordAction("The token plummeted to zero. I lost $500.");
+            {
+              text: "Expose Greg in the meeting with your project files",
+              fn: () => {
+                if (char.smarts >= 50) {
+                  if (char.school) char.school.jobPerformance = clamp((char.school.jobPerformance || 70) + 15, 0, 100);
+                  char.happiness = clamp(char.happiness + 12, 0, 100);
+                  recordAction("Exposed Greg's credit theft with clear documentation! Management commended my honesty and initiative. (+Performance, +Happiness)");
+                  showPopup("Management reviewed your timestamps and reprimanded Greg! Your job performance rose.", "Credit Reclaimed! 🎯", "👏");
+                } else {
+                  if (char.school) char.school.jobPerformance = clamp((char.school.jobPerformance || 70) - 8, 0, 100);
+                  char.happiness = clamp(char.happiness - 8, 0, 100);
+                  recordAction("The confrontation in the meeting turned awkward and management asked everyone to calm down. (-Performance)");
+                  showPopup("The confrontation turned tense. Management urged the team to avoid public drama.", "Tense Meeting", "😐");
+                }
               }
-            }},
-            { text: "Keep savings safe", fn: () => { recordAction("I decided not to risk my savings on volatile tokens."); } }
+            },
+            {
+              text: "Report him privately to HR and the director",
+              fn: () => {
+                if (char.school) char.school.jobPerformance = clamp((char.school.jobPerformance || 70) + 8, 0, 100);
+                char.smarts = clamp(char.smarts + 4, 0, 100);
+                recordAction("Filed an official HR complaint regarding the stolen project credit. (+Performance)");
+                showPopup("HR investigated and formally credited you as lead author on the initiative.", "HR Resolution", "📋");
+              }
+            },
+            {
+              text: "Let it go to maintain breakroom peace",
+              fn: () => {
+                char.happiness = clamp(char.happiness - 12, 0, 100);
+                recordAction("I let Greg take credit for my hard work and stewed in frustration. (-Happiness)");
+                showPopup("You stayed quiet while Greg soaked in applause. You felt resentful and unappreciated.", "Swallowed Pride", "😞");
+              }
+            }
           ]
+        });
+
+        pool.push({
+          icon: "🤫",
+          title: "Corporate Kickback",
+          desc: "A software vendor offers you an illicit $3,500 cash envelope under the table to fast-track their contract renewal.",
+          choices: [
+            {
+              text: "Accept the $3,500 cash kickback",
+              fn: () => {
+                if (Math.random() < 0.45) {
+                  char.salary = 0;
+                  char.occupation = "Unemployed";
+                  char.occIcon = "🛋️";
+                  char.money = Math.max(0, char.money - 5000);
+                  char.happiness = clamp(char.happiness - 30, 0, 100);
+                  recordAction("🚨 Caught accepting an illegal vendor kickback! Immediately fired and fined $5,000.");
+                  showPopup("Corporate Compliance discovered the illicit transaction! You were terminated immediately and fined $5,000.", "Caught & Fired! 🚨", "🚨");
+                } else {
+                  char.money += 3500;
+                  char.happiness = clamp(char.happiness + 10, 0, 100);
+                  recordAction("Discreetly pocketed $3,500 cash from the vendor without getting caught.");
+                  showPopup("You pocketed the cash envelope. No one noticed, but the guilt lingers.", "Shady Cash 💰", "💵");
+                }
+              }
+            },
+            {
+              text: "Report the bribery attempt to Legal & Compliance",
+              fn: () => {
+                if (char.school) char.school.jobPerformance = clamp((char.school.jobPerformance || 70) + 18, 0, 100);
+                char.smarts = clamp(char.smarts + 8, 0, 100);
+                char.happiness = clamp(char.happiness + 14, 0, 100);
+                recordAction("Reported vendor bribery to Compliance. Commended for corporate integrity! (+Performance, +Smarts)");
+                showPopup("Compliance disqualified the vendor and praised your integrity at the company all-hands!", "Integrity Award 🏆", "🏆");
+              }
+            },
+            {
+              text: "Decline the envelope firmly without reporting",
+              fn: () => {
+                char.happiness = clamp(char.happiness + 5, 0, 100);
+                recordAction("Turned down the vendor's unethical offer cleanly.");
+                showPopup("You pushed the envelope away and instructed them to follow standard protocol.", "Offer Refused", "🛡️");
+              }
+            }
+          ]
+        });
+
+        pool.push({
+          icon: "🔥",
+          title: "Emergency Weekend Crunch",
+          desc: "The VP calls your cell at 8:00 AM Saturday requesting an emergency 48-hour sprint to save a critical enterprise account.",
+          choices: [
+            {
+              text: "Work all weekend without complaint",
+              fn: () => {
+                if (char.school) char.school.jobPerformance = clamp((char.school.jobPerformance || 70) + 20, 0, 100);
+                char.money += 1800;
+                char.happiness = clamp(char.happiness - 14, 0, 100);
+                char.health = clamp(char.health - 6, 0, 100);
+                recordAction("Worked 48 hours straight over the weekend! Saved the client and earned $1,800 overtime bonus. (+Perf, -$Health)");
+                showPopup("You pulled through and secured the client! The VP awarded you a $1,800 weekend sprint bonus.", "Client Saved! 💼", "💼");
+              }
+            },
+            {
+              text: "Politely decline to protect your rest & health",
+              fn: () => {
+                char.happiness = clamp(char.happiness + 10, 0, 100);
+                if (char.school) char.school.jobPerformance = clamp((char.school.jobPerformance || 70) - 8, 0, 100);
+                recordAction("Declined the emergency weekend overtime to rest. (+Happiness, -Performance)");
+                showPopup("You protected your weekend. The VP sounded annoyed, but your mental health thanked you.", "Recharged at Home", "🛌");
+              }
+            },
+            {
+              text: "Negotiate double overtime pay and two paid days off",
+              fn: () => {
+                if (char.school) char.school.jobPerformance = clamp((char.school.jobPerformance || 70) + 12, 0, 100);
+                char.money += 2600;
+                char.happiness = clamp(char.happiness - 5, 0, 100);
+                recordAction("Negotiated double-time pay and compensatory leave for the weekend sprint! (+$2,600)");
+                showPopup("The VP agreed to double time! You crushed the deliverables and banked $2,600.", "Savvy Negotiator 🤝", "💰");
+              }
+            }
+          ]
+        });
+      }
+
+      // 2. Part-Time Job Situations (if holding a part-time job)
+      if (char.partTimeJob) {
+        pool.push({
+          icon: "🐕",
+          title: "Runaway Pet Incident",
+          desc: "While working your part-time shift, an excitable golden retriever bolts toward oncoming traffic!",
+          choices: [
+            {
+              text: "Sprint and lunge to snatch the leash",
+              fn: () => {
+                char.health = clamp(char.health - 6, 0, 100);
+                char.happiness = clamp(char.happiness + 14, 0, 100);
+                char.money += 50;
+                recordAction("Dived onto the sidewalk and stopped the dog just in time! Scraped your knee, but the owner rewarded you $50.");
+                showPopup("You safely secured the pup! The owner tipped you $50 for quick thinking.", "Heroic Rescue! 🐕", "🐕");
+              }
+            },
+            {
+              text: "Use bacon treats and a cheerful voice to lure it back",
+              fn: () => {
+                char.smarts = clamp(char.smarts + 8, 0, 100);
+                char.happiness = clamp(char.happiness + 10, 0, 100);
+                recordAction("Successfully lured the runaway dog back with treats and calm commands. (+Smarts)");
+                showPopup("The dog turned right around for the bacon treat and wagged its tail!", "Clever Handler 🥓", "🐶");
+              }
+            },
+            {
+              text: "Freeze in shock and panic",
+              fn: () => {
+                char.happiness = clamp(char.happiness - 12, 0, 100);
+                recordAction("A bystander had to step in and grab the dog while I stood frozen. (-Happiness)");
+                showPopup("A kind bystander caught the leash. You received a stern reprimand from the pet owner.", "Shaken Up", "😰");
+              }
+            }
+          ]
+        });
+
+        pool.push({
+          icon: "☕",
+          title: "Irate Customer Outburst",
+          desc: "An aggressive customer slams their coffee cup on the counter and demands you be fired for slow service.",
+          choices: [
+            {
+              text: "Stay polite, remake the order quickly, and offer a pastry voucher",
+              fn: () => {
+                char.smarts = clamp(char.smarts + 8, 0, 100);
+                char.happiness = clamp(char.happiness + 6, 0, 100);
+                recordAction("De-escalated a furious customer with impeccable professionalism. (+Smarts)");
+                showPopup("The customer calmed down and your shift supervisor noted your stellar de-escalation skills.", "Professional Grace ☕", "🌟");
+              }
+            },
+            {
+              text: "Call the supervisor to handle the hostility",
+              fn: () => {
+                char.happiness = clamp(char.happiness + 5, 0, 100);
+                recordAction("Delegated an unreasonable customer to management.");
+                showPopup("Your manager asked the unruly customer to leave the premises.", "Manager Intervened", "🛡️");
+              }
+            },
+            {
+              text: "Lose your temper and shout back at them",
+              fn: () => {
+                char.happiness = clamp(char.happiness - 16, 0, 100);
+                const oldJob = char.partTimeJob.title;
+                char.partTimeJob = null;
+                recordAction(`Lost temper with a customer and was immediately fired from part-time job as ${oldJob}.`);
+                showPopup(`You lost your cool and screamed back! Store management fired you on the spot.`, "Fired from Side Job! 🚪", "🚪");
+              }
+            }
+          ]
+        });
+
+        pool.push({
+          icon: "💵",
+          title: "Forgotten Cash Drawer Bill",
+          desc: "While balancing your cash register till at closing, you spot an unaccounted $100 bill stuck under the drawer.",
+          choices: [
+            {
+              text: "Turn it over to the store manager with your end-of-day slip",
+              fn: () => {
+                char.happiness = clamp(char.happiness + 15, 0, 100);
+                char.smarts = clamp(char.smarts + 6, 0, 100);
+                recordAction("Turned in found cash to management. Earned employee of the month! (+Happiness)");
+                showPopup("Your supervisor commended your honesty and gave you preferred scheduling!", "Honest Worker 🌟", "🌟");
+              }
+            },
+            {
+              text: "Slip the $100 bill into your pocket",
+              fn: () => {
+                if (Math.random() < 0.35) {
+                  const oldJob = char.partTimeJob.title;
+                  char.partTimeJob = null;
+                  char.happiness = clamp(char.happiness - 20, 0, 100);
+                  recordAction(`Security cameras caught me pocketing $100. Fired from ${oldJob} for theft.`);
+                  showPopup("Security footage caught you taking the bill! You were dismissed immediately.", "Caught on Camera! 🚨", "🚨");
+                } else {
+                  char.money += 100;
+                  char.happiness = clamp(char.happiness + 8, 0, 100);
+                  recordAction("Quietly took $100 from the cash register till.");
+                  showPopup("You took the $100. The audit somehow passed without incident.", "Pocketed Cash 💵", "💵");
+                }
+              }
+            },
+            {
+              text: "Leave it untouched in the register",
+              fn: () => {
+                recordAction("Decided not to get involved and left the misplaced bill in the drawer.");
+                showPopup("You closed the register and left the till for tomorrow's shift.", "Left Untouched", "🔒");
+              }
+            }
+          ]
+        });
+      }
+
+      // 3. School / College Situations
+      if (char.school && (char.school.stage === "High School" || char.school.stage === "University")) {
+        pool.push({
+          icon: "📝",
+          title: "Leaked Final Exam",
+          desc: "A fellow student sends you a direct message containing the exact answer key for tomorrow's midterm exam.",
+          choices: [
+            {
+              text: "Delete the leak and study hard with your own flashcards",
+              fn: () => {
+                char.smarts = clamp(char.smarts + 10, 0, 100);
+                char.school.grades = clamp(char.school.grades + 6, 0, 100);
+                recordAction("Studied honestly and aced the exam on merit! (+Smarts, +Grades)");
+                showPopup("You relied on your own hard work and earned an honest high grade!", "Honest Scholar 📚", "📚");
+              }
+            },
+            {
+              text: "Memorize the leaked answer key overnight",
+              fn: () => {
+                if (Math.random() < 0.40) {
+                  char.school.grades = 20;
+                  char.happiness = clamp(char.happiness - 25, 0, 100);
+                  recordAction("🚨 Caught with leaked exam answers! Received an F and placed on academic disciplinary probation.");
+                  showPopup("The professor flagged identical atypical answers! You failed the exam and received disciplinary probation.", "Academic Dishonesty! 🚨", "🚨");
+                } else {
+                  char.school.grades = clamp(char.school.grades + 18, 0, 100);
+                  char.happiness = clamp(char.happiness + 12, 0, 100);
+                  recordAction("Cheated using the leaked exam key and scored 100% undetected.");
+                  showPopup("You scored 100% on the exam! No one discovered the leaked key.", "Top Score (Cheated) 🤫", "🤫");
+                }
+              }
+            },
+            {
+              text: "Anonymously report the exam leak to the dean",
+              fn: () => {
+                char.smarts = clamp(char.smarts + 12, 0, 100);
+                char.happiness = clamp(char.happiness + 8, 0, 100);
+                recordAction("Reported leaked exam key. Faculty issued a newly drafted exam.");
+                showPopup("Faculty invalidated the compromised test and administered a fair exam for everyone.", "Leak Reported ⚖️", "⚖️");
+              }
+            }
+          ]
+        });
+
+        pool.push({
+          icon: "🔊",
+          title: "Late-Night Dorm Ruckus",
+          desc: "Neighbors down the hall are blasting heavy subwoofer bass at 2:30 AM the night before your 8:00 AM chemistry midterm.",
+          choices: [
+            {
+              text: "Put in foam earplugs and push through your study guide",
+              fn: () => {
+                char.smarts = clamp(char.smarts + 6, 0, 100);
+                char.happiness = clamp(char.happiness - 4, 0, 100);
+                recordAction("Studied through the dorm noise with earplugs. (+Smarts)");
+                showPopup("The foam earplugs muffled the beats enough for you to review chapter summaries.", "Focused Study 🎧", "🎧");
+              }
+            },
+            {
+              text: "Knock firmly and ask them to lower the music",
+              fn: () => {
+                if (Math.random() < 0.65) {
+                  char.happiness = clamp(char.happiness + 10, 0, 100);
+                  recordAction("Politely asked neighbors to lower music. They apologized and turned it off!");
+                  showPopup("They apologized, turned off the speaker, and wished you luck on your midterm!", "Peace Restored 🕊️", "🕊️");
+                } else {
+                  char.happiness = clamp(char.happiness - 10, 0, 100);
+                  recordAction("Neighbors mocked my request and turned the volume up louder. (-Happiness)");
+                  showPopup("They laughed and closed the door in your face. It was impossible to sleep.", "Rude Neighbors 😠", "😠");
+                }
+              }
+            },
+            {
+              text: "Give up on sleep and join the party",
+              fn: () => {
+                char.happiness = clamp(char.happiness + 18, 0, 100);
+                char.health = clamp(char.health - 6, 0, 100);
+                char.school.grades = clamp(char.school.grades - 8, 0, 100);
+                recordAction("Abandoned studying to party all night! (+Happiness, -Grades, -Health)");
+                showPopup("You partied until 5 AM! Unforgettable night, but you bombed the midterm with heavy eye bags.", "Wild Night 🎉", "🍻");
+              }
+            }
+          ]
+        });
+      }
+
+      // 4. Asset / Property / Vehicle Situations
+      if (char.assets && char.assets.length > 0) {
+        const hasVehicle = char.assets.some(a => a.type === 'vehicle');
+        const hasProp = char.assets.some(a => a.type === 'property');
+
+        if (hasVehicle) {
+          pool.push({
+            icon: "🚗",
+            title: "Highway Engine Sputter",
+            desc: "While driving at 70 MPH on the highway, your temperature gauge spikes into red and white smoke billows from the hood.",
+            choices: [
+              {
+                text: "Safely pull over to the shoulder and call roadside towing ($350)",
+                fn: () => {
+                  char.money = Math.max(0, char.money - 350);
+                  char.smarts = clamp(char.smarts + 5, 0, 100);
+                  char.happiness = clamp(char.happiness + 4, 0, 100);
+                  recordAction("Safely pulled vehicle over and had it towed for repair. (-$350)");
+                  showPopup("The mechanic replaced a cracked radiator hose. Your quick reaction saved the engine block!", "Safe Repair 🚗", "🚗");
+                }
+              },
+              {
+                text: "Try to push the car 5 more miles to your exit",
+                fn: () => {
+                  char.money = Math.max(0, char.money - 2200);
+                  char.happiness = clamp(char.happiness - 16, 0, 100);
+                  recordAction("Attempted to drive an overheating car. Completely cracked the engine cylinder head! (-$2,200)");
+                  showPopup("The engine seized completely on the freeway! Total rebuild cost: $2,200.", "Engine Seized! 💥", "💥");
+                }
+              },
+              {
+                text: "Pop the hood and attempt roadside DIY diagnosis",
+                fn: () => {
+                  if (char.smarts >= 55) {
+                    char.money = Math.max(0, char.money - 45);
+                    char.smarts = clamp(char.smarts + 8, 0, 100);
+                    char.happiness = clamp(char.happiness + 12, 0, 100);
+                    recordAction("Diagnosed a loose coolant clamp and fixed it on the roadside! (-$45, +Smarts)");
+                    showPopup("Your mechanical knowledge paid off! You tightened the clamp, topped off coolant, and drove home.", "DIY Mechanic 🔧", "🔧");
+                  } else {
+                    char.money = Math.max(0, char.money - 600);
+                    char.health = clamp(char.health - 6, 0, 100);
+                    recordAction("Burned your hand on hot steam attempting amateur roadside engine repairs. (-$600)");
+                    showPopup("Steam burned your fingers and you had to call a flatbed tow truck anyway.", "Amateur Mistake 🤕", "🤕");
+                  }
+                }
+              }
+            ]
+          });
         }
-      ];
 
-      const item = dilemmas[Math.floor(Math.random() * dilemmas.length)];
-      document.getElementById('dIcon').innerText = item.icon;
-      document.getElementById('dTitle').innerText = item.title;
-      document.getElementById('dDesc').innerText = item.desc;
+        if (hasProp) {
+          pool.push({
+            icon: "💧",
+            title: "Basement Pipe Catastrophe",
+            desc: "A winter freeze bursts the main water intake pipe in your property, flooding the basement with 3 inches of standing water.",
+            choices: [
+              {
+                text: "Shut off master valve and call emergency plumbers ($1,200)",
+                fn: () => {
+                  char.money = Math.max(0, char.money - 1200);
+                  char.smarts = clamp(char.smarts + 8, 0, 100);
+                  recordAction("Stopped water main and hired emergency restoration crews. (-$1,200)");
+                  showPopup("Quick action stopped the flood! Plumbers soldered the joint and industrial fans dried the flooring.", "Flood Mitigated 💧", "🛠️");
+                }
+              },
+              {
+                text: "File an expedited homeowner insurance claim ($500 deductible)",
+                fn: () => {
+                  char.money = Math.max(0, char.money - 500);
+                  char.happiness = clamp(char.happiness + 8, 0, 100);
+                  recordAction("Filed insurance claim for frozen pipe flood. Paid $500 deductible.");
+                  showPopup("Insurance approved the claim and sent certified restoration contractors to fix all drywall.", "Claim Approved 🏡", "📄");
+                }
+              },
+              {
+                text: "Try to mop up all the water with household towels",
+                fn: () => {
+                  char.health = clamp(char.health - 10, 0, 100);
+                  char.money = Math.max(0, char.money - 2800);
+                  char.happiness = clamp(char.happiness - 15, 0, 100);
+                  recordAction("Failed to clean flood in time. Severe mold forced a $2,800 emergency remediation. (-$2,800)");
+                  showPopup("Moisture seeped behind baseboards! Black mold formed, costing $2,800 to remediate.", "Mold Outbreak ☣️", "☣️");
+                }
+              }
+            ]
+          });
+        }
+      }
 
-      const choicesBox = document.getElementById('dChoices');
-      choicesBox.innerHTML = '';
-      item.choices.forEach((ch, idx) => {
-        const b = document.createElement('button');
-        b.className = idx === 0 ? 'choice-btn primary' : 'choice-btn';
-        b.innerText = ch.text;
-        b.onclick = () => {
-          document.getElementById('modalDilemma').classList.remove('active');
-          ch.fn();
-        };
-        choicesBox.appendChild(b);
+      // 5. General Life Situations
+      pool.push({
+        icon: "👛",
+        title: "Found Leather Wallet",
+        desc: "You spot a fat designer leather wallet on a sidewalk bench containing $750 cash, credit cards, and a driver's license.",
+        choices: [
+          {
+            text: "Contact the owner via license info and return everything intact",
+            fn: () => {
+              char.happiness = clamp(char.happiness + 25, 0, 100);
+              char.smarts = clamp(char.smarts + 8, 0, 100);
+              char.money += 150;
+              recordAction("Returned lost wallet intact to its owner. The tearful owner insisted on giving me a $150 reward! (+Happiness, +$150)");
+              showPopup("The grateful owner hugged you with tears in their eyes and handed you a $150 cash reward!", "Good Samaritan 🌟", "🌟");
+            }
+          },
+          {
+            text: "Turn it over to the front desk at the nearest police station",
+            fn: () => {
+              char.happiness = clamp(char.happiness + 15, 0, 100);
+              char.smarts = clamp(char.smarts + 5, 0, 100);
+              recordAction("Delivered lost wallet to police lost-and-found. (+Happiness)");
+              showPopup("The desk sergeant logged the wallet and praised your honest citizenship.", "Civic Duty 👮", "👮");
+            }
+          },
+          {
+            text: "Pocket the $750 cash and toss the wallet in a bin",
+            fn: () => {
+              char.money += 750;
+              char.happiness = clamp(char.happiness - 15, 0, 100);
+              recordAction("Pocketed $750 cash from a lost wallet and discarded the owner's cards. (+$750, -Happiness)");
+              showPopup("You kept the money, but your conscience gnaws at you every time you open your purse.", "Guilty Cash 💸", "💸");
+            }
+          }
+        ]
       });
 
-      document.getElementById('modalDilemma').classList.add('active');
+      pool.push({
+        icon: "🐱",
+        title: "Shivering Stray Kitten",
+        desc: "A drenched calico kitten with huge green eyes scratches at your front door during a violent thunder storm.",
+        choices: [
+          {
+            text: "Bring it inside, towel it dry, and adopt it ($100 vet checkup)",
+            fn: () => {
+              char.money = Math.max(0, char.money - 100);
+              char.happiness = clamp(char.happiness + 26, 0, 100);
+              recordAction("Adopted the stray kitten and named her Mochi! She purrs on my lap every night. (+Happiness)");
+              showPopup("Mochi is healthy and vaccinated! She curls up on your chest whenever you sleep.", "New Best Friend 🐱", "🐱");
+            }
+          },
+          {
+            text: "Transport it to a well-funded no-kill animal sanctuary",
+            fn: () => {
+              char.happiness = clamp(char.happiness + 12, 0, 100);
+              recordAction("Safely transported the stray kitten to a reputable no-kill sanctuary.");
+              showPopup("The rescue sanctuary accepted the kitten and promised to find her a loving forever home.", "Safe at Shelter 🐾", "🐾");
+            }
+          },
+          {
+            text: "Shoo it off your porch into the alley",
+            fn: () => {
+              char.happiness = clamp(char.happiness - 14, 0, 100);
+              recordAction("Shooed away the shivering kitten. Felt intensely guilty all week. (-Happiness)");
+              showPopup("You closed the blinds. Her faint meows outside kept you awake with regret.", "Hardened Heart 💔", "💔");
+            }
+          }
+        ]
+      });
+
+      pool.push({
+        icon: "📱",
+        title: "Suspicious Prize Call",
+        desc: "A robotic voice calls claiming you won $450,000 in a government grant, requiring a $250 fee to unlock funds.",
+        choices: [
+          {
+            text: "Hang up immediately and register number on Do-Not-Call registry",
+            fn: () => {
+              char.smarts = clamp(char.smarts + 10, 0, 100);
+              char.happiness = clamp(char.happiness + 5, 0, 100);
+              recordAction("Avoided phone grant scam and reported caller. (+Smarts)");
+              showPopup("You recognized the classic phishing scheme and protected your bank credentials.", "Scam Thwarted 🛡️", "🛡️");
+            }
+          },
+          {
+            text: "Keep the scammer talking for 45 minutes wasting their time",
+            fn: () => {
+              char.happiness = clamp(char.happiness + 15, 0, 100);
+              char.smarts = clamp(char.smarts + 6, 0, 100);
+              recordAction("Trolled a phone scammer for 45 minutes with fake account numbers! (+Happiness)");
+              showPopup("You gave them bogus bank codes until they screamed in frustration and hung up!", "Master Troll 😂", "😂");
+            }
+          },
+          {
+            text: "Transfer the $250 processing wire fee",
+            fn: () => {
+              char.money = Math.max(0, char.money - 250);
+              char.happiness = clamp(char.happiness - 16, 0, 100);
+              char.smarts = clamp(char.smarts - 5, 0, 100);
+              recordAction("Fell for a prize telephone scam and lost $250 wire transfer. (-$250, -Smarts)");
+              showPopup("The grant money never arrived and their phone line disconnected permanently.", "Scammed! 🤦", "💸");
+            }
+          }
+        ]
+      });
+
+      const item = pool[Math.floor(Math.random() * pool.length)];
+      showCustomDilemma(item.title, item.desc, item.choices, item.icon);
+    }
+
+    function popupDilemma() {
+      triggerContextualSituation();
     }
 
     function recordAction(str) {
@@ -2258,6 +2790,196 @@
         showPopup(`🎉 Welcome aboard! You have officially started working as a ${title} making $${pay.toLocaleString()}/year!`, "Hired! 🎉", "💼");
         render();
       }, "Job Offer", "💼", "Accept Offer");
+    }
+
+    // PART-TIME JOBS SYSTEM
+    const PART_TIME_JOBS = [
+      { title: "Dog Walker", pay: 3600, minAge: 14, reqSmarts: 0, icon: "🐶", desc: "Walk neighborhood dogs after school/hours." },
+      { title: "Babysitter", pay: 4800, minAge: 14, reqSmarts: 10, icon: "👶", desc: "Watch local family children in the evenings." },
+      { title: "Grocery Cashier", pay: 6200, minAge: 15, reqSmarts: 15, icon: "🛒", desc: "Scan groceries and bag goods at the supermarket." },
+      { title: "Cafe Barista", pay: 7400, minAge: 16, reqSmarts: 25, icon: "☕", desc: "Brew artisan espresso and serve morning commuters." },
+      { title: "Warehouse Stocker", pay: 9200, minAge: 18, reqSmarts: 20, icon: "📦", desc: "Night-shift inventory sorting and heavy boxes." },
+      { title: "Freelance Tech Support", pay: 12000, minAge: 18, reqSmarts: 50, icon: "💻", desc: "Troubleshoot PCs, WiFi routers, and software." }
+    ];
+
+    function applyPartTimeJob(title, pay, minAge, reqSmarts, icon) {
+      if (!char.isAlive) return;
+
+      if (char.age < minAge) {
+        showPopup(`You must be at least ${minAge} years old to work as a ${title}!`, "Too Young", "👶");
+        return;
+      }
+
+      if (char.smarts < reqSmarts) {
+        showPopup(`Failed the interview for ${title}. Requires Smarts ≥ ${reqSmarts}%. (Your Smarts: ${char.smarts}%)`, "Job Interview", "💼");
+        return;
+      }
+
+      const promptText = char.partTimeJob
+        ? `You are currently working as a ${char.partTimeJob.title} ($${char.partTimeJob.pay.toLocaleString()}/yr). Switch to ${title} ($${pay.toLocaleString()}/yr)?`
+        : `Accept part-time job as a ${title} paying $${pay.toLocaleString()}/year?`;
+
+      showConfirm(promptText, () => {
+        char.partTimeJob = { title, pay, icon };
+        char.happiness = clamp(char.happiness + 10, 0, 100);
+        recordAction(`💼 Started working part-time as a ${title} ($${pay.toLocaleString()}/yr)!`);
+        showPopup(`🎉 You were hired as a part-time ${title}! You will earn $${pay.toLocaleString()} each year you age.`, "Hired Part-Time! 🎉", icon);
+        render();
+      }, "Part-Time Job", icon, "Accept Job");
+    }
+
+    function quitPartTimeJob() {
+      if (!char.isAlive || !char.partTimeJob) return;
+      showConfirm(`Quit your part-time job as a ${char.partTimeJob.title}?`, () => {
+        const oldTitle = char.partTimeJob.title;
+        char.partTimeJob = null;
+        recordAction(`🚪 Resigned from part-time job as ${oldTitle}.`);
+        showPopup(`You resigned from your part-time job as ${oldTitle}.`, "Job Resigned", "🚪");
+        render();
+      }, "Resign Part-Time Job", "🚪", "Quit Job");
+    }
+
+    function openPartTimeJobsModal() {
+      if (!char.isAlive) return;
+      let html = '<div class="modal-sublist">';
+      PART_TIME_JOBS.forEach(j => {
+        const isCurrent = char.partTimeJob && char.partTimeJob.title === j.title;
+        html += `
+          <div class="modal-subitem" onclick="applyPartTimeJob('${j.title}', ${j.pay}, ${j.minAge}, ${j.reqSmarts}, '${j.icon}')">
+            <span class="modal-subitem-icon">${j.icon}</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${j.title} ($${j.pay.toLocaleString()}/yr)</div>
+              <div class="modal-subitem-sub">Age ${j.minAge}+ • Smarts ≥ ${j.reqSmarts}% • ${j.desc}</div>
+            </div>
+            <button class="modal-subitem-action">${isCurrent ? 'Current' : 'Apply'}</button>
+          </div>
+        `;
+      });
+      html += '</div>';
+      showCustomModal("Part-Time Jobs & Side Gigs", "🕒", html, `<button class="modal-btn" onclick="closeModal()">Close</button>`);
+    }
+
+    // ASSETS & NET WORTH SYSTEM
+    function renderAssetsPage() {
+      const assets = char.assets || [];
+      const totalAssetValue = assets.reduce((sum, a) => sum + (a.price || 0), 0);
+      const debt = (char.school && char.school.studentDebt) ? char.school.studentDebt : 0;
+      const netWorth = char.money + totalAssetValue - debt;
+
+      const netWorthDesc = document.getElementById('assetNetWorthDesc');
+      if (netWorthDesc) {
+        netWorthDesc.innerText = `Total Net Worth: ${(netWorth >= 0 ? '$' : '-$') + Math.abs(netWorth).toLocaleString()}`;
+      }
+      const liquidCashEl = document.getElementById('assetLiquidCash');
+      if (liquidCashEl) {
+        liquidCashEl.innerText = (char.money >= 0 ? '$' : '-$') + Math.abs(char.money).toLocaleString();
+      }
+      const assetValEl = document.getElementById('assetTotalVal');
+      if (assetValEl) {
+        assetValEl.innerText = `$${totalAssetValue.toLocaleString()}`;
+      }
+
+      const countEl = document.getElementById('ownedAssetsCount');
+      if (countEl) countEl.innerText = assets.length;
+
+      const listEl = document.getElementById('ownedAssetsList');
+      if (listEl) {
+        if (assets.length === 0) {
+          listEl.innerHTML = `
+            <div style="text-align:center; padding:16px 12px; font-size:12px; color:#64748B; background:#F8FAFC; border:1px dashed #CBD5E1; border-radius:10px; margin-bottom:10px;">
+              You do not own any properties, vehicles, or luxury assets yet.
+            </div>
+          `;
+        } else {
+          let html = '';
+          assets.forEach((a) => {
+            const resale = Math.round(a.price * 0.90);
+            html += `
+              <div class="interactive-card">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${a.icon || '📦'}</div>
+                  <div class="card-texts">
+                    <h4>${a.name}</h4>
+                    <p>Estimated Market: $${a.price.toLocaleString()} • Resale: $${resale.toLocaleString()} (${a.type})</p>
+                  </div>
+                </div>
+                <button class="btn-card-action secondary" onclick="sellAsset('${a.id}')">Sell</button>
+              </div>
+            `;
+          });
+          listEl.innerHTML = html;
+        }
+      }
+    }
+
+    function buyAsset(type, name, price, icon) {
+      if (!char.isAlive) return;
+
+      if (type === 'vehicle' && char.age < 16) {
+        showPopup("You must be at least 16 years old to purchase and operate a motor vehicle!", "Automobile Dealership", "🚗");
+        return;
+      }
+
+      if (char.money < price) {
+        showPopup(`You cannot afford this asset! You need $${price.toLocaleString()} but currently have $${char.money.toLocaleString()}.`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      showConfirm(`Purchase ${name} for $${price.toLocaleString()}?`, () => {
+        char.money -= price;
+        if (!char.assets) char.assets = [];
+        const newAsset = {
+          id: "asset_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+          type: type,
+          name: name,
+          price: price,
+          icon: icon
+        };
+        char.assets.push(newAsset);
+
+        if (type === 'property') {
+          if (!char.properties) char.properties = [];
+          char.properties.push(name);
+          char.happiness = clamp(char.happiness + 25, 0, 100);
+          recordAction(`🏡 Purchased ${name} for $${price.toLocaleString()}!`);
+          showPopup(`🎉 Congratulations! You bought ${name} for $${price.toLocaleString()}! You are now a homeowner!`, "Property Acquired! 🏡", "🏡");
+        } else if (type === 'vehicle') {
+          char.happiness = clamp(char.happiness + 20, 0, 100);
+          recordAction(`🚗 Purchased ${name} for $${price.toLocaleString()}!`);
+          showPopup(`🎉 Nice ride! You purchased a brand new ${name} for $${price.toLocaleString()}!`, "Vehicle Purchased! 🚗", "🚗");
+        } else {
+          char.happiness = clamp(char.happiness + 15, 0, 100);
+          char.looks = clamp(char.looks + 4, 0, 100);
+          recordAction(`💎 Acquired a luxury ${name} for $${price.toLocaleString()}!`);
+          showPopup(`💎 You purchased ${name} for $${price.toLocaleString()}! Looking stylish!`, "Luxury Acquired! 💎", "💎");
+        }
+
+        render();
+      }, "Purchase Asset", icon, "Buy Now");
+    }
+
+    function buyProperty(name, price) {
+      buyAsset('property', name, price, '🏡');
+    }
+
+    function sellAsset(assetId) {
+      if (!char.isAlive || !char.assets) return;
+      const idx = char.assets.findIndex(a => a.id === assetId);
+      if (idx === -1) return;
+      const asset = char.assets[idx];
+      const resale = Math.round(asset.price * 0.90);
+
+      showConfirm(`Sell your ${asset.name} for $${resale.toLocaleString()} cash (90% market value)?`, () => {
+        char.money += resale;
+        char.assets.splice(idx, 1);
+        if (asset.type === 'property' && char.properties) {
+          const pIdx = char.properties.indexOf(asset.name);
+          if (pIdx !== -1) char.properties.splice(pIdx, 1);
+        }
+        recordAction(`💰 Sold ${asset.name} for $${resale.toLocaleString()} cash.`);
+        showPopup(`You sold your ${asset.name} and received $${resale.toLocaleString()} into your bank balance.`, "Asset Sold 💰", "💰");
+        render();
+      }, "Sell Asset", "💰", "Sell Asset");
     }
 
     function doUniversity() {
@@ -3161,6 +3883,30 @@
             </div>
             <button class="btn-card-action secondary">Drop Out</button>
           </div>
+
+          ${char.partTimeJob ? `
+            <div class="interactive-card">
+              <div class="card-left-group">
+                <div class="card-emoji-box">${char.partTimeJob.icon}</div>
+                <div class="card-texts">
+                  <h4>Part-Time Job: ${char.partTimeJob.title}</h4>
+                  <p>Income: $${char.partTimeJob.pay.toLocaleString()}/yr • Active student employment</p>
+                </div>
+              </div>
+              <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
+            </div>
+          ` : `
+            <div class="interactive-card" onclick="openPartTimeJobsModal()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🕒</div>
+                <div class="card-texts">
+                  <h4>Part-Time Student Jobs (Age 14+)</h4>
+                  <p>Earn supplemental income after school and on weekends</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Browse Gigs</button>
+            </div>
+          `}
         `;
       } else if (char.school && char.school.stage === "Dropout") {
         // 📦 HIGH SCHOOL DROPOUT
@@ -3202,15 +3948,39 @@
             <button class="btn-card-action">Study</button>
           </div>
 
-          <div class="interactive-card" onclick="switchTab('pageAssets', 'tabBtnAssets')">
+          ${char.partTimeJob ? `
+            <div class="interactive-card">
+              <div class="card-left-group">
+                <div class="card-emoji-box">${char.partTimeJob.icon}</div>
+                <div class="card-texts">
+                  <h4>Part-Time Job: ${char.partTimeJob.title}</h4>
+                  <p>Earnings: $${char.partTimeJob.pay.toLocaleString()}/yr • Active side gig</p>
+                </div>
+              </div>
+              <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
+            </div>
+          ` : `
+            <div class="interactive-card" onclick="openPartTimeJobsModal()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🕒</div>
+                <div class="card-texts">
+                  <h4>Part-Time Jobs & Side Gigs</h4>
+                  <p>Flexible work available without diploma</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Browse Gigs</button>
+            </div>
+          `}
+
+          <div class="interactive-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
             <div class="card-left-group">
-              <div class="card-emoji-box">💼</div>
+              <div class="card-emoji-box">🍔</div>
               <div class="card-texts">
-                <h4>Seek Entry-Level Work</h4>
-                <p>Browse career openings in the Assets tab</p>
+                <h4>Fast Food Worker ($18,000/yr)</h4>
+                <p>Entry-level job with no diploma required</p>
               </div>
             </div>
-            <button class="btn-card-action">Browse</button>
+            <button class="btn-card-action">Apply</button>
           </div>
         `;
       } else if (char.school && char.school.stage === "University") {
@@ -3266,16 +4036,29 @@
             <button class="btn-card-action secondary">Party</button>
           </div>
 
-          <div class="interactive-card" onclick="doCampusJob()">
-            <div class="card-left-group">
-              <div class="card-emoji-box">💼</div>
-              <div class="card-texts">
-                <h4>Work-Study Campus Job</h4>
-                <p>Earn $5,500 working in university facilities & labs</p>
+          ${char.partTimeJob ? `
+            <div class="interactive-card">
+              <div class="card-left-group">
+                <div class="card-emoji-box">${char.partTimeJob.icon}</div>
+                <div class="card-texts">
+                  <h4>Part-Time Job: ${char.partTimeJob.title}</h4>
+                  <p>Earnings: $${char.partTimeJob.pay.toLocaleString()}/yr • Supplemental college income</p>
+                </div>
               </div>
+              <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
             </div>
-            <button class="btn-card-action success">Work ($5.5k)</button>
-          </div>
+          ` : `
+            <div class="interactive-card" onclick="openPartTimeJobsModal()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🕒</div>
+                <div class="card-texts">
+                  <h4>Part-Time & Campus Jobs</h4>
+                  <p>Earn supplemental income to pay off tuition and debt</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Find Job</button>
+            </div>
+          `}
 
           <div class="interactive-card" onclick="openClassmatesModal()">
             <div class="card-left-group">
@@ -3457,24 +4240,180 @@
               <div class="school-overview-header">
                 <div class="school-overview-badge">🛋️</div>
                 <div class="school-overview-info">
-                  <div class="school-overview-name">Currently Unemployed</div>
-                  <div class="school-overview-desc">Search for job openings in Assets or advance education below</div>
+                  <div class="school-overview-name">Currently Unemployed (Full-Time)</div>
+                  <div class="school-overview-desc">Browse full-time career positions or side gigs below</div>
                 </div>
               </div>
-            </div>
-
-            <div class="interactive-card" onclick="switchTab('pageAssets', 'tabBtnAssets')">
-              <div class="card-left-group">
-                <div class="card-emoji-box">💼</div>
-                <div class="card-texts">
-                  <h4>Browse Career Openings</h4>
-                  <p>Apply for entry-level, tech, legal, medical, or corporate roles</p>
-                </div>
-              </div>
-              <button class="btn-card-action">Job Market</button>
             </div>
           `;
         }
+
+        // Active Part-Time Gig Status
+        if (char.partTimeJob) {
+          html += `
+            <div class="section-title"><span>🕒</span> Active Part-Time Gig</div>
+            <div class="interactive-card">
+              <div class="card-left-group">
+                <div class="card-emoji-box">${char.partTimeJob.icon}</div>
+                <div class="card-texts">
+                  <h4>${char.partTimeJob.title} ($${char.partTimeJob.pay.toLocaleString()}/yr)</h4>
+                  <p>Active part-time job • Supplemental annual earnings</p>
+                </div>
+              </div>
+              <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
+            </div>
+          `;
+        }
+
+        // Full-Time Career Market (Careers ONLY)
+        html += `
+          <div class="section-title"><span>💼</span> Full-Time Career Market</div>
+
+          <div class="interactive-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🍔</div>
+              <div class="card-texts">
+                <h4>Fast Food Worker ($18,000/yr)</h4>
+                <p>No education requirements. Entry level.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyJob('Retail Sales Associate', 28000, 1, 20, '🛍️')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🛍️</div>
+              <div class="card-texts">
+                <h4>Retail Sales Associate ($28,000/yr)</h4>
+                <p>Requires HS Diploma or GED & Smarts ≥ 20.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyJob('Graphic Designer', 42000, 1, 30, '🎨')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🎨</div>
+              <div class="card-texts">
+                <h4>Graphic Designer ($42,000/yr)</h4>
+                <p>Requires High School diploma or GED & Smarts ≥ 30.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyJob('Software Engineer', 98000, 2, 60, '💻')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💻</div>
+              <div class="card-texts">
+                <h4>Software Engineer ($98,000/yr)</h4>
+                <p>Requires University degree (Bachelor's) & Smarts ≥ 60.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyJob('Corporate Lawyer', 165000, 3, 70, '⚖️')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">⚖️</div>
+              <div class="card-texts">
+                <h4>Corporate Lawyer ($165,000/yr)</h4>
+                <p>Requires Law School degree (J.D.) & Smarts ≥ 70.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyJob('Medical Surgeon', 185000, 3, 80, '🩺')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🩺</div>
+              <div class="card-texts">
+                <h4>Medical Surgeon ($185,000/yr)</h4>
+                <p>Requires Medical School degree (M.D.) & Smarts ≥ 80.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyJob('Corporate CEO', 420000, 3, 90, '👑')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">👑</div>
+              <div class="card-texts">
+                <h4>Corporate CEO ($420,000/yr)</h4>
+                <p>Requires Business School (MBA) or Degree & Smarts ≥ 90.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="section-title"><span>🕒</span> Part-Time Jobs & Side Gigs</div>
+
+          <div class="interactive-card" onclick="applyPartTimeJob('Dog Walker', 3600, 14, 0, '🐶')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🐶</div>
+              <div class="card-texts">
+                <h4>Dog Walker ($3,600/yr)</h4>
+                <p>Walk local neighborhood pets. (Age 14+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyPartTimeJob('Babysitter', 4800, 14, 10, '👶')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">👶</div>
+              <div class="card-texts">
+                <h4>Babysitter ($4,800/yr)</h4>
+                <p>Watch neighborhood children in the evenings. (Age 14+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyPartTimeJob('Grocery Cashier', 6200, 15, 15, '🛒')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🛒</div>
+              <div class="card-texts">
+                <h4>Grocery Cashier ($6,200/yr)</h4>
+                <p>Operate supermarket register and bag goods. (Age 15+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyPartTimeJob('Cafe Barista', 7400, 16, 25, '☕')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">☕</div>
+              <div class="card-texts">
+                <h4>Cafe Barista ($7,400/yr)</h4>
+                <p>Craft espresso drinks and serve morning rush. (Age 16+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyPartTimeJob('Warehouse Stocker', 9200, 18, 20, '📦')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">📦</div>
+              <div class="card-texts">
+                <h4>Warehouse Stocker ($9,200/yr)</h4>
+                <p>Night-shift inventory sorting and boxes. (Age 18+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+
+          <div class="interactive-card" onclick="applyPartTimeJob('Freelance Tech Support', 12000, 18, 50, '💻')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💻</div>
+              <div class="card-texts">
+                <h4>Freelance Tech Support ($12,000/yr)</h4>
+                <p>Troubleshoot PCs, routers & setups. (Age 18+, Smarts ≥ 50)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Apply</button>
+          </div>
+        `;
 
         // Higher education section for adults
         if (char.school && char.school.hasDiploma && !char.school.hasDegree) {
