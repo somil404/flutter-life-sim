@@ -660,6 +660,171 @@
       flex-direction: column;
       gap: 10px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    /* SCHOOL & EDUCATION DASHBOARD STYLING */
+    .school-overview-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .school-overview-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .school-overview-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .school-overview-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .school-overview-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #0F172A;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .school-overview-desc {
+      font-size: 11.5px;
+      color: #64748B;
+      margin-top: 1px;
+    }
+
+    .school-metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .school-metric-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .school-metric-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #475569;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .school-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #E2E8F0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .school-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    .fill-green { background: #16A34A; }
+    .fill-blue { background: #2563EB; }
+    .fill-yellow { background: #CA8A04; }
+    .fill-red { background: #DC2626; }
+
+    /* MODAL SUB-LISTS & INTERACTIVE ITEMS */
+    .modal-sublist {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      text-align: left;
+      width: 100%;
+      margin: 6px 0;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .modal-subitem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 9px;
+      cursor: pointer;
+      gap: 8px;
+      transition: background 0.12s;
+    }
+
+    .modal-subitem:hover, .modal-subitem:active {
+      background: #F1F5F9;
+    }
+
+    .modal-subitem-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .modal-subitem-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .modal-subitem-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0F172A;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-subitem-sub {
+      font-size: 11px;
+      color: #64748B;
+    }
+
+    .modal-subitem-action {
+      background: #2563EB;
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 6px;
+      border: none;
+      flex-shrink: 0;
     }
 
     .modal-icon-bubble, .dilemma-icon-bubble {
@@ -787,54 +952,12 @@
       <!-- ================= PAGE 2: SCHOOL & EDUCATION ================= -->
       <div class="tab-page" id="pageSchool">
         <div class="page-top-bar">
-          <div class="page-top-title"><span id="schoolStageEmoji">🎒</span> <span id="schoolStageTitle">Primary School</span></div>
+          <div class="page-top-title"><span id="schoolStageEmoji">🎒</span> <span id="schoolStageTitle">School & Education</span></div>
           <button class="btn-close-page" onclick="closeToFeed()">✕ Close</button>
         </div>
 
-        <div class="interactive-card" id="schoolMainCard" onclick="doStudyHarder()">
-          <div class="card-left-group">
-            <div class="card-emoji-box" id="schoolMainIcon">📚</div>
-            <div class="card-texts">
-              <h4 id="schoolActionTitle">Study Harder</h4>
-              <p id="schoolActionDesc">Apply yourself in class and do extra homework (+Smarts)</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Study</button>
-        </div>
-
-        <div class="interactive-card" id="schoolExtracurricularCard" onclick="doExtracurricular()">
-          <div class="card-left-group">
-            <div class="card-emoji-box">⚽</div>
-            <div class="card-texts">
-              <h4 id="schoolClubTitle">Join Athletics & School Clubs</h4>
-              <p>Participate in sports teams and academic debate (+Health, +Looks)</p>
-            </div>
-          </div>
-          <button class="btn-card-action secondary">Join</button>
-        </div>
-
-        <div class="interactive-card" id="schoolClassmatesCard" onclick="interactWithClassmates()">
-          <div class="card-left-group">
-            <div class="card-emoji-box">👥</div>
-            <div class="card-texts">
-              <h4>Classmates & Teachers</h4>
-              <p id="schoolSocialDesc">Socialize, make friends, and chat with teachers (+Happiness)</p>
-            </div>
-          </div>
-          <button class="btn-card-action success">Socialize</button>
-        </div>
-
-        <div class="section-title"><span>🎓</span> Higher Education</div>
-
-        <div class="interactive-card" onclick="doUniversity()">
-          <div class="card-left-group">
-            <div class="card-emoji-box">🎓</div>
-            <div class="card-texts">
-              <h4>University Degree ($12,000)</h4>
-              <p>Requires Smarts ≥ 50. Unlocks executive positions.</p>
-            </div>
-          </div>
-          <button class="btn-card-action">Enroll</button>
+        <div id="schoolContentContainer" style="display: flex; flex-direction: column; gap: 9px;">
+          <!-- Dynamically populated based on stage & age -->
         </div>
       </div>
 
@@ -863,7 +986,7 @@
             <div class="card-emoji-box">🎨</div>
             <div class="card-texts">
               <h4>Graphic Designer ($42,000/yr)</h4>
-              <p>Requires High School diploma & Smarts ≥ 30.</p>
+              <p>Requires High School diploma or GED & Smarts ≥ 30.</p>
             </div>
           </div>
           <button class="btn-card-action">Apply</button>
@@ -874,29 +997,40 @@
             <div class="card-emoji-box">💻</div>
             <div class="card-texts">
               <h4>Software Engineer ($98,000/yr)</h4>
-              <p>Requires University degree & Smarts ≥ 60.</p>
+              <p>Requires University degree (Bachelor's) & Smarts ≥ 60.</p>
             </div>
           </div>
           <button class="btn-card-action">Apply</button>
         </div>
 
-        <div class="interactive-card" onclick="applyJob('Medical Surgeon', 185000, 2, 80, '🩺')">
+        <div class="interactive-card" onclick="applyJob('Corporate Lawyer', 165000, 3, 70, '⚖️')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">⚖️</div>
+            <div class="card-texts">
+              <h4>Corporate Lawyer ($165,000/yr)</h4>
+              <p>Requires Law School degree (J.D.) & Smarts ≥ 70.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Apply</button>
+        </div>
+
+        <div class="interactive-card" onclick="applyJob('Medical Surgeon', 185000, 3, 80, '🩺')">
           <div class="card-left-group">
             <div class="card-emoji-box">🩺</div>
             <div class="card-texts">
               <h4>Medical Surgeon ($185,000/yr)</h4>
-              <p>Requires University degree & Smarts ≥ 80.</p>
+              <p>Requires Medical School degree (M.D.) & Smarts ≥ 80.</p>
             </div>
           </div>
           <button class="btn-card-action">Apply</button>
         </div>
 
-        <div class="interactive-card" onclick="applyJob('Corporate CEO', 420000, 2, 90, '👑')">
+        <div class="interactive-card" onclick="applyJob('Corporate CEO', 420000, 3, 90, '👑')">
           <div class="card-left-group">
             <div class="card-emoji-box">👑</div>
             <div class="card-texts">
               <h4>Corporate CEO ($420,000/yr)</h4>
-              <p>Requires University degree & Smarts ≥ 90.</p>
+              <p>Requires Business School (MBA) or Degree & Smarts ≥ 90.</p>
             </div>
           </div>
           <button class="btn-card-action">Apply</button>
@@ -1162,7 +1296,7 @@
       salary: 0,
       occupation: "Infant",
       occIcon: "🍼",
-      educationLevel: 0, // 0: None, 1: High School, 2: University
+      educationLevel: 0, // 0: None, 1: High School / GED, 2: University Degree, 3: Graduate Degree
       happiness: 90,
       health: 95,
       smarts: 45,
@@ -1173,8 +1307,92 @@
       father: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
       mother: { name: "Emma McCartney", job: "Grocer", age: 40 },
       sister: { name: "Madison McCartney", age: 8 },
-      events: []
+      events: [],
+      school: null
     };
+
+    function initSchoolState() {
+      char.school = {
+        stage: "Infant", // "Infant", "Elementary", "Middle", "High School", "University", "Grad School", "Dropout", "Career"
+        schoolName: "None",
+        grades: 75,
+        popularity: 50,
+        clubs: [],
+        faculty: [],
+        classmates: [],
+        isDropout: false,
+        hasDiploma: false,
+        dropoutAge: null,
+        major: null,
+        yearsInUni: 0,
+        hasDegree: false,
+        scholarship: false,
+        studentDebt: 0,
+        gradProgram: null,
+        yearsInGrad: 0,
+        hasMedDegree: false,
+        hasLawDegree: false,
+        hasMBADegree: false,
+        jobPerformance: 70,
+        yearsInJob: 0,
+        studiedThisYear: false,
+        slackedThisYear: false
+      };
+    }
+
+    function generateSchoolName(stage) {
+      const prefixes = ["Oakridge", "Lincoln", "Westwood", "St. Jude", "Horizon", "Maplewood", "Sunnyvale", "Roosevelt", "Beacon", "Crestview"];
+      const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+      if (stage === "Elementary") return `${prefix} Elementary School`;
+      if (stage === "Middle") return `${prefix} Middle School`;
+      if (stage === "High") return `${prefix} High School`;
+      if (stage === "University") return `${prefix} State University`;
+      return `${prefix} Academy`;
+    }
+
+    function generateFaculty(stage) {
+      const titles = stage === "Elementary" 
+        ? ["Grade Teacher", "Reading Specialist"]
+        : stage === "Middle" 
+          ? ["Science Teacher", "Math Teacher", "Vice Principal"]
+          : ["Homeroom Teacher", "English Literature Teacher", "Principal"];
+      const lastNames = ["Higgins", "Gable", "Henderson", "Harrison", "Sterling", "Kovacs", "Sinclair", "Vance"];
+      const prefixes = ["Mr.", "Mrs.", "Ms.", "Dr."];
+      
+      const list = [];
+      const count = stage === "Elementary" ? 1 : 2;
+      for (let i = 0; i < count; i++) {
+        const p = prefixes[Math.floor(Math.random() * prefixes.length)];
+        const ln = lastNames[(Math.floor(Math.random() * lastNames.length) + i) % lastNames.length];
+        const role = titles[i % titles.length];
+        list.push({
+          name: `${p} ${ln}`,
+          role: role,
+          strictness: 30 + Math.floor(Math.random() * 50),
+          respect: 60 + Math.floor(Math.random() * 30)
+        });
+      }
+      return list;
+    }
+
+    function generateClassmates(stage) {
+      const boys = ["Tommy", "Liam", "Noah", "Ethan", "Lucas", "Oliver", "Mason"];
+      const girls = ["Emily", "Chloe", "Olivia", "Sophia", "Ava", "Emma", "Mia"];
+      const lastNames = ["Miller", "Watson", "Chen", "Davis", "Martinez", "Taylor", "Brooks", "Reed"];
+      const list = [];
+      for (let i = 0; i < 3; i++) {
+        const isBoy = Math.random() > 0.5;
+        const fn = isBoy ? boys[Math.floor(Math.random() * boys.length)] : girls[Math.floor(Math.random() * girls.length)];
+        const ln = lastNames[(Math.floor(Math.random() * lastNames.length) + i) % lastNames.length];
+        list.push({
+          name: `${fn} ${ln}`,
+          gender: isBoy ? "Male" : "Female",
+          friendship: 40 + Math.floor(Math.random() * 35),
+          popularity: 30 + Math.floor(Math.random() * 60)
+        });
+      }
+      return list;
+    }
 
     // TASKS / MILESTONES SYSTEM
     let tasks = [
@@ -1215,6 +1433,8 @@
       char.isAlive = true;
       char.partner = null;
       char.properties = [];
+
+      initSchoolState();
 
       char.father = { name: "David " + char.name.split(" ")[1], job: "Engineer", age: 28 };
       char.mother = { name: "Sarah " + char.name.split(" ")[1], job: "Teacher", age: 26 };
@@ -1496,22 +1716,154 @@
         char.money += net;
       }
 
-      // Milestones
+      // Annual Student Debt Repayments (if not currently in college/grad school)
+      if (char.age >= 18 && char.school && char.school.studentDebt > 0 && char.school.stage !== "University" && char.school.stage !== "Grad School") {
+        const debtPmt = Math.min(char.school.studentDebt, 1500);
+        char.school.studentDebt -= debtPmt;
+        char.money -= debtPmt;
+        yearNotes.push(`💳 Paid $${debtPmt.toLocaleString()} toward student loan repayment. ($${char.school.studentDebt.toLocaleString()} debt remaining).`);
+        if (char.school.studentDebt === 0) {
+          yearNotes.push("🎉 HOORAY! I have officially paid off all my student loans!");
+        }
+      }
+
+      // Annual School Grades Fluctuation
+      if (char.school && (char.school.stage === "Elementary" || char.school.stage === "Middle" || char.school.stage === "High School" || char.school.stage === "University")) {
+        if (!char.school.studiedThisYear) {
+          char.school.grades = clamp(char.school.grades - (1 + Math.floor(Math.random() * 2)), 10, 100);
+        }
+        char.school.studiedThisYear = false;
+        char.school.slackedThisYear = false;
+      }
+
+      // Milestones & Transitions
       if (char.age === 6) {
+        char.school.stage = "Elementary";
+        char.school.schoolName = generateSchoolName("Elementary");
+        char.school.grades = 75;
+        char.school.popularity = 50;
+        char.school.faculty = generateFaculty("Elementary");
+        char.school.classmates = generateClassmates("Elementary");
+        char.school.clubs = [];
         char.occupation = "Elementary Student";
         char.occIcon = "🎒";
-        yearNotes.push("I started attending Elementary School!");
-      } else if (char.age === 14) {
-        char.occupation = "High School Student";
-        char.occIcon = "🎒";
-        yearNotes.push("I entered High School.");
-      } else if (char.age === 18) {
-        char.educationLevel = Math.max(char.educationLevel, 1);
-        if (char.salary === 0) {
-          char.occupation = "High School Graduate";
-          char.occIcon = "🎓";
+        yearNotes.push(`🎒 I started attending Elementary School at ${char.school.schoolName}! My teacher is ${char.school.faculty[0].name}.`);
+      } else if (char.age === 11) {
+        if (!char.school.isDropout) {
+          char.school.stage = "Middle";
+          char.school.schoolName = generateSchoolName("Middle");
+          char.school.grades = 75;
+          char.school.faculty = generateFaculty("Middle");
+          char.school.classmates = generateClassmates("Middle");
+          char.school.clubs = [];
+          char.occupation = "Middle School Student";
+          char.occIcon = "🎒";
+          yearNotes.push(`🏫 I graduated from Elementary and began Middle School at ${char.school.schoolName}!`);
+        } else {
+          yearNotes.push("📅 Turned 11 years old.");
         }
-        yearNotes.push("🎓 I graduated from High School!");
+      } else if (char.age === 14) {
+        if (!char.school.isDropout) {
+          char.school.stage = "High School";
+          char.school.schoolName = generateSchoolName("High");
+          char.school.grades = 75;
+          char.school.faculty = generateFaculty("High");
+          char.school.classmates = generateClassmates("High");
+          char.school.clubs = [];
+          char.occupation = "High School Student";
+          char.occIcon = "🎒";
+          yearNotes.push(`🏫 I entered High School at ${char.school.schoolName} as a freshman!`);
+        } else {
+          yearNotes.push("📅 Turned 14 years old.");
+        }
+      } else if (char.age === 17 && char.school && char.school.stage === "High School") {
+        yearNotes.push("🎉 Senior year of High School! Prom night is here!");
+        setTimeout(popupPromNight, 360);
+      } else if (char.age === 18) {
+        if (char.school && char.school.stage === "High School") {
+          if (char.school.grades >= 50) {
+            char.school.hasDiploma = true;
+            char.educationLevel = 1;
+            char.school.stage = "Career";
+            if (char.salary === 0) {
+              char.occupation = "High School Graduate";
+              char.occIcon = "🎓";
+            }
+            if (char.school.grades >= 85) {
+              yearNotes.push(`🎓 I graduated from High School with High Honors (Valedictorian)! (Grades: ${char.school.grades}%)`);
+              setTimeout(() => showPopup(`🎓 Congratulations! You graduated from ${char.school.schoolName} with High Honors! You received your High School Diploma and are now eligible to apply to University.`, "Graduation Honors! 🎓", "🎓"), 320);
+            } else {
+              yearNotes.push(`🎓 I graduated from High School and received my diploma! (Grades: ${char.school.grades}%)`);
+              setTimeout(() => showPopup(`🎓 Congratulations! You graduated from ${char.school.schoolName}! You received your High School Diploma.`, "High School Graduate 🎓", "🎓"), 320);
+            }
+          } else {
+            char.school.isDropout = true;
+            char.school.hasDiploma = false;
+            char.school.stage = "Dropout";
+            char.occupation = "High School Dropout";
+            char.occIcon = "📦";
+            yearNotes.push(`⚠️ Due to failing grades (${char.school.grades}%), I failed to graduate from High School.`);
+            setTimeout(() => showPopup(`⚠️ You failed to graduate from High School due to failing grades (${char.school.grades}%). You did not receive a diploma, but you can take the GED exam to earn an equivalency diploma.`, "Graduation Failed", "⚠️"), 320);
+          }
+        } else if (char.school && char.school.isDropout) {
+          yearNotes.push("🎂 Celebrated my 18th birthday! As an adult, I can now take the GED equivalency test or seek full-time work.");
+        } else {
+          yearNotes.push("🎂 Celebrated my 18th birthday and officially entered adulthood!");
+        }
+      } else if (char.school && char.school.stage === "University") {
+        char.school.yearsInUni++;
+        if (char.school.yearsInUni === 1) {
+          yearNotes.push(`📚 Completed my Freshman year at ${char.school.schoolName}. GPA: ${Math.round(char.school.grades/25*10)/10}.`);
+        } else if (char.school.yearsInUni === 2) {
+          yearNotes.push(`📚 Finished my Sophomore year of university studying ${char.school.major}.`);
+        } else if (char.school.yearsInUni === 3) {
+          yearNotes.push(`📚 Completed my Junior year. Ready for my final Senior year!`);
+        } else if (char.school.yearsInUni >= 4) {
+          if (char.school.grades >= 50) {
+            char.school.hasDegree = true;
+            char.educationLevel = 2;
+            char.school.stage = "Career";
+            if (char.salary === 0) {
+              char.occupation = "University Graduate (" + char.school.major + ")";
+              char.occIcon = "🎓";
+            }
+            yearNotes.push(`🎓 I graduated from ${char.school.schoolName} with a Bachelor's Degree in ${char.school.major}!`);
+            setTimeout(() => showPopup(`🎓 DEGREE EARNED! Congratulations! You graduated from ${char.school.schoolName} with a Bachelor's Degree in ${char.school.major}! Higher-paying corporate careers and Graduate Schools are now unlocked.`, "Bachelor's Degree! 🎓", "🎓"), 320);
+          } else {
+            char.school.stage = "Career";
+            if (char.salary === 0) {
+              char.occupation = "College Dropout";
+              char.occIcon = "📦";
+            }
+            yearNotes.push(`⚠️ I was academically dismissed from university due to failing grades (${char.school.grades}%).`);
+            setTimeout(() => showPopup("⚠️ You were academically dismissed from university due to failing grades. Any remaining student loans must still be repaid.", "Academic Dismissal", "⚠️"), 320);
+          }
+        }
+      } else if (char.school && char.school.stage === "Grad School") {
+        char.school.yearsInGrad++;
+        const reqYears = char.school.gradProgram.includes("MBA") ? 2 : 3;
+        if (char.school.yearsInGrad >= reqYears) {
+          char.educationLevel = 3;
+          char.school.stage = "Career";
+          if (char.school.gradProgram === "Medical School") {
+            char.school.hasMedDegree = true;
+            if (char.salary === 0) { char.occupation = "Medical Doctor (M.D.)"; char.occIcon = "🩺"; }
+            yearNotes.push("🩺 I graduated from Medical School with a Medical Doctor (M.D.) degree!");
+            setTimeout(() => showPopup("🩺 Congratulations, Doctor! You earned your Medical Doctor (M.D.) degree. Medical Surgeon positions are now unlocked!", "Doctor of Medicine! 🩺", "🩺"), 320);
+          } else if (char.school.gradProgram === "Law School") {
+            char.school.hasLawDegree = true;
+            if (char.salary === 0) { char.occupation = "Law Graduate (J.D.)"; char.occIcon = "⚖️"; }
+            yearNotes.push("⚖️ I graduated from Law School and passed the bar exam with a Juris Doctor (J.D.)!");
+            setTimeout(() => showPopup("⚖️ Congratulations! You graduated with a Juris Doctor (J.D.) degree and passed the bar exam. Corporate Lawyer positions are now unlocked!", "Juris Doctor! ⚖️", "⚖️"), 320);
+          } else if (char.school.gradProgram === "Business School (MBA)") {
+            char.school.hasMBADegree = true;
+            if (char.salary === 0) { char.occupation = "MBA Graduate"; char.occIcon = "📈"; }
+            yearNotes.push("📈 I graduated from Business School with an MBA degree!");
+            setTimeout(() => showPopup("📈 Congratulations! You earned your Master of Business Administration (MBA). Corporate Executive positions are unlocked!", "MBA Graduate! 📈", "📈"), 320);
+          }
+        } else {
+          yearNotes.push(`📚 Completed Year ${char.school.yearsInGrad} of ${char.school.gradProgram}.`);
+        }
       } else {
         triggerAnnualEvents(yearNotes);
       }
@@ -1662,8 +2014,117 @@
       document.getElementById('gameModal').classList.add('active');
     }
 
+    function showCustomModal(title, icon, bodyHtml, actionsHtml = null) {
+      document.getElementById('modalIcon').innerText = icon;
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalBody').innerHTML = bodyHtml;
+      const actions = document.getElementById('modalActions');
+      if (actionsHtml) {
+        actions.innerHTML = actionsHtml;
+      } else {
+        actions.innerHTML = `<button class="modal-btn primary" onclick="closeModal()">Close</button>`;
+      }
+      document.getElementById('gameModal').classList.add('active');
+    }
+
+    function showCustomDilemma(title, desc, choices, icon = "🤔") {
+      document.getElementById('dIcon').innerText = icon;
+      document.getElementById('dTitle').innerText = title;
+      document.getElementById('dDesc').innerText = desc;
+      const choicesBox = document.getElementById('dChoices');
+      choicesBox.innerHTML = '';
+      choices.forEach((ch, idx) => {
+        const b = document.createElement('button');
+        b.className = idx === 0 ? 'choice-btn primary' : 'choice-btn';
+        b.innerText = ch.text;
+        b.onclick = () => {
+          document.getElementById('modalDilemma').classList.remove('active');
+          if (ch.fn) ch.fn();
+        };
+        choicesBox.appendChild(b);
+      });
+      document.getElementById('modalDilemma').classList.add('active');
+    }
+
     function closeModal() {
       document.getElementById('gameModal').classList.remove('active');
+    }
+
+    // HIGH SCHOOL PROM NIGHT EVENT
+    function popupPromNight() {
+      const partnerName = char.partner ? char.partner.name : (char.school && char.school.classmates.length > 0 ? char.school.classmates[0].name : "your crush");
+      const choices = [
+        {
+          text: `Ask ${partnerName} to be your Prom Date`,
+          fn: () => {
+            char.happiness = clamp(char.happiness + 25, 0, 100);
+            char.looks = clamp(char.looks + 5, 0, 100);
+            if (char.school) char.school.popularity = clamp(char.school.popularity + 15, 0, 100);
+            recordAction(`💃 I attended High School Prom with ${partnerName}! We were voted Prom royalty.`);
+            showPopup(`💃 You had a magical night at Prom with ${partnerName}! You danced under glitter balls and took memorable photos. (+Happiness, +Popularity)`, "Prom Royalty 👑", "💃");
+          }
+        },
+        {
+          text: "Go with a group of close classmates",
+          fn: () => {
+            char.happiness = clamp(char.happiness + 18, 0, 100);
+            if (char.school) char.school.popularity = clamp(char.school.popularity + 10, 0, 100);
+            recordAction("🕺 I arrived at Prom with an awesome crew of friends and danced all night!");
+            showPopup("🕺 You and your crew owned the dance floor! (+Happiness, +Popularity)", "Prom Night 🕺", "🕺");
+          }
+        },
+        {
+          text: "Skip Prom and stay home playing video games",
+          fn: () => {
+            char.happiness = clamp(char.happiness + 5, 0, 100);
+            recordAction("🛋️ I skipped High School Prom and had a cozy evening playing games at home.");
+            showPopup("🛋️ You relaxed at home with pizza and video games. No dress code, zero drama!", "Skipped Prom", "🛋️");
+          }
+        }
+      ];
+      showCustomDilemma("🎉 High School Prom Night", "Tonight is your Senior Prom! Music is pumping and students are arriving in limos. How will you attend?", choices, "🎉");
+    }
+
+    // TODDLER ACTIONS (AGES 0-5)
+    function doToddlerToys() {
+      if (!char.isAlive) return;
+      char.smarts = clamp(char.smarts + 4 + Math.floor(Math.random() * 4), 0, 100);
+      char.happiness = clamp(char.happiness + 5, 0, 100);
+      if (char.school) char.school.studiedThisYear = true;
+      recordAction("🧩 I played with brain-teaser blocks and learned colors & shapes! (+Smarts)");
+      showPopup("You had fun stacking alphabet blocks and matching geometric shapes! (+Smarts)", "Educational Blocks", "🧩");
+    }
+
+    function doToddlerStory() {
+      if (!char.isAlive) return;
+      char.smarts = clamp(char.smarts + 3 + Math.floor(Math.random() * 3), 0, 100);
+      char.happiness = clamp(char.happiness + 6, 0, 100);
+      if (char.school) char.school.studiedThisYear = true;
+      recordAction("📖 My parents read me a delightful bedtime story. (+Smarts, +Happiness)");
+      showPopup("Your parents tucked you in and read an enchanting bedtime adventure story! (+Smarts, +Happiness)", "Bedtime Story", "📖");
+    }
+
+    function doToddlerCrawl() {
+      if (!char.isAlive) return;
+      char.health = clamp(char.health + 4 + Math.floor(Math.random() * 3), 0, 100);
+      char.happiness = clamp(char.happiness + 5, 0, 100);
+      recordAction("🧸 I crawled all around the living room discovering new toys. (+Health)");
+      showPopup("You crawled around playfully exploring the living room carpet! (+Health)", "Crawl & Explore", "🧸");
+    }
+
+    function doToddlerNap() {
+      if (!char.isAlive) return;
+      char.health = clamp(char.health + 5 + Math.floor(Math.random() * 4), 0, 100);
+      char.happiness = clamp(char.happiness + 5, 0, 100);
+      recordAction("😴 I took a peaceful 2-hour afternoon nap. Recharged!");
+      showPopup("You curled up with your favorite blanket and took a cozy afternoon nap. (+Health)", "Afternoon Nap", "😴");
+    }
+
+    function doToddlerTantrum() {
+      if (!char.isAlive) return;
+      char.happiness = clamp(char.happiness - 3, 0, 100);
+      recordAction("😭 I threw a screaming temper tantrum in the kitchen until given a juice box.");
+      showPopup("You cried, stamped your feet, and kicked until your parents handed you a pacifier!", "Temper Tantrum", "😭");
     }
 
     // ACTIVITIES ACTIONS
@@ -1746,184 +2207,1326 @@
     }
 
     // CAREER & ASSETS ACTIONS
-    function doUniversity() {
-      if (!char.isAlive) return;
-      if (char.age < 18) {
-        showPopup("You must be at least 18 to enroll in University!", "University", "🎓");
-        return;
-      }
-      if (char.educationLevel >= 2) {
-        showPopup("You have already earned your University degree!", "University", "🎓");
-        return;
-      }
-      if (char.smarts < 50) {
-        showPopup("Your Smarts must be ≥ 50 to qualify for university admission. Study harder first!", "University Admissions", "📚");
-        return;
-      }
-      char.educationLevel = 2;
-      char.money -= 12000;
-      char.smarts += 20;
-      char.occupation = "College Graduate";
-      char.occIcon = "🎓";
-      recordAction("🎓 Graduated with honors from University! Executive careers unlocked.");
-    }
-
     function applyJob(title, pay, reqEdu, reqSmarts, icon) {
       if (!char.isAlive) return;
       if (char.age < 18) {
         showPopup("You must be at least 18 years old to work full-time!", "Job Market", "💼");
         return;
       }
-      if (char.educationLevel < reqEdu) {
-        showPopup("This career position requires a University degree!", "Job Requirements", "🎓");
+
+      // Check Education Requirements
+      if (reqEdu === 1 && !char.school.hasDiploma) {
+        showPopup("This career position requires a High School Diploma or GED equivalency!", "Education Required", "📜");
         return;
       }
-      if (char.smarts < reqSmarts) {
-        showPopup(`Failed the job interview for ${title}. Requires Smarts ≥ ${reqSmarts}.`, "Job Interview", "💼");
+      if (reqEdu === 2 && !char.school.hasDegree) {
+        showPopup("This career position requires a University Bachelor's Degree!", "Education Required", "🎓");
         return;
       }
-
-      char.occupation = title;
-      char.occIcon = icon;
-      char.salary = pay;
-      char.happiness += 12;
-      recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
-    }
-
-    function buyProperty(propertyName, price) {
-      if (!char.isAlive) return;
-      if (char.age < 18) {
-        showPopup("You must be at least 18 years old to purchase real estate!", "Real Estate", "🏠");
-        return;
-      }
-      if (char.money < price) {
-        showPopup(`You need $${price.toLocaleString()} in your bank balance to purchase the ${propertyName}.`, "Mortgage Declined", "🏠");
-        return;
-      }
-      char.money -= price;
-      char.properties.push(propertyName);
-      char.happiness += 25;
-      recordAction(`🏡 Successfully purchased a ${propertyName} for $${price.toLocaleString()}!`);
-    }
-
-    // RELATIONSHIPS ACTIONS
-    function spendFamily(who) {
-      char.happiness += 12;
-      recordAction(`I spent quality time chatting and bonding with my ${who}. (+Happiness)`);
-    }
-
-    function findDate() {
-      if (char.age < 16) {
-        showPopup("You must be at least 16 years old to start dating!", "Dating", "💘");
-        return;
-      }
-      if (char.partner) {
-        char.happiness += 15;
-        recordAction(`I spent a romantic candlelit dinner with my partner ${char.partner.name}. (+Happiness)`);
-      } else {
-        const dates = [
-          { name: "Jordan Taylor", age: char.age, job: "Photographer" },
-          { name: "Taylor Hayes", age: char.age, job: "Nurse" },
-          { name: "Riley Morgan", age: char.age, job: "Musician" }
-        ];
-        char.partner = dates[Math.floor(Math.random() * dates.length)];
-        char.happiness += 25;
-        recordAction(`💘 I started dating ${char.partner.name}, a wonderful ${char.partner.job}!`);
-      }
-    }
-
-    // SCHOOL & CAREER LOGIC
-    function updateSchoolDashboard() {
-      const emojiEl = document.getElementById('schoolStageEmoji');
-      const titleEl = document.getElementById('schoolStageTitle');
-      const mainTitle = document.getElementById('schoolActionTitle');
-      const mainDesc = document.getElementById('schoolActionDesc');
-      const clubCard = document.getElementById('schoolExtracurricularCard');
-      const socialDesc = document.getElementById('schoolSocialDesc');
-      const navIcon = document.getElementById('bottomNavRoleIcon');
-      const navText = document.getElementById('bottomNavRoleText');
-
-      if (char.age < 6) {
-        emojiEl.innerText = "🍼";
-        titleEl.innerText = "Infancy & Early Years";
-        mainTitle.innerText = "Play with Educational Toys";
-        mainDesc.innerText = "Stack colorful wooden blocks and learn shapes (+Smarts)";
-        clubCard.style.display = "none";
-        socialDesc.innerText = "Crawl around and giggle with parents (+Happiness)";
-        if (navIcon) navIcon.innerText = "🍼";
-        if (navText) navText.innerText = "Infant";
-      } else if (char.age < 18) {
-        if (char.age < 14) {
-          emojiEl.innerText = "🎒";
-          titleEl.innerText = "Elementary School";
-          mainTitle.innerText = "Study Hard & Homework";
-          mainDesc.innerText = "Pay close attention in class and read books (+Smarts)";
-          clubCard.style.display = "flex";
-          socialDesc.innerText = "Make friends during playground recess (+Happiness)";
-        } else {
-          emojiEl.innerText = "🏫";
-          titleEl.innerText = "High School";
-          mainTitle.innerText = "Study for Exams";
-          mainDesc.innerText = "Prepare for graduation and university SATs (+Smarts)";
-          clubCard.style.display = "flex";
-          socialDesc.innerText = "Hang out with classmates in the cafeteria (+Happiness)";
+      if (reqEdu === 3) {
+        if (title.includes("Surgeon") && !char.school.hasMedDegree) {
+          showPopup("Medical Surgeon requires a Medical Doctor (M.D.) degree from Medical School!", "Degree Required", "🩺");
+          return;
         }
-        if (navIcon) navIcon.innerText = "🎒";
-        if (navText) navText.innerText = "School";
-      } else if (char.educationLevel === 2 && char.salary === 0) {
-        emojiEl.innerText = "🎓";
-        titleEl.innerText = "University Campus";
-        mainTitle.innerText = "Attend Lectures & Labs";
-        mainDesc.innerText = "Earn high GPA honors for your degree (+Smarts)";
-        clubCard.style.display = "flex";
-        socialDesc.innerText = "Network with fellow college students (+Happiness)";
-        if (navIcon) navIcon.innerText = "🎓";
-        if (navText) navText.innerText = "University";
-      } else {
-        emojiEl.innerText = "💼";
-        titleEl.innerText = char.occupation || "Career & Employment";
-        mainTitle.innerText = char.salary > 0 ? "Work Overtime & Upskill" : "Seek Employment";
-        mainDesc.innerText = char.salary > 0 ? "Impress your boss and aim for bonuses (+Smarts, +Happiness)" : "Search and apply for job openings in Assets";
-        clubCard.style.display = "flex";
-        socialDesc.innerText = char.salary > 0 ? "Chat by the watercooler with coworkers (+Happiness)" : "Network with professionals (+Happiness)";
-        if (navIcon) navIcon.innerText = char.occIcon || "💼";
-        if (navText) navText.innerText = "Career";
+        if (title.includes("Lawyer") && !char.school.hasLawDegree) {
+          showPopup("Corporate Lawyer requires a Juris Doctor (J.D.) degree from Law School!", "Degree Required", "⚖️");
+          return;
+        }
+        if (title.includes("CEO") && !char.school.hasMBADegree && !(char.school.hasDegree && char.smarts >= 90)) {
+          showPopup("Corporate CEO requires a Master of Business Administration (MBA) or exceptional honors with Smarts ≥ 90%!", "Executive Requirements", "👑");
+          return;
+        }
       }
+
+      // Check Smarts
+      if (char.smarts < reqSmarts) {
+        showPopup(`Failed the job interview for ${title}. Requires Smarts ≥ ${reqSmarts}%. (Your Smarts: ${char.smarts}%)`, "Job Interview", "💼");
+        return;
+      }
+
+      const confirmPrompt = char.salary > 0 
+        ? `You currently work as ${char.occupation} ($${char.salary.toLocaleString()}/yr). Accept new position as ${title} ($${pay.toLocaleString()}/yr)?`
+        : `Congratulations! You received a job offer for ${title} ($${pay.toLocaleString()}/yr). Accept?`;
+
+      showConfirm(confirmPrompt, () => {
+        char.occupation = title;
+        char.occIcon = icon;
+        char.salary = pay;
+        if (char.school) char.school.jobPerformance = 70;
+        char.happiness = clamp(char.happiness + 15, 0, 100);
+        recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
+        showPopup(`🎉 Welcome aboard! You have officially started working as a ${title} making $${pay.toLocaleString()}/year!`, "Hired! 🎉", "💼");
+        render();
+      }, "Job Offer", "💼", "Accept Offer");
     }
 
-    function doStudyHarder() {
-      if (!char.isAlive) return;
-      char.smarts += 6 + Math.floor(Math.random() * 5);
-      char.happiness -= 2;
-      if (char.age < 6) {
-        recordAction("🧩 I played with brain puzzles and learned ABCs! (+Smarts)");
-      } else if (char.age < 18) {
-        recordAction("📚 I studied diligently and aced my school homework! (+Smarts)");
-      } else {
-        recordAction("💻 I stayed late and delivered stellar work performance! (+Smarts)");
-      }
+    function doUniversity() {
+      openUniversityApplicationModal();
     }
 
     function doExtracurricular() {
-      if (!char.isAlive) return;
-      char.health += 5 + Math.floor(Math.random() * 5);
-      char.looks += 3;
-      char.happiness += 6;
-      if (char.age < 18) {
-        recordAction("⚽ I played varsity soccer and joined the chess club! (+Health, +Looks)");
-      } else {
-        recordAction("🏋️ I joined the company softball league with coworkers! (+Health, +Looks)");
-      }
+      openClubsModal();
     }
 
     function interactWithClassmates() {
+      openClassmatesModal();
+    }
+
+    // SCHOOL & CAREER COMPREHENSIVE ACTIONS
+    function doStudyHarder() {
       if (!char.isAlive) return;
-      char.happiness += 12;
-      char.looks += 2;
-      if (char.age < 18) {
-        recordAction("🤝 I spent lunch chatting and laughing with my favorite classmates! (+Happiness)");
+      if (char.age < 6) {
+        doToddlerToys();
+        return;
+      }
+      char.school.studiedThisYear = true;
+      char.smarts = clamp(char.smarts + 4 + Math.floor(Math.random() * 4), 0, 100);
+      char.school.grades = clamp(char.school.grades + 8 + Math.floor(Math.random() * 7), 0, 100);
+      char.happiness = clamp(char.happiness - 2, 0, 100);
+
+      if (char.school.stage === "University") {
+        recordAction(`📚 I pulled a late-night study session at the university library! (Grades: ${char.school.grades}%)`);
+        showPopup(`You studied course notes and completed assignments at the campus library! Current Grades: ${char.school.grades}% (+Smarts, +Grades)`, "University Library", "📚");
+      } else if (char.school.stage === "Grad School") {
+        recordAction(`🔬 I conducted intensive research and coursework for ${char.school.gradProgram}.`);
+        showPopup(`You reviewed complex case studies and research papers! Current Grades: ${char.school.grades}%`, "Graduate Studies", "🔬");
       } else {
-        recordAction("☕ I had coffee and bonded with colleagues during lunch break! (+Happiness)");
+        recordAction(`📚 I applied myself in class and finished all extra homework! (Grades: ${char.school.grades}%)`);
+        showPopup(`You paid strict attention in class and did extra homework! Your grades improved to ${char.school.grades}%. (+Smarts, +Grades)`, "Study Harder", "📚");
+      }
+      render();
+    }
+
+    function doSlackOff() {
+      if (!char.isAlive || !char.school) return;
+      char.school.slackedThisYear = true;
+      char.school.grades = clamp(char.school.grades - (10 + Math.floor(Math.random() * 8)), 5, 100);
+      char.happiness = clamp(char.happiness + 7, 0, 100);
+
+      if (Math.random() < 0.35 && char.school.faculty.length > 0) {
+        const t = char.school.faculty[0];
+        t.respect = clamp(t.respect - 15, 0, 100);
+        char.happiness = clamp(char.happiness - 8, 0, 100);
+        recordAction(`🚨 I was caught slacking off by ${t.name} and given after-school detention! (Grades: ${char.school.grades}%)`);
+        showPopup(`${t.name} caught you goofing off during lecture and assigned you detention! Grades dropped to ${char.school.grades}%.`, "Detention! 🚨", "🚨");
+      } else {
+        recordAction(`😈 I slacked off, doodled in my notebook, and skipped doing homework. (Grades: ${char.school.grades}%)`);
+        showPopup(`You slacked off and played games on your phone during class. Relaxing, but grades dropped to ${char.school.grades}%.`, "Slacked Off", "😈");
+      }
+      render();
+    }
+
+    function openClassmatesModal() {
+      if (!char.isAlive || !char.school) return;
+      if (!char.school.classmates || char.school.classmates.length === 0) {
+        char.school.classmates = generateClassmates(char.school.stage);
+      }
+      let html = '<div class="modal-sublist">';
+      char.school.classmates.forEach((c, i) => {
+        html += `
+          <div class="modal-subitem" onclick="interactPeer(${i})">
+            <span class="modal-subitem-icon">${c.gender === 'Female' ? '👧' : '👦'}</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${c.name}</div>
+              <div class="modal-subitem-sub">Friendship: ${c.friendship}% • Popularity: ${c.popularity}%</div>
+            </div>
+            <button class="modal-subitem-action">Interact</button>
+          </div>
+        `;
+      });
+      html += '</div>';
+      showCustomModal("Classmates", "👥", html, `<button class="modal-btn" onclick="closeModal()">Close</button>`);
+    }
+
+    function interactPeer(idx) {
+      const p = char.school.classmates[idx];
+      if (!p) return;
+      const bodyHtml = `
+        <div style="text-align: left; margin-bottom: 8px;">
+          <div style="font-size: 14px; font-weight: 700; color: #0F172A;">${p.name} (${p.gender})</div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-top:6px;"><span>Friendship:</span> <span>${p.friendship}%</span></div>
+          <div class="school-progress-bar"><div class="school-progress-fill ${p.friendship >= 60 ? 'fill-green' : p.friendship >= 40 ? 'fill-blue' : 'fill-yellow'}" style="width: ${p.friendship}%"></div></div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-top:5px;"><span>Popularity:</span> <span>${p.popularity}%</span></div>
+          <div class="school-progress-bar"><div class="school-progress-fill ${p.popularity >= 60 ? 'fill-green' : 'fill-blue'}" style="width: ${p.popularity}%"></div></div>
+        </div>
+        <div class="modal-sublist">
+          <div class="modal-subitem" onclick="peerAction(${idx}, 'chat')">
+            <span class="modal-subitem-icon">💬</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Chat & Hang Out</div>
+              <div class="modal-subitem-sub">Spend recess talking and laughing (+Friendship)</div>
+            </div>
+          </div>
+          <div class="modal-subitem" onclick="peerAction(${idx}, 'compliment')">
+            <span class="modal-subitem-icon">🎁</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Compliment</div>
+              <div class="modal-subitem-sub">Say something flattering about them (+Friendship)</div>
+            </div>
+          </div>
+          <div class="modal-subitem" onclick="peerAction(${idx}, 'prank')">
+            <span class="modal-subitem-icon">🤪</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Play a Prank</div>
+              <div class="modal-subitem-sub">Risk: may become popular or spark a fight</div>
+            </div>
+          </div>
+          ${char.age >= 10 ? `
+          <div class="modal-subitem" onclick="peerAction(${idx}, 'date')">
+            <span class="modal-subitem-icon">💌</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Ask Out on a Date</div>
+              <div class="modal-subitem-sub">Ask them to be your romantic partner</div>
+            </div>
+          </div>` : ''}
+        </div>
+      `;
+      showCustomModal(p.name, p.gender === "Female" ? "👧" : "👦", bodyHtml, `<button class="modal-btn" onclick="openClassmatesModal()">← Back to Classmates</button>`);
+    }
+
+    function peerAction(idx, action) {
+      const p = char.school.classmates[idx];
+      if (!p) return;
+      if (action === 'chat') {
+        p.friendship = clamp(p.friendship + 10 + Math.floor(Math.random() * 8), 0, 100);
+        char.happiness = clamp(char.happiness + 7, 0, 100);
+        showPopup(`You and ${p.name} talked about favorite bands and hobbies during break! Friendship rose to ${p.friendship}%.`, "Classmate Chat", "💬");
+      } else if (action === 'compliment') {
+        p.friendship = clamp(p.friendship + 14 + Math.floor(Math.random() * 8), 0, 100);
+        char.happiness = clamp(char.happiness + 5, 0, 100);
+        showPopup(`You complimented ${p.name}'s outfit and nice smile! They smiled brightly. Friendship rose to ${p.friendship}%.`, "Compliment", "🎁");
+      } else if (action === 'prank') {
+        if (Math.random() > 0.40) {
+          char.school.popularity = clamp(char.school.popularity + 8, 0, 100);
+          p.friendship = clamp(p.friendship + 4, 0, 100);
+          showPopup(`Your funny prank on ${p.name} had everyone in the hallway cracking up! Popularity increased.`, "Prank Succeeded! 🤪", "🤪");
+        } else {
+          p.friendship = clamp(p.friendship - 22, 0, 100);
+          char.happiness = clamp(char.happiness - 8, 0, 100);
+          showPopup(`${p.name} didn't find your prank funny at all and shoved you! Friendship dropped to ${p.friendship}%.`, "Prank Backfired! 😠", "😠");
+        }
+      } else if (action === 'date') {
+        if (char.partner) {
+          showPopup(`You are already in a relationship with ${char.partner.name}! Break up first if you want to date someone else.`, "Already Dating", "💘");
+          return;
+        }
+        if (p.friendship >= 50 && char.looks >= 30) {
+          char.partner = { name: p.name, age: char.age, job: "Student" };
+          char.happiness = clamp(char.happiness + 28, 0, 100);
+          recordAction(`💘 ${p.name} and I started dating!`);
+          showPopup(`💘 ${p.name} blushed and agreed to be your romantic partner! You are now officially dating!`, "Sweet Romance! 💘", "💘");
+        } else {
+          char.happiness = clamp(char.happiness - 10, 0, 100);
+          showPopup(`${p.name} gently smiled and replied: 'I really value our friendship, but I don't see you that way.'`, "Politely Declined 💔", "💔");
+        }
+      }
+      render();
+    }
+
+    function openFacultyModal() {
+      if (!char.isAlive || !char.school) return;
+      if (!char.school.faculty || char.school.faculty.length === 0) {
+        char.school.faculty = generateFaculty(char.school.stage);
+      }
+      let html = '<div class="modal-sublist">';
+      char.school.faculty.forEach((f, i) => {
+        html += `
+          <div class="modal-subitem" onclick="interactFaculty(${i})">
+            <span class="modal-subitem-icon">👨‍🏫</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${f.name}</div>
+              <div class="modal-subitem-sub">${f.role} • Respect: ${f.respect}% • Strictness: ${f.strictness}%</div>
+            </div>
+            <button class="modal-subitem-action">Check In</button>
+          </div>
+        `;
+      });
+      html += '</div>';
+      showCustomModal("School Faculty", "👨‍🏫", html, `<button class="modal-btn" onclick="closeModal()">Close</button>`);
+    }
+
+    function interactFaculty(idx) {
+      const f = char.school.faculty[idx];
+      if (!f) return;
+      const bodyHtml = `
+        <div style="text-align: left; margin-bottom: 8px;">
+          <div style="font-size: 14px; font-weight: 700; color: #0F172A;">${f.name}</div>
+          <div style="font-size: 12px; color: #64748B;">${f.role}</div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-top:6px;"><span>Respect:</span> <span>${f.respect}%</span></div>
+          <div class="school-progress-bar"><div class="school-progress-fill ${f.respect >= 60 ? 'fill-green' : 'fill-yellow'}" style="width: ${f.respect}%"></div></div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; margin-top:5px;"><span>Strictness:</span> <span>${f.strictness}%</span></div>
+          <div class="school-progress-bar"><div class="school-progress-fill ${f.strictness >= 60 ? 'fill-red' : 'fill-blue'}" style="width: ${f.strictness}%"></div></div>
+        </div>
+        <div class="modal-sublist">
+          <div class="modal-subitem" onclick="facultyAction(${idx}, 'suckUp')">
+            <span class="modal-subitem-icon">🍎</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Suck Up to Teacher</div>
+              <div class="modal-subitem-sub">Praise their lesson and offer assistance (+Respect)</div>
+            </div>
+          </div>
+          <div class="modal-subitem" onclick="facultyAction(${idx}, 'help')">
+            <span class="modal-subitem-icon">🙋</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Ask for Extra Tutoring</div>
+              <div class="modal-subitem-sub">Get help understanding difficult concepts (+Grades)</div>
+            </div>
+          </div>
+          <div class="modal-subitem" onclick="facultyAction(${idx}, 'disrespect')">
+            <span class="modal-subitem-icon">😠</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Talk Back & Disrespect</div>
+              <div class="modal-subitem-sub">Argue with teacher (High risk of detention)</div>
+            </div>
+          </div>
+        </div>
+      `;
+      showCustomModal(f.name, "👨‍🏫", bodyHtml, `<button class="modal-btn" onclick="openFacultyModal()">← Back to Faculty</button>`);
+    }
+
+    function facultyAction(idx, action) {
+      const f = char.school.faculty[idx];
+      if (!f) return;
+      if (action === 'suckUp') {
+        f.respect = clamp(f.respect + 15, 0, 100);
+        char.school.grades = clamp(char.school.grades + 3, 0, 100);
+        showPopup(`You helped ${f.name} organize classroom handouts. Respect increased to ${f.respect}%!`, "Teacher's Pet 🍎", "🍎");
+      } else if (action === 'help') {
+        char.school.grades = clamp(char.school.grades + 8, 0, 100);
+        char.smarts = clamp(char.smarts + 3, 0, 100);
+        showPopup(`${f.name} patiently answered your questions after class. Your exam confidence grew! Grades: ${char.school.grades}%`, "Tutoring Session 🙋", "🙋");
+      } else if (action === 'disrespect') {
+        f.respect = clamp(f.respect - 25, 0, 100);
+        if (f.strictness > 45) {
+          char.school.grades = clamp(char.school.grades - 5, 0, 100);
+          char.happiness = clamp(char.happiness - 10, 0, 100);
+          showPopup(`${f.name} gave you 2 hours of detention and called your parents! Respect dropped to ${f.respect}%.`, "Detention! 🚨", "🚨");
+        } else {
+          showPopup(`${f.name} gave you a stern reprimand: 'I will not tolerate that behavior in my class!'`, "Reprimanded 😠", "😠");
+        }
+      }
+      render();
+    }
+
+    function openClubsModal() {
+      if (!char.isAlive || !char.school) return;
+      const allClubs = char.school.stage === "Elementary"
+        ? ["Soccer Club", "Art Club", "School Choir", "Chess Club"]
+        : char.school.stage === "Middle"
+          ? ["Track & Field", "Robotics Club", "Drama Club", "Debate Team", "School Band"]
+          : ["Varsity Football", "Cheerleading Squad", "Student Council", "Coding Club", "Drama Club", "Marching Band"];
+
+      let html = '<div class="modal-sublist">';
+      if (char.school.clubs.length > 0) {
+        html += '<div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 2px;">YOUR ACTIVE CLUBS</div>';
+        char.school.clubs.forEach(c => {
+          html += `
+            <div class="modal-subitem">
+              <span class="modal-subitem-icon">🏅</span>
+              <div class="modal-subitem-info">
+                <div class="modal-subitem-title">${c}</div>
+                <div class="modal-subitem-sub">Active member</div>
+              </div>
+              <div style="display: flex; gap: 5px;">
+                <button class="modal-subitem-action" onclick="practiceClub('${c}')">Practice</button>
+                <button class="modal-subitem-action" style="background: #64748B;" onclick="leaveClub('${c}')">Leave</button>
+              </div>
+            </div>
+          `;
+        });
+        html += '<div style="font-size: 11.5px; font-weight: 700; color: #475569; margin: 8px 0 2px;">JOIN MORE CLUBS (MAX 2)</div>';
+      }
+
+      allClubs.filter(c => !char.school.clubs.includes(c)).forEach(c => {
+        html += `
+          <div class="modal-subitem">
+            <span class="modal-subitem-icon">⚽</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${c}</div>
+              <div class="modal-subitem-sub">Boosts health, popularity, and skills</div>
+            </div>
+            <button class="modal-subitem-action" onclick="joinClub('${c}')">Join</button>
+          </div>
+        `;
+      });
+      html += '</div>';
+      showCustomModal("Extracurricular Clubs", "🏅", html, `<button class="modal-btn" onclick="closeModal()">Close</button>`);
+    }
+
+    function joinClub(clubName) {
+      if (char.school.clubs.length >= 2) {
+        showPopup("You are already participating in 2 clubs! You must leave one before joining another.", "Club Limit", "⚠️");
+        return;
+      }
+      char.school.clubs.push(clubName);
+      char.school.popularity = clamp(char.school.popularity + 6, 0, 100);
+      showPopup(`You joined the ${clubName}! Welcome to the team! (+Popularity)`, "Club Joined", "🎉");
+      render();
+    }
+
+    function leaveClub(clubName) {
+      char.school.clubs = char.school.clubs.filter(c => c !== clubName);
+      showPopup(`You left the ${clubName}.`, "Left Club", "👋");
+      render();
+    }
+
+    function practiceClub(clubName) {
+      char.health = clamp(char.health + 4, 0, 100);
+      char.looks = clamp(char.looks + 2, 0, 100);
+      char.happiness = clamp(char.happiness + 5, 0, 100);
+      char.school.popularity = clamp(char.school.popularity + 4, 0, 100);
+      showPopup(`You gave 100% effort in ${clubName} practice! Performance and fitness improved.`, "Club Practice", "🏅");
+      render();
+    }
+
+    function handleDropoutAttempt() {
+      if (!char.isAlive) return;
+      if (char.age < 16) {
+        showPopup(`Under child education and labor laws, you cannot drop out of school at age ${char.age}! Attendance is mandatory until age 16.`, "Education Law ⚖️", "⚖️");
+        return;
+      }
+      showConfirm("Are you sure you want to drop out of High School? You will enter adulthood without a diploma and limited career prospects.", () => {
+        char.school.isDropout = true;
+        char.school.stage = "Dropout";
+        char.school.dropoutAge = char.age;
+        char.occupation = "High School Dropout";
+        char.occIcon = "📦";
+        recordAction(`❌ I dropped out of High School at age ${char.age}.`);
+        showPopup("You have officially dropped out of High School. You will need to take the GED equivalency exam in adulthood to qualify for University.", "Dropped Out", "📦");
+        render();
+      }, "Drop Out of School", "⚠️", "Drop Out");
+    }
+
+    function takeGEDExam() {
+      if (!char.isAlive) return;
+      if (char.money < 200) {
+        showPopup("The GED exam registration fee is $200. Insufficient funds in bank balance!", "GED Registration", "📝");
+        return;
+      }
+      showConfirm("Registration for the official GED Equivalency Exam costs $200. Are you ready to take the test?", () => {
+        char.money -= 200;
+        if (char.smarts >= 50) {
+          char.school.hasDiploma = true;
+          char.school.isDropout = false;
+          char.educationLevel = 1;
+          char.school.stage = "Career";
+          if (char.salary === 0) {
+            char.occupation = "High School Graduate (GED)";
+            char.occIcon = "📜";
+          }
+          char.happiness = clamp(char.happiness + 25, 0, 100);
+          recordAction("📜 I took the GED equivalency exam and passed with honors! Awarded high school diploma equivalent.");
+          showPopup("🎉 Congratulations! You scored high and passed the GED exam! You have earned your high school equivalency diploma and can now apply to University.", "GED Passed! 🎉", "🎓");
+        } else {
+          char.happiness = clamp(char.happiness - 12, 0, 100);
+          recordAction("❌ I took the GED test but scored below the minimum passing threshold.");
+          showPopup("❌ You scored below the passing mark on the GED exam. You need a Smarts rating of at least 50% to pass. Read books or study at the library and try again!", "GED Exam Failed", "❌");
+        }
+        render();
+      }, "Take GED Exam ($200)", "📝", "Take Test ($200)");
+    }
+
+    function openUniversityApplicationModal() {
+      if (!char.isAlive) return;
+      if (!char.school.hasDiploma) {
+        showPopup("University admission requires a High School Diploma or GED equivalency diploma!", "Admissions Requirement", "📜");
+        return;
+      }
+      if (char.school.hasDegree) {
+        showPopup("You have already earned your Bachelor's Degree! Consider applying to Graduate School (Medical, Law, or MBA).", "Degree Completed", "🎓");
+        return;
+      }
+
+      const majors = [
+        { name: "Computer Science", req: 50, icon: "💻", desc: "Software, algorithms, and AI" },
+        { name: "Biology (Pre-Med)", req: 65, icon: "🧬", desc: "Pre-requisite for Medical School" },
+        { name: "Business Administration", req: 45, icon: "📊", desc: "Finance, management, and MBA path" },
+        { name: "Political Science (Pre-Law)", req: 55, icon: "⚖️", desc: "Pre-requisite for Law School" },
+        { name: "Arts & Humanities", req: 30, icon: "🎨", desc: "Creative writing, philosophy, history" }
+      ];
+
+      let html = '<div class="modal-sublist">';
+      majors.forEach(m => {
+        html += `
+          <div class="modal-subitem" onclick="selectMajor('${m.name}', ${m.req})">
+            <span class="modal-subitem-icon">${m.icon}</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${m.name}</div>
+              <div class="modal-subitem-sub">${m.desc} (Req Smarts ≥ ${m.req}%)</div>
+            </div>
+            <button class="modal-subitem-action">Select</button>
+          </div>
+        `;
+      });
+      html += '</div>';
+      showCustomModal("Choose College Major", "🎓", html, `<button class="modal-btn" onclick="closeModal()">Close</button>`);
+    }
+
+    function selectMajor(majorName, reqSmarts) {
+      if (char.smarts < reqSmarts) {
+        showPopup(`Your application for ${majorName} was rejected. The admissions committee requires a Smarts rating of at least ${reqSmarts}%. (Your Smarts: ${char.smarts}%)`, "Admissions Rejected", "❌");
+        return;
+      }
+      openTuitionFundingModal(majorName);
+    }
+
+    function openTuitionFundingModal(majorName) {
+      const tuition = 24000;
+      const html = `
+        <div style="text-align: left; margin-bottom: 8px;">
+          <div style="font-size: 13.5px; font-weight: 700; color: #0F172A;">Major: ${majorName}</div>
+          <div style="font-size: 12px; color: #64748B;">4-Year Tuition & Campus Fees: $${tuition.toLocaleString()} ($6,000/yr)</div>
+        </div>
+        <div class="modal-sublist">
+          <div class="modal-subitem" onclick="chooseFunding('${majorName}', 'scholarship')">
+            <span class="modal-subitem-icon">🏆</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Academic Scholarship (Free)</div>
+              <div class="modal-subitem-sub">Requires HS Grades ≥ 85% & Smarts ≥ 75%</div>
+            </div>
+          </div>
+          <div class="modal-subitem" onclick="chooseFunding('${majorName}', 'parents')">
+            <span class="modal-subitem-icon">👨‍👩‍👧</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Ask Parents to Pay</div>
+              <div class="modal-subitem-sub">Depends on parent relationship & generosity</div>
+            </div>
+          </div>
+          <div class="modal-subitem" onclick="chooseFunding('${majorName}', 'loan')">
+            <span class="modal-subitem-icon">💳</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Student Loans ($24,000)</div>
+              <div class="modal-subitem-sub">Guaranteed approval; repaid after graduation</div>
+            </div>
+          </div>
+          <div class="modal-subitem" onclick="chooseFunding('${majorName}', 'cash')">
+            <span class="modal-subitem-icon">💵</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Pay Cash ($24,000)</div>
+              <div class="modal-subitem-sub">Current balance: $${char.money.toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      showCustomModal("Tuition & Funding", "💰", html, `<button class="modal-btn" onclick="openUniversityApplicationModal()">← Back to Majors</button>`);
+    }
+
+    function chooseFunding(majorName, method) {
+      if (method === 'scholarship') {
+        if (char.school.grades >= 85 && char.smarts >= 75) {
+          enrollUniversity(majorName, "Scholarship", 0, 0);
+        } else {
+          showPopup("Scholarship application rejected: Requires High School Grades ≥ 85% and Smarts ≥ 75%. Try another funding method!", "Scholarship Denied", "🏆");
+        }
+      } else if (method === 'parents') {
+        const canPay = (char.father || char.mother) && Math.random() > 0.35;
+        if (canPay) {
+          enrollUniversity(majorName, "Parents", 0, 0);
+        } else {
+          showPopup("Your parents reviewed their finances and apologized: 'We cannot afford $24,000 right now. You will need to take out student loans.'", "Parents Declined", "👨‍👩‍👧");
+        }
+      } else if (method === 'loan') {
+        enrollUniversity(majorName, "Student Loans", 24000, 0);
+      } else if (method === 'cash') {
+        if (char.money >= 24000) {
+          enrollUniversity(majorName, "Cash", 0, 24000);
+        } else {
+          showPopup(`You need $24,000 in your bank balance to pay cash tuition. Current balance: $${char.money.toLocaleString()}`, "Insufficient Funds", "💵");
+        }
+      }
+    }
+
+    function enrollUniversity(majorName, fundingType, loanAmt, cashAmt) {
+      if (cashAmt > 0) char.money -= cashAmt;
+      if (loanAmt > 0) char.school.studentDebt += loanAmt;
+
+      char.school.stage = "University";
+      char.school.schoolName = generateSchoolName("University");
+      char.school.major = majorName;
+      char.school.yearsInUni = 0;
+      char.school.grades = 80;
+      char.school.popularity = 50;
+      char.school.faculty = [{ name: "Prof. Armstrong", role: "Department Chair", respect: 75, strictness: 60 }];
+      char.school.classmates = generateClassmates("University");
+      char.school.clubs = [];
+      char.occupation = `University Student (${majorName})`;
+      char.occIcon = "🎓";
+
+      recordAction(`🎓 I enrolled at ${char.school.schoolName} majoring in ${majorName}! (Funding: ${fundingType})`);
+      showPopup(`🎉 Welcome to ${char.school.schoolName}! You are officially enrolled as a Freshman studying ${majorName}. Maintain passing grades across the 4-year curriculum to earn your Bachelor's degree.`, "Enrolled in University! 🎓", "🎓");
+      render();
+    }
+
+    function doCollegeParty() {
+      if (!char.isAlive) return;
+      char.happiness = clamp(char.happiness + 18, 0, 100);
+      char.school.popularity = clamp(char.school.popularity + 8, 0, 100);
+      char.health = clamp(char.health - 3, 0, 100);
+      const wacky = Math.random();
+      if (wacky > 0.70) {
+        char.money += 150;
+        recordAction("🍻 I won first place in the campus trivia tournament and won $150 prize!");
+        showPopup("You attended a wild fraternity party and took 1st place in campus trivia! Won $150 cash! (+Happiness, +Popularity)", "Campus Party", "🍻");
+      } else {
+        recordAction("🍻 I danced all night at a campus house party with college friends.");
+        showPopup("You had a blast partying and networking with fellow college students! (+Happiness, +Popularity)", "Campus Party", "🍻");
+      }
+      render();
+    }
+
+    function doCampusJob() {
+      if (!char.isAlive) return;
+      if (char.salary > 0) {
+        showPopup("You already work a full-time career!", "Campus Job", "💼");
+        return;
+      }
+      char.money += 5500;
+      char.happiness = clamp(char.happiness - 3, 0, 100);
+      recordAction("💼 I worked shifts at the university library & campus lab, earning $5,500!");
+      showPopup("You completed work-study shifts on campus, earning $5,500 deposited into your bank account!", "Work-Study Stipend", "💵");
+      render();
+    }
+
+    function handleUniversityDropout() {
+      if (!char.isAlive) return;
+      showConfirm(`Are you sure you want to drop out of university? Any student loans ($${char.school.studentDebt.toLocaleString()}) must still be repaid.`, () => {
+        char.school.stage = "Career";
+        char.occupation = "College Dropout";
+        char.occIcon = "📦";
+        recordAction("❌ I dropped out of university before finishing my degree.");
+        showPopup("You dropped out of university. You can apply again in the future.", "Dropped Out", "📦");
+        render();
+      }, "Drop Out of University", "⚠️", "Drop Out");
+    }
+
+    function openGradSchoolModal() {
+      if (!char.isAlive) return;
+      if (!char.school.hasDegree) {
+        showPopup("Graduate School requires a Bachelor's Degree from University!", "Degree Required", "🎓");
+        return;
+      }
+
+      const programs = [
+        {
+          name: "Medical School",
+          years: 3,
+          cost: 45000,
+          reqSmarts: 75,
+          icon: "🩺",
+          desc: "Requires Biology (Pre-Med) & Smarts ≥ 75. Unlocks Medical Surgeon."
+        },
+        {
+          name: "Law School",
+          years: 3,
+          cost: 40000,
+          reqSmarts: 70,
+          icon: "⚖️",
+          desc: "Requires Pre-Law or Business & Smarts ≥ 70. Unlocks Corporate Lawyer."
+        },
+        {
+          name: "Business School (MBA)",
+          years: 2,
+          cost: 30000,
+          reqSmarts: 60,
+          icon: "📈",
+          desc: "Requires Business or CS & Smarts ≥ 60. Unlocks Corporate CEO."
+        }
+      ];
+
+      let html = '<div class="modal-sublist">';
+      programs.forEach(p => {
+        html += `
+          <div class="modal-subitem" onclick="selectGradProgram('${p.name}', ${p.years}, ${p.cost}, ${p.reqSmarts})">
+            <span class="modal-subitem-icon">${p.icon}</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${p.name} (${p.years} Yrs)</div>
+              <div class="modal-subitem-sub">${p.desc}</div>
+            </div>
+            <button class="modal-subitem-action">Apply</button>
+          </div>
+        `;
+      });
+      html += '</div>';
+      showCustomModal("Apply to Graduate School", "🎓", html, `<button class="modal-btn" onclick="closeModal()">Close</button>`);
+    }
+
+    function selectGradProgram(progName, years, cost, reqSmarts) {
+      if (char.smarts < reqSmarts) {
+        showPopup(`Your application for ${progName} was rejected. Requires Smarts ≥ ${reqSmarts}%. (Your Smarts: ${char.smarts}%)`, "Admissions Rejected", "❌");
+        return;
+      }
+      if (progName === "Medical School" && !char.school.major.includes("Biology")) {
+        showPopup("Medical School requires a Bachelor's Degree majoring in Biology (Pre-Med)!", "Prerequisite Missing", "🧬");
+        return;
+      }
+      if (progName === "Law School" && !char.school.major.includes("Law") && !char.school.major.includes("Business")) {
+        showPopup("Law School requires a Bachelor's Degree in Pre-Law or Business Administration!", "Prerequisite Missing", "⚖️");
+        return;
+      }
+
+      showConfirm(`${progName} Tuition: $${cost.toLocaleString()} total. Finance tuition via student loans?`, () => {
+        enrollGradSchool(progName, "Student Loans", cost);
+      }, progName + " Tuition", "💰", "Take Loans ($" + cost.toLocaleString() + ")");
+    }
+
+    function enrollGradSchool(progName, method, cost) {
+      char.school.studentDebt += cost;
+      char.school.stage = "Grad School";
+      char.school.gradProgram = progName;
+      char.school.yearsInGrad = 0;
+      char.school.grades = 85;
+      char.occupation = `${progName} Student`;
+      char.occIcon = "🎓";
+      recordAction(`🎓 I was accepted into ${progName}!`);
+      showPopup(`🎉 Congratulations! You were accepted into ${progName}. Advance through your studies to earn your professional graduate degree!`, "Graduate School", "🎓");
+      render();
+    }
+
+    function doGradNetworking() {
+      if (!char.isAlive) return;
+      char.happiness = clamp(char.happiness + 12, 0, 100);
+      char.smarts = clamp(char.smarts + 2, 0, 100);
+      recordAction(`☕ I attended a professional academic symposium and networked with fellows in ${char.school.gradProgram}.`);
+      showPopup("You attended an academic seminar and connected with prominent mentors in your field! (+Smarts, +Happiness)", "Networking", "☕");
+      render();
+    }
+
+    function handleGradDropout() {
+      if (!char.isAlive) return;
+      showConfirm("Are you sure you want to drop out of Graduate School?", () => {
+        char.school.stage = "Career";
+        char.occupation = "University Graduate (" + char.school.major + ")";
+        char.occIcon = "🎓";
+        recordAction(`❌ I dropped out of ${char.school.gradProgram}.`);
+        showPopup(`You withdrew from ${char.school.gradProgram}.`, "Withdrawn", "📦");
+        render();
+      }, "Withdraw from Program", "⚠️", "Withdraw");
+    }
+
+    function doWorkOvertime() {
+      if (!char.isAlive || char.salary === 0) return;
+      char.school.jobPerformance = clamp((char.school.jobPerformance || 65) + 15, 0, 100);
+      char.smarts = clamp(char.smarts + 2, 0, 100);
+      char.happiness = clamp(char.happiness - 2, 0, 100);
+      recordAction(`💼 I worked overtime and delivered outstanding deliverables! (Performance: ${char.school.jobPerformance}%)`);
+      showPopup(`You worked late and solved high-priority company challenges! Job performance rose to ${char.school.jobPerformance}%.`, "Overtime Work 💼", "💼");
+      render();
+    }
+
+    function doAskRaise() {
+      if (!char.isAlive || char.salary === 0) return;
+      if (char.school.jobPerformance >= 70) {
+        const raise = Math.round(char.salary * 0.15);
+        char.salary += raise;
+        char.happiness = clamp(char.happiness + 16, 0, 100);
+        recordAction(`💰 Boss granted a 15% salary raise! New salary: $${char.salary.toLocaleString()}/yr.`);
+        showPopup(`🎉 Approved! Your boss praised your dedication and increased your salary by $${raise.toLocaleString()} to $${char.salary.toLocaleString()}/yr!`, "Raise Approved 💰", "💰");
+      } else {
+        char.happiness = clamp(char.happiness - 6, 0, 100);
+        showPopup(`❌ Denied. Your supervisor stated: 'Your performance (${char.school.jobPerformance}%) must be at least 70% before we can discuss a raise. Work harder!'`, "Raise Denied", "❌");
+      }
+      render();
+    }
+
+    function doAskPromotion() {
+      if (!char.isAlive || char.salary === 0) return;
+      if (char.school.jobPerformance >= 85) {
+        const bump = Math.round(char.salary * 0.25);
+        char.salary += bump;
+        if (!char.occupation.startsWith("Senior ")) char.occupation = "Senior " + char.occupation;
+        char.happiness = clamp(char.happiness + 22, 0, 100);
+        recordAction(`🏆 Promoted to ${char.occupation}! New salary: $${char.salary.toLocaleString()}/yr.`);
+        showPopup(`🏆 PROMOTED! You climbed the ladder to ${char.occupation} with a 25% salary bump to $${char.salary.toLocaleString()}/yr!`, "Promotion Earned! 🏆", "🏆");
+      } else {
+        showPopup(`❌ Not Ready. You need a performance rating of at least 85% to receive a promotion. (Current performance: ${char.school.jobPerformance}%)`, "Not Ready Yet", "📈");
+      }
+      render();
+    }
+
+    function doCoworkerChat() {
+      if (!char.isAlive) return;
+      char.happiness = clamp(char.happiness + 10, 0, 100);
+      recordAction("☕ I shared laughs and coffee with colleagues in the breakroom. (+Happiness)");
+      showPopup("You had a pleasant coffee chat with colleagues in the office lounge! (+Happiness)", "Breakroom Chat", "☕");
+      render();
+    }
+
+    function doQuitJob() {
+      if (!char.isAlive || char.salary === 0) return;
+      showConfirm(`Are you sure you want to resign from your career as ${char.occupation}?`, () => {
+        recordAction(`🚪 I resigned from my job as ${char.occupation}.`);
+        char.occupation = "Unemployed";
+        char.occIcon = "🛋️";
+        char.salary = 0;
+        char.school.jobPerformance = 60;
+        showPopup("You handed in your resignation letter and are now unemployed.", "Resigned", "🚪");
+        render();
+      }, "Resign from Job", "🚪", "Resign");
+    }
+
+    function payStudentDebt() {
+      if (!char.isAlive || !char.school || char.school.studentDebt <= 0) return;
+      if (char.money <= 0) {
+        showPopup("You don't have funds in your bank balance to make a debt payment!", "Insufficient Funds", "💳");
+        return;
+      }
+      const pmt = Math.min(char.money, char.school.studentDebt);
+      showConfirm(`Make a voluntary payment of $${pmt.toLocaleString()} toward your student debt balance ($${char.school.studentDebt.toLocaleString()} total)?`, () => {
+        char.money -= pmt;
+        char.school.studentDebt -= pmt;
+        recordAction(`💳 Made an early student loan payment of $${pmt.toLocaleString()}. ($${char.school.studentDebt.toLocaleString()} debt remaining).`);
+        showPopup(`Payment of $${pmt.toLocaleString()} submitted! Remaining student debt: $${char.school.studentDebt.toLocaleString()}`, "Payment Successful", "💳");
+        render();
+      }, "Repay Student Debt", "💳", "Pay $" + pmt.toLocaleString());
+    }
+
+    // SCHOOL & CAREER LOGIC DASHBOARD RENDERER
+    function updateSchoolDashboard() {
+      const container = document.getElementById('schoolContentContainer');
+      const emojiEl = document.getElementById('schoolStageEmoji');
+      const titleEl = document.getElementById('schoolStageTitle');
+      const navIcon = document.getElementById('bottomNavRoleIcon');
+      const navText = document.getElementById('bottomNavRoleText');
+
+      if (!container) return;
+
+      if (char.age < 6) {
+        // 🍼 INFANCY & TODDLER
+        if (emojiEl) emojiEl.innerText = "🍼";
+        if (titleEl) titleEl.innerText = "Infancy & Early Years";
+        if (navIcon) navIcon.innerText = "🍼";
+        if (navText) navText.innerText = "Infant";
+
+        container.innerHTML = `
+          <div class="school-overview-card">
+            <div class="school-overview-header">
+              <div class="school-overview-badge">🍼</div>
+              <div class="school-overview-info">
+                <div class="school-overview-name">Early Childhood (Age ${char.age})</div>
+                <div class="school-overview-desc">At home with parents • Developing motor & cognitive skills</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-card" onclick="doToddlerToys()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🧩</div>
+              <div class="card-texts">
+                <h4>Play with Educational Blocks</h4>
+                <p>Learn geometric shapes and colors (+Smarts, +Happiness)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Play</button>
+          </div>
+
+          <div class="interactive-card" onclick="doToddlerStory()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">📖</div>
+              <div class="card-texts">
+                <h4>Ask for Bedtime Story</h4>
+                <p>Listen to parents read illustrated tales (+Smarts, +Parents)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Listen</button>
+          </div>
+
+          <div class="interactive-card" onclick="doToddlerCrawl()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🧸</div>
+              <div class="card-texts">
+                <h4>Crawl & Explore the Living Room</h4>
+                <p>Discover surroundings and peek under couches (+Health)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Explore</button>
+          </div>
+
+          <div class="interactive-card" onclick="doToddlerNap()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">😴</div>
+              <div class="card-texts">
+                <h4>Take an Afternoon Nap</h4>
+                <p>Cozy up with blanket for a 2-hour nap (+Health, +Happiness)</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Nap</button>
+          </div>
+
+          <div class="interactive-card" onclick="doToddlerTantrum()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">😭</div>
+              <div class="card-texts">
+                <h4>Throw a Temper Tantrum</h4>
+                <p>Cry loudly and kick feet until pacified</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Tantrum</button>
+          </div>
+        `;
+      } else if (char.school && (char.school.stage === "Elementary" || char.school.stage === "Middle" || char.school.stage === "High School")) {
+        // 🎒 SCHOOL (Elementary, Middle, High)
+        const stageName = char.school.stage;
+        const icon = stageName === "High School" ? "🏫" : "🎒";
+        if (emojiEl) emojiEl.innerText = icon;
+        if (titleEl) titleEl.innerText = `${stageName} • ${char.school.schoolName}`;
+        if (navIcon) navIcon.innerText = "🎒";
+        if (navText) navText.innerText = "School";
+
+        const gradeFillClass = char.school.grades >= 80 ? 'fill-green' : char.school.grades >= 60 ? 'fill-blue' : char.school.grades >= 40 ? 'fill-yellow' : 'fill-red';
+        const popFillClass = char.school.popularity >= 60 ? 'fill-green' : 'fill-blue';
+
+        container.innerHTML = `
+          <div class="school-overview-card">
+            <div class="school-overview-header">
+              <div class="school-overview-badge">${icon}</div>
+              <div class="school-overview-info">
+                <div class="school-overview-name">${char.school.schoolName}</div>
+                <div class="school-overview-desc">${stageName} Student • Age ${char.age}</div>
+              </div>
+            </div>
+            <div class="school-metrics-grid">
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>Grades</span> <span>${char.school.grades}%</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill ${gradeFillClass}" style="width: ${char.school.grades}%;"></div></div>
+              </div>
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>Popularity</span> <span>${char.school.popularity}%</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill ${popFillClass}" style="width: ${char.school.popularity}%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-card" onclick="doStudyHarder()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">📚</div>
+              <div class="card-texts">
+                <h4>Study Harder</h4>
+                <p>Apply yourself in class and do extra homework (+Grades, +Smarts)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Study</button>
+          </div>
+
+          <div class="interactive-card" onclick="doSlackOff()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">😈</div>
+              <div class="card-texts">
+                <h4>Slack Off & Prank</h4>
+                <p>Mess around during class (-Grades, risk of detention)</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Slack</button>
+          </div>
+
+          <div class="interactive-card" onclick="openClassmatesModal()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">👥</div>
+              <div class="card-texts">
+                <h4>Classmates (${char.school.classmates.length})</h4>
+                <p>Socialize, befriend, prank, or date classmates</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Classmates</button>
+          </div>
+
+          <div class="interactive-card" onclick="openFacultyModal()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">👨‍🏫</div>
+              <div class="card-texts">
+                <h4>Teachers & Faculty</h4>
+                <p>Check in, suck up, or ask for extra tutoring</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Faculty</button>
+          </div>
+
+          <div class="interactive-card" onclick="openClubsModal()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🏅</div>
+              <div class="card-texts">
+                <h4>Extracurricular Clubs (${char.school.clubs.length}/2)</h4>
+                <p>${char.school.clubs.length > 0 ? char.school.clubs.join(', ') : 'Athletics, debate, and music teams'}</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Clubs</button>
+          </div>
+
+          <div class="interactive-card" onclick="handleDropoutAttempt()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🚪</div>
+              <div class="card-texts">
+                <h4>Drop Out of School</h4>
+                <p>${char.age < 16 ? 'Prohibited by state law until age 16' : 'Forfeit high school education'}</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Drop Out</button>
+          </div>
+        `;
+      } else if (char.school && char.school.stage === "Dropout") {
+        // 📦 HIGH SCHOOL DROPOUT
+        if (emojiEl) emojiEl.innerText = "📦";
+        if (titleEl) titleEl.innerText = "High School Dropout";
+        if (navIcon) navIcon.innerText = char.age < 18 ? "🎒" : (char.salary > 0 ? (char.occIcon || "💼") : "📦");
+        if (navText) navText.innerText = char.age < 18 ? "School" : (char.salary > 0 ? "Career" : "Dropout");
+
+        container.innerHTML = `
+          <div class="school-overview-card">
+            <div class="school-overview-header">
+              <div class="school-overview-badge">📦</div>
+              <div class="school-overview-info">
+                <div class="school-overview-name">High School Dropout</div>
+                <div class="school-overview-desc">No secondary diploma • Pass GED exam to qualify for college</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-card" onclick="takeGEDExam()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">📝</div>
+              <div class="card-texts">
+                <h4>Take GED Equivalency Exam ($200)</h4>
+                <p>Earn an official High School Equivalency Diploma (Req Smarts ≥ 50%)</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Take Exam</button>
+          </div>
+
+          <div class="interactive-card" onclick="doStudy()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">📚</div>
+              <div class="card-texts">
+                <h4>Study Books at Public Library</h4>
+                <p>Read textbooks and boost your Smarts for the GED test (+Smarts)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Study</button>
+          </div>
+
+          <div class="interactive-card" onclick="switchTab('pageAssets', 'tabBtnAssets')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💼</div>
+              <div class="card-texts">
+                <h4>Seek Entry-Level Work</h4>
+                <p>Browse career openings in the Assets tab</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Browse</button>
+          </div>
+        `;
+      } else if (char.school && char.school.stage === "University") {
+        // 🎓 UNIVERSITY
+        if (emojiEl) emojiEl.innerText = "🎓";
+        if (titleEl) titleEl.innerText = `${char.school.schoolName}`;
+        if (navIcon) navIcon.innerText = "🎓";
+        if (navText) navText.innerText = "University";
+
+        const standing = ['Freshman', 'Sophomore', 'Junior', 'Senior'][Math.min(char.school.yearsInUni, 3)];
+        const gradeFillClass = char.school.grades >= 80 ? 'fill-green' : char.school.grades >= 60 ? 'fill-blue' : 'fill-yellow';
+
+        container.innerHTML = `
+          <div class="school-overview-card">
+            <div class="school-overview-header">
+              <div class="school-overview-badge">🎓</div>
+              <div class="school-overview-info">
+                <div class="school-overview-name">${char.school.schoolName}</div>
+                <div class="school-overview-desc">Major: ${char.school.major} • ${standing} (Year ${char.school.yearsInUni + 1} of 4)</div>
+              </div>
+            </div>
+            <div class="school-metrics-grid">
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>GPA / Grades</span> <span>${char.school.grades}%</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill ${gradeFillClass}" style="width: ${char.school.grades}%;"></div></div>
+              </div>
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>Student Debt</span> <span>$${char.school.studentDebt.toLocaleString()}</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill fill-blue" style="width: ${Math.min(100, (char.school.studentDebt / 30000) * 100)}%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-card" onclick="doStudyHarder()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">📚</div>
+              <div class="card-texts">
+                <h4>Study at University Library</h4>
+                <p>Hit the books and ace your midterms & finals (+GPA, +Smarts)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Study</button>
+          </div>
+
+          <div class="interactive-card" onclick="doCollegeParty()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🍻</div>
+              <div class="card-texts">
+                <h4>Attend Campus Frat Party</h4>
+                <p>Socialize and celebrate with college friends (+Happiness, +Popularity)</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Party</button>
+          </div>
+
+          <div class="interactive-card" onclick="doCampusJob()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💼</div>
+              <div class="card-texts">
+                <h4>Work-Study Campus Job</h4>
+                <p>Earn $5,500 working in university facilities & labs</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Work ($5.5k)</button>
+          </div>
+
+          <div class="interactive-card" onclick="openClassmatesModal()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">👥</div>
+              <div class="card-texts">
+                <h4>College Classmates (${char.school.classmates.length})</h4>
+                <p>Befriend, study together, or date fellow undergraduates</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Classmates</button>
+          </div>
+
+          <div class="interactive-card" onclick="handleUniversityDropout()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🚪</div>
+              <div class="card-texts">
+                <h4>Drop Out of University</h4>
+                <p>Leave college before earning your Bachelor's degree</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Drop Out</button>
+          </div>
+        `;
+      } else if (char.school && char.school.stage === "Grad School") {
+        // 🎓 GRADUATE SCHOOL (Medical, Law, MBA)
+        if (emojiEl) emojiEl.innerText = "🎓";
+        if (titleEl) titleEl.innerText = `${char.school.gradProgram}`;
+        if (navIcon) navIcon.innerText = "🎓";
+        if (navText) navText.innerText = "Grad School";
+
+        const totalYrs = char.school.gradProgram.includes("MBA") ? 2 : 3;
+
+        container.innerHTML = `
+          <div class="school-overview-card">
+            <div class="school-overview-header">
+              <div class="school-overview-badge">🎓</div>
+              <div class="school-overview-info">
+                <div class="school-overview-name">${char.school.gradProgram}</div>
+                <div class="school-overview-desc">Year ${char.school.yearsInGrad + 1} of ${totalYrs} • Professional Program</div>
+              </div>
+            </div>
+            <div class="school-metrics-grid">
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>Academic Standing</span> <span>Good</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill fill-green" style="width: 85%;"></div></div>
+              </div>
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>Student Debt</span> <span>$${char.school.studentDebt.toLocaleString()}</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill fill-blue" style="width: ${Math.min(100, (char.school.studentDebt / 60000) * 100)}%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-card" onclick="doStudyHarder()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🔬</div>
+              <div class="card-texts">
+                <h4>Intensive Coursework & Research</h4>
+                <p>Review professional case studies & clinical rotations (+Smarts)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Study</button>
+          </div>
+
+          <div class="interactive-card" onclick="doGradNetworking()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">☕</div>
+              <div class="card-texts">
+                <h4>Professional Colloquium</h4>
+                <p>Network with attending doctors, partners, or corporate executives</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Network</button>
+          </div>
+
+          <div class="interactive-card" onclick="handleGradDropout()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🚪</div>
+              <div class="card-texts">
+                <h4>Withdraw from Graduate Program</h4>
+                <p>Leave program and return to workforce</p>
+              </div>
+            </div>
+            <button class="btn-card-action secondary">Withdraw</button>
+          </div>
+        `;
+      } else {
+        // 💼 ADULT CAREER & HIGHER EDUCATION
+        if (emojiEl) emojiEl.innerText = char.occIcon || "💼";
+        if (titleEl) titleEl.innerText = char.salary > 0 ? char.occupation : "Career & Higher Education";
+        if (navIcon) navIcon.innerText = char.occIcon || "💼";
+        if (navText) navText.innerText = "Career";
+
+        const perf = char.school ? (char.school.jobPerformance || 65) : 65;
+        const perfFill = perf >= 80 ? 'fill-green' : perf >= 60 ? 'fill-blue' : 'fill-yellow';
+
+        let html = '';
+
+        if (char.salary > 0) {
+          html += `
+            <div class="school-overview-card">
+              <div class="school-overview-header">
+                <div class="school-overview-badge">${char.occIcon || '💼'}</div>
+                <div class="school-overview-info">
+                  <div class="school-overview-name">${char.occupation}</div>
+                  <div class="school-overview-desc">Salary: $${char.salary.toLocaleString()}/yr • Full-Time Career</div>
+                </div>
+              </div>
+              <div class="school-metrics-grid">
+                <div class="school-metric-box">
+                  <div class="school-metric-label"><span>Job Performance</span> <span>${perf}%</span></div>
+                  <div class="school-progress-bar"><div class="school-progress-fill ${perfFill}" style="width: ${perf}%;"></div></div>
+                </div>
+                <div class="school-metric-box">
+                  <div class="school-metric-label"><span>Student Debt</span> <span>$${(char.school ? char.school.studentDebt : 0).toLocaleString()}</span></div>
+                  <div class="school-progress-bar"><div class="school-progress-fill fill-blue" style="width: ${Math.min(100, ((char.school ? char.school.studentDebt : 0) / 40000) * 100)}%;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="interactive-card" onclick="doWorkOvertime()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💼</div>
+                <div class="card-texts">
+                  <h4>Work Overtime & Upskill</h4>
+                  <p>Put in extra hours on company projects (+Job Performance)</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Overtime</button>
+            </div>
+
+            <div class="interactive-card" onclick="doAskRaise()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💰</div>
+                <div class="card-texts">
+                  <h4>Ask for a Salary Raise</h4>
+                  <p>Request +15% salary increase (Requires Performance ≥ 70%)</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Ask Raise</button>
+            </div>
+
+            <div class="interactive-card" onclick="doAskPromotion()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">📈</div>
+                <div class="card-texts">
+                  <h4>Ask for Promotion</h4>
+                  <p>Advance to senior job tier (Requires Performance ≥ 85%)</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Promotion</button>
+            </div>
+
+            <div class="interactive-card" onclick="doCoworkerChat()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">☕</div>
+                <div class="card-texts">
+                  <h4>Chat with Coworkers</h4>
+                  <p>Bond with colleagues in the breakroom (+Happiness)</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Socialize</button>
+            </div>
+
+            <div class="interactive-card" onclick="doQuitJob()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🚪</div>
+                <div class="card-texts">
+                  <h4>Resign from Job</h4>
+                  <p>Hand in two weeks notice and leave this career</p>
+                </div>
+              </div>
+              <button class="btn-card-action secondary">Resign</button>
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="school-overview-card">
+              <div class="school-overview-header">
+                <div class="school-overview-badge">🛋️</div>
+                <div class="school-overview-info">
+                  <div class="school-overview-name">Currently Unemployed</div>
+                  <div class="school-overview-desc">Search for job openings in Assets or advance education below</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="interactive-card" onclick="switchTab('pageAssets', 'tabBtnAssets')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💼</div>
+                <div class="card-texts">
+                  <h4>Browse Career Openings</h4>
+                  <p>Apply for entry-level, tech, legal, medical, or corporate roles</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Job Market</button>
+            </div>
+          `;
+        }
+
+        // Higher education section for adults
+        if (char.school && char.school.hasDiploma && !char.school.hasDegree) {
+          html += `
+            <div class="section-title"><span>🎓</span> Higher Education</div>
+            <div class="interactive-card" onclick="openUniversityApplicationModal()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🎓</div>
+                <div class="card-texts">
+                  <h4>Apply to University</h4>
+                  <p>Choose major and apply for scholarships, loans, or cash</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Apply</button>
+            </div>
+          `;
+        }
+
+        if (char.school && char.school.hasDegree && !char.school.hasMedDegree && !char.school.hasLawDegree && !char.school.hasMBADegree) {
+          html += `
+            <div class="section-title"><span>🎓</span> Graduate School</div>
+            <div class="interactive-card" onclick="openGradSchoolModal()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🎓</div>
+                <div class="card-texts">
+                  <h4>Apply to Graduate School</h4>
+                  <p>Medical School (M.D.), Law School (J.D.), or Business School (MBA)</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Apply</button>
+            </div>
+          `;
+        }
+
+        // Student debt section
+        if (char.school && char.school.studentDebt > 0) {
+          html += `
+            <div class="section-title"><span>💳</span> Student Loans</div>
+            <div class="interactive-card" onclick="payStudentDebt()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💳</div>
+                <div class="card-texts">
+                  <h4>Pay Student Debt ($${char.school.studentDebt.toLocaleString()})</h4>
+                  <p>$1,500/yr auto-repayment • Tap to make voluntary early payment</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Pay Debt</button>
+            </div>
+          `;
+        }
+
+        container.innerHTML = html;
       }
     }
 
