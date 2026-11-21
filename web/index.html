@@ -6,7 +6,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#FFF8F0">
+  <meta name="theme-color" content="#FFF9F2">
   <link rel="manifest" href="manifest.json">
   <title>Life Journey - Life Simulator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,10 +26,12 @@
       --blue-light: #E8F0FE;
       --pink-soft: #F06292;
       --pink-light: #FDE8EF;
+      --purple-soft: #8E44AD;
+      --purple-light: #F4ECF7;
       --text-title: #2B2D42;
       --text-body: #4A4E69;
       --text-muted: #8D99AE;
-      --card-shadow: 0 8px 24px rgba(43, 45, 66, 0.06);
+      --card-shadow: 0 6px 20px rgba(43, 45, 66, 0.06);
       --card-border: 1.5px solid #F0E6DD;
     }
 
@@ -67,7 +69,7 @@
 
     /* TOP HEADER */
     .app-header {
-      padding: 14px 18px 10px;
+      padding: 12px 18px 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -100,23 +102,29 @@
       letter-spacing: -0.3px;
     }
 
-    .btn-new-life {
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-action-pill {
       background: #FFFFFF;
       border: var(--card-border);
       border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 12.5px;
+      padding: 6px 12px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-title);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       box-shadow: var(--card-shadow);
       transition: all 0.15s;
     }
 
-    .btn-new-life:active {
+    .btn-action-pill:active {
       transform: scale(0.95);
       background: #F7EFE8;
     }
@@ -128,8 +136,8 @@
 
     .id-card {
       background: var(--card-white);
-      border-radius: 22px;
-      padding: 14px 16px;
+      border-radius: 20px;
+      padding: 12px 16px;
       border: var(--card-border);
       box-shadow: var(--card-shadow);
       display: flex;
@@ -144,23 +152,23 @@
     }
 
     .avatar-wrapper {
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       background: #FFF4EE;
-      border-radius: 16px;
+      border-radius: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
+      font-size: 28px;
       position: relative;
       border: 1.5px solid #F5DFD5;
     }
 
     .avatar-flag {
       position: absolute;
-      bottom: -4px;
-      right: -4px;
-      font-size: 14px;
+      bottom: -3px;
+      right: -3px;
+      font-size: 13px;
       background: #FFFFFF;
       border-radius: 50%;
       padding: 1px;
@@ -174,14 +182,14 @@
 
     .id-name {
       font-family: 'Outfit', sans-serif;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--text-title);
       letter-spacing: -0.2px;
     }
 
     .id-sub {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text-muted);
       display: flex;
@@ -196,7 +204,7 @@
 
     .balance-val {
       font-family: 'Outfit', sans-serif;
-      font-size: 21px;
+      font-size: 19px;
       font-weight: 800;
       color: var(--green-soft);
       letter-spacing: -0.5px;
@@ -212,34 +220,61 @@
       color: var(--text-muted);
     }
 
-    /* STORY LOG FEED */
-    .story-scroll {
+    /* MAIN TAB VIEW CONTAINER */
+    .tab-viewport {
       flex: 1;
       overflow-y: auto;
-      padding: 6px 16px 12px;
+      padding: 4px 16px 12px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
       -webkit-overflow-scrolling: touch;
     }
 
+    .tab-page {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .tab-page.active {
+      display: flex;
+      animation: fadeIn 0.18s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SECTION HEADERS FOR PAGES */
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-title);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .section-title span {
+      font-size: 19px;
+    }
+
+    /* STORY LOG FEED (PAGE: LIFE) */
     .year-entry-card {
       background: var(--card-white);
       border-radius: 18px;
       padding: 14px 16px;
       border: var(--card-border);
       box-shadow: var(--card-shadow);
-      animation: fadeIn 0.22s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .year-entry-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 15.5px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--peach);
       margin-bottom: 7px;
@@ -262,32 +297,148 @@
       margin-bottom: 0;
     }
 
-    /* STATS ROW (Happiness, Health, Smarts, Looks) */
+    /* CARDS FOR ASSETS, ACTIVITIES, TASKS */
+    .interactive-card {
+      background: var(--card-white);
+      border: var(--card-border);
+      border-radius: 18px;
+      padding: 13px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .interactive-card:active {
+      transform: scale(0.98);
+      background: #FAF5F0;
+    }
+
+    .card-left-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-emoji-box {
+      width: 44px;
+      height: 44px;
+      background: #FFF4EE;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 1px solid #F5DFD5;
+      flex-shrink: 0;
+    }
+
+    .card-texts h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-title);
+    }
+
+    .card-texts p {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn-card-action {
+      background: var(--peach);
+      color: #FFFFFF;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 18px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 122, 89, 0.25);
+      flex-shrink: 0;
+    }
+
+    .btn-card-action.secondary {
+      background: var(--blue-soft);
+      box-shadow: 0 4px 10px rgba(56, 128, 255, 0.25);
+    }
+
+    .btn-card-action.success {
+      background: var(--green-soft);
+      box-shadow: 0 4px 10px rgba(46, 184, 114, 0.25);
+    }
+
+    .btn-card-action:disabled {
+      background: #B0BEC5;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* TASKS PROGRESS OVERVIEW */
+    .task-summary-card {
+      background: linear-gradient(135deg, #FF8A65, #FF7043);
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(255, 112, 67, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-summary-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .task-summary-card p {
+      font-size: 12.5px;
+      opacity: 0.9;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .task-badge-pill {
+      background: rgba(255, 255, 255, 0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    /* STATS SECTION (Happiness, Health, Smarts, Looks) */
     .stats-section {
-      padding: 8px 16px 4px;
+      padding: 6px 16px 4px;
       background: var(--bg-warm);
     }
 
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 7px;
     }
 
     .stat-pill {
       background: var(--card-white);
       border: var(--card-border);
-      border-radius: 16px;
-      padding: 8px 6px;
+      border-radius: 14px;
+      padding: 7px 5px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       box-shadow: var(--card-shadow);
     }
 
     .stat-head {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-title);
       display: flex;
@@ -297,7 +448,7 @@
 
     .stat-track {
       width: 100%;
-      height: 7px;
+      height: 6px;
       background: #F0EAE4;
       border-radius: 10px;
       overflow: hidden;
@@ -311,76 +462,80 @@
 
     .stat-val-text {
       font-family: 'Outfit', sans-serif;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--text-title);
     }
 
-    /* BOTTOM CONTROLS & DOCK */
+    /* 5-TAB BOTTOM NAVIGATION DOCK (Life, Assets, Age, Activities, Tasks) */
     .bottom-dock {
       background: var(--card-white);
-      padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
-      border-top-left-radius: 26px;
-      border-top-right-radius: 26px;
+      padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
       border-top: var(--card-border);
       box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
       z-index: 50;
     }
 
-    .nav-btn {
+    .tab-nav-btn {
       flex: 1;
-      height: 52px;
-      background: #FFF7F2;
-      border: 1.5px solid #F5DFD5;
-      border-radius: 16px;
+      height: 50px;
+      background: transparent;
+      border: none;
+      border-radius: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       gap: 2px;
-      color: var(--peach);
+      color: var(--text-muted);
       transition: all 0.15s;
     }
 
-    .nav-btn:active {
-      transform: scale(0.93);
-      background: #FCEBE2;
+    .tab-nav-btn.active {
+      color: var(--peach);
+      background: #FFF4EE;
     }
 
-    .nav-btn span {
-      font-size: 11px;
+    .tab-nav-btn:active {
+      transform: scale(0.92);
+    }
+
+    .tab-nav-btn span {
+      font-size: 10.5px;
       font-weight: 700;
     }
 
-    .nav-btn .icon {
-      font-size: 17px;
+    .tab-nav-btn .nav-icon {
+      font-size: 18px;
     }
 
     /* CENTER HERO AGE BUTTON */
     .hero-age-btn {
-      flex: 1.4;
-      height: 54px;
+      flex: 1.3;
+      height: 52px;
       background: linear-gradient(135deg, #34D399, #10B981);
-      border: 2.5px solid #FFFFFF;
-      border-radius: 20px;
-      box-shadow: 0 8px 18px rgba(16, 185, 129, 0.35);
+      border: 2px solid #FFFFFF;
+      border-radius: 18px;
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
       color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
+      gap: 6px;
       cursor: pointer;
       transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .hero-age-btn:active {
       transform: scale(0.92);
-      box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
     }
 
     .hero-age-btn.dead {
@@ -390,147 +545,9 @@
 
     .hero-age-text {
       font-family: 'Outfit', sans-serif;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       letter-spacing: 0.3px;
-    }
-
-    /* MODAL SHEETS */
-    .modal-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(43, 45, 66, 0.55);
-      z-index: 100;
-      display: none;
-      align-items: flex-end;
-      backdrop-filter: blur(4px);
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-sheet {
-      width: 100%;
-      max-height: 80%;
-      background: var(--bg-warm);
-      border-top-left-radius: 26px;
-      border-top-right-radius: 26px;
-      border-top: 2px solid #F0E6DD;
-      box-shadow: 0 -10px 30px rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: slideUp 0.22s ease-out;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    .sheet-top {
-      padding: 16px 20px;
-      background: var(--card-white);
-      border-bottom: 1.5px solid #F0E6DD;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .sheet-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 19px;
-      font-weight: 800;
-      color: var(--text-title);
-    }
-
-    .sheet-close {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #F7EFE8;
-      border: 1px solid #EADBCE;
-      color: var(--text-title);
-      font-size: 14px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .sheet-content {
-      padding: 14px 16px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .action-card {
-      background: var(--card-white);
-      border: var(--card-border);
-      border-radius: 16px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: var(--card-shadow);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .action-card:active {
-      transform: scale(0.97);
-    }
-
-    .card-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .card-icon-bubble {
-      width: 44px;
-      height: 44px;
-      background: #FFF4EE;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      border: 1px solid #F5DFD5;
-    }
-
-    .card-texts h4 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-title);
-    }
-
-    .card-texts p {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .btn-pill {
-      background: var(--peach);
-      color: #FFFFFF;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(255, 122, 89, 0.3);
     }
 
     /* DILEMMA / SCENARIO CARD */
@@ -568,21 +585,21 @@
     }
 
     .dilemma-icon-bubble {
-      width: 58px;
-      height: 58px;
+      width: 56px;
+      height: 56px;
       background: #FFFFFF;
       border-radius: 18px;
       border: 1.5px solid #F0E6DD;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 30px;
       margin: 0 auto;
     }
 
     .dilemma-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 800;
       color: var(--text-title);
     }
@@ -598,7 +615,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .choice-btn {
@@ -607,7 +624,7 @@
       border-radius: 14px;
       padding: 12px;
       font-family: 'Outfit', sans-serif;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--text-title);
       cursor: pointer;
@@ -637,7 +654,9 @@
         <div class="brand-icon">🌟</div>
         <div class="brand-title">Life Journey</div>
       </div>
-      <button class="btn-new-life" onclick="confirmRestart()">🔄 New Life</button>
+      <div class="header-actions">
+        <button class="btn-action-pill" onclick="confirmRestart()">🔄 Restart</button>
+      </div>
     </header>
 
     <!-- 2. IDENTITY & BANK BALANCE CARD -->
@@ -664,9 +683,222 @@
       </div>
     </section>
 
-    <!-- 3. MAIN STORY / YEAR EVENT FEED -->
-    <main class="story-scroll" id="storyScroll">
-      <!-- Generated dynamically -->
+    <!-- 3. MULTI-PAGE TAB VIEWPORT -->
+    <main class="tab-viewport">
+
+      <!-- ================= PAGE 1: LIFE STORY FEED ================= -->
+      <div class="tab-page active" id="pageLife">
+        <!-- Injected dynamically from char.events -->
+      </div>
+
+      <!-- ================= PAGE 2: ASSETS & CAREERS ================= -->
+      <div class="tab-page" id="pageAssets">
+        <div class="section-title"><span>🎓</span> Education</div>
+        
+        <div class="interactive-card" onclick="doUniversity()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🎓</div>
+            <div class="card-texts">
+              <h4>University Degree ($12,000)</h4>
+              <p>Requires Smarts ≥ 50. Unlocks high-income career tiers.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Enroll</button>
+        </div>
+
+        <div class="section-title"><span>💼</span> Jobs & Careers</div>
+
+        <div class="interactive-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🍔</div>
+            <div class="card-texts">
+              <h4>Fast Food Worker ($18,000/yr)</h4>
+              <p>No education requirements. Entry level.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Apply</button>
+        </div>
+
+        <div class="interactive-card" onclick="applyJob('Graphic Designer', 42000, 1, 30, '🎨')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🎨</div>
+            <div class="card-texts">
+              <h4>Graphic Designer ($42,000/yr)</h4>
+              <p>Requires High School diploma & Smarts ≥ 30.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Apply</button>
+        </div>
+
+        <div class="interactive-card" onclick="applyJob('Software Engineer', 98000, 2, 60, '💻')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">💻</div>
+            <div class="card-texts">
+              <h4>Software Engineer ($98,000/yr)</h4>
+              <p>Requires University degree & Smarts ≥ 60.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Apply</button>
+        </div>
+
+        <div class="interactive-card" onclick="applyJob('Medical Surgeon', 185000, 2, 80, '🩺')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🩺</div>
+            <div class="card-texts">
+              <h4>Medical Surgeon ($185,000/yr)</h4>
+              <p>Requires University degree & Smarts ≥ 80.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Apply</button>
+        </div>
+
+        <div class="interactive-card" onclick="applyJob('Corporate CEO', 420000, 2, 90, '👑')">
+          <div class="card-left-group">
+            <div class="card-emoji-box">👑</div>
+            <div class="card-texts">
+              <h4>Corporate CEO ($420,000/yr)</h4>
+              <p>Requires University degree & Smarts ≥ 90.</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Apply</button>
+        </div>
+
+        <div class="section-title"><span>🏠</span> Real Estate & Properties</div>
+
+        <div class="interactive-card" onclick="buyProperty('Suburban House', 250000)">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🏡</div>
+            <div class="card-texts">
+              <h4>Suburban House ($250,000)</h4>
+              <p>A cozy family home with a spacious green backyard.</p>
+            </div>
+          </div>
+          <button class="btn-card-action secondary">Purchase</button>
+        </div>
+
+        <div class="interactive-card" onclick="buyProperty('Luxury Penthouse', 850000)">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🏙️</div>
+            <div class="card-texts">
+              <h4>Luxury Penthouse ($850,000)</h4>
+              <p>Skyline view, private elevator, and rooftop swimming pool.</p>
+            </div>
+          </div>
+          <button class="btn-card-action secondary">Purchase</button>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 3: ACTIVITIES ================= -->
+      <div class="tab-page" id="pageActivities">
+        <div class="section-title"><span>🧘</span> Mind & Body</div>
+
+        <div class="interactive-card" onclick="doStudy()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">📚</div>
+            <div class="card-texts">
+              <h4>Read Books & Study Hard</h4>
+              <p>Spend hours studying at the library. (+Smarts)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Study</button>
+        </div>
+
+        <div class="interactive-card" onclick="doGym()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🏋️</div>
+            <div class="card-texts">
+              <h4>Gym & Workout Session</h4>
+              <p>Weightlifting and cardio training. (+Health, +Looks)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Workout</button>
+        </div>
+
+        <div class="interactive-card" onclick="doDoctor()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🩺</div>
+            <div class="card-texts">
+              <h4>Doctor Consultation ($250)</h4>
+              <p>Get examined by a physician and cure diseases. (+Health)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Visit</button>
+        </div>
+
+        <div class="section-title"><span>🏖️</span> Leisure & Fun</div>
+
+        <div class="interactive-card" onclick="doVacation()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🏖️</div>
+            <div class="card-texts">
+              <h4>First-Class Vacation ($1,200)</h4>
+              <p>Fly first-class to tropical beach resort. (+Happiness)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Fly</button>
+        </div>
+
+        <div class="interactive-card" onclick="doLottery()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🎰</div>
+            <div class="card-texts">
+              <h4>Play the Lottery ($50)</h4>
+              <p>Try your luck to win the $100,000 jackpot!</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Play</button>
+        </div>
+
+        <div class="interactive-card" onclick="doNightclub()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">🪩</div>
+            <div class="card-texts">
+              <h4>Go to a Nightclub ($80)</h4>
+              <p>Dance and socialize with friends. (+Happiness, +Looks)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Dance</button>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 4: RELATIONSHIPS ================= -->
+      <div class="tab-page" id="pageRelationships">
+        <div class="section-title"><span>👨‍👩‍👧</span> Immediate Family</div>
+        <div id="familyCardsContainer" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Injected dynamically -->
+        </div>
+
+        <div class="section-title"><span>💌</span> Dating & Love</div>
+
+        <div class="interactive-card" onclick="findDate()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">💘</div>
+            <div class="card-texts">
+              <h4 id="partnerTitle">Find a Date</h4>
+              <p id="partnerSub">Meet someone special and go out on a romantic date.</p>
+            </div>
+          </div>
+          <button class="btn-card-action success" id="btnPartnerAction">Date</button>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 5: TASKS & MILESTONES ================= -->
+      <div class="tab-page" id="pageTasks">
+        <div class="task-summary-card">
+          <div>
+            <h3>Life Milestones</h3>
+            <p id="tasksSummaryText">Complete goals to unlock rewards</p>
+          </div>
+          <div class="task-badge-pill" id="tasksRatio">0 / 6</div>
+        </div>
+
+        <div class="section-title"><span>🎯</span> Life Challenges</div>
+
+        <div id="tasksListContainer" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Dynamically generated tasks -->
+        </div>
+      </div>
+
     </main>
 
     <!-- 4. STATS SECTION (Happiness, Health, Smarts, Looks) -->
@@ -710,10 +942,15 @@
       </div>
     </section>
 
-    <!-- 5. BOTTOM NAVIGATION DOCK (Assets, Activities, Relationships, Hero Age +1) -->
+    <!-- 5. 5-TAB BOTTOM NAVIGATION DOCK (Life, Assets, Age, Activities, Tasks) -->
     <footer class="bottom-dock">
-      <button class="nav-btn" onclick="openAssetsModal()">
-        <span class="icon">💼</span>
+      <button class="tab-nav-btn active" id="tabBtnLife" onclick="switchTab('pageLife', 'tabBtnLife')">
+        <span class="nav-icon">📖</span>
+        <span>Life</span>
+      </button>
+
+      <button class="tab-nav-btn" id="tabBtnAssets" onclick="switchTab('pageAssets', 'tabBtnAssets')">
+        <span class="nav-icon">💼</span>
         <span>Assets</span>
       </button>
 
@@ -723,172 +960,16 @@
         <span class="hero-age-text">Age</span>
       </button>
 
-      <button class="nav-btn" onclick="openActivitiesModal()">
-        <span class="icon">🎡</span>
+      <button class="tab-nav-btn" id="tabBtnActivities" onclick="switchTab('pageActivities', 'tabBtnActivities')">
+        <span class="nav-icon">🎡</span>
         <span>Activities</span>
       </button>
 
-      <button class="nav-btn" onclick="openRelationshipsModal()">
-        <span class="icon">❤️</span>
-        <span>Relationships</span>
+      <button class="tab-nav-btn" id="tabBtnTasks" onclick="switchTab('pageTasks', 'tabBtnTasks')">
+        <span class="nav-icon">🎯</span>
+        <span>Tasks</span>
       </button>
     </footer>
-
-    <!-- ACTIVITIES MODAL -->
-    <div id="modalActivities" class="modal-overlay" onclick="onOverlayClick(event, 'modalActivities')">
-      <div class="modal-sheet">
-        <div class="sheet-top">
-          <span class="sheet-title">🎡 Activities</span>
-          <button class="sheet-close" onclick="closeModal('modalActivities')">✕</button>
-        </div>
-        <div class="sheet-content">
-          <div class="action-card" onclick="doStudy()">
-            <div class="card-left">
-              <div class="card-icon-bubble">📚</div>
-              <div class="card-texts">
-                <h4>Study Hard / Read Books</h4>
-                <p>Spend hours studying to boost Smarts.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Study</button>
-          </div>
-
-          <div class="action-card" onclick="doGym()">
-            <div class="card-left">
-              <div class="card-icon-bubble">🏋️</div>
-              <div class="card-texts">
-                <h4>Gym & Workout</h4>
-                <p>Lift weights and run cardio. Boosts Health & Looks.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Workout</button>
-          </div>
-
-          <div class="action-card" onclick="doDoctor()">
-            <div class="card-left">
-              <div class="card-icon-bubble">🩺</div>
-              <div class="card-texts">
-                <h4>Doctor Consultation ($250)</h4>
-                <p>Cure illnesses and recover Health.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Visit</button>
-          </div>
-
-          <div class="action-card" onclick="doVacation()">
-            <div class="card-left">
-              <div class="card-icon-bubble">🏖️</div>
-              <div class="card-texts">
-                <h4>Luxury Vacation ($1,200)</h4>
-                <p>Take a scenic tropical trip to max Happiness.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Fly</button>
-          </div>
-
-          <div class="action-card" onclick="doLottery()">
-            <div class="card-left">
-              <div class="card-icon-bubble">🎰</div>
-              <div class="card-texts">
-                <h4>Lottery Ticket ($50)</h4>
-                <p>Try your luck to win big jackpots!</p>
-              </div>
-            </div>
-            <button class="btn-pill">Play</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ASSETS & CAREERS MODAL -->
-    <div id="modalAssets" class="modal-overlay" onclick="onOverlayClick(event, 'modalAssets')">
-      <div class="modal-sheet">
-        <div class="sheet-top">
-          <span class="sheet-title">💼 Assets & Careers</span>
-          <button class="sheet-close" onclick="closeModal('modalAssets')">✕</button>
-        </div>
-        <div class="sheet-content">
-          <div class="action-card" onclick="doUniversity()">
-            <div class="card-left">
-              <div class="card-icon-bubble">🎓</div>
-              <div class="card-texts">
-                <h4>University ($12,000)</h4>
-                <p>Requires Smarts ≥ 50. Unlocks executive positions.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Enroll</button>
-          </div>
-
-          <div class="action-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
-            <div class="card-left">
-              <div class="card-icon-bubble">🍔</div>
-              <div class="card-texts">
-                <h4>Fast Food Worker ($18,000/yr)</h4>
-                <p>No requirements. Age ≥ 18.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Apply</button>
-          </div>
-
-          <div class="action-card" onclick="applyJob('Graphic Designer', 40000, 1, 30, '🎨')">
-            <div class="card-left">
-              <div class="card-icon-bubble">🎨</div>
-              <div class="card-texts">
-                <h4>Graphic Designer ($40,000/yr)</h4>
-                <p>Requires High School & Smarts ≥ 30.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Apply</button>
-          </div>
-
-          <div class="action-card" onclick="applyJob('Software Engineer', 95000, 2, 60, '💻')">
-            <div class="card-left">
-              <div class="card-icon-bubble">💻</div>
-              <div class="card-texts">
-                <h4>Software Engineer ($95,000/yr)</h4>
-                <p>Requires University degree & Smarts ≥ 60.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Apply</button>
-          </div>
-
-          <div class="action-card" onclick="applyJob('Medical Surgeon', 180000, 2, 80, '🩺')">
-            <div class="card-left">
-              <div class="card-icon-bubble">🩺</div>
-              <div class="card-texts">
-                <h4>Medical Surgeon ($180,000/yr)</h4>
-                <p>Requires University degree & Smarts ≥ 80.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Apply</button>
-          </div>
-
-          <div class="action-card" onclick="applyJob('Corporate CEO', 400000, 2, 90, '👑')">
-            <div class="card-left">
-              <div class="card-icon-bubble">👑</div>
-              <div class="card-texts">
-                <h4>Corporate CEO ($400,000/yr)</h4>
-                <p>Requires University degree & Smarts ≥ 90.</p>
-              </div>
-            </div>
-            <button class="btn-pill">Apply</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RELATIONSHIPS MODAL -->
-    <div id="modalRel" class="modal-overlay" onclick="onOverlayClick(event, 'modalRel')">
-      <div class="modal-sheet">
-        <div class="sheet-top">
-          <span class="sheet-title">❤️ Relationships</span>
-          <button class="sheet-close" onclick="closeModal('modalRel')">✕</button>
-        </div>
-        <div class="sheet-content" id="relSheetContent">
-          <!-- Populated from state -->
-        </div>
-      </div>
-    </div>
 
     <!-- DILEMMA DIALOG -->
     <div id="modalDilemma" class="dilemma-overlay">
@@ -903,15 +984,13 @@
   </div>
 
   <script>
-    // CHARACTER STATE (Standard authentic names and meanings)
+    // CHARACTER STATE
     let char = {
       name: "Alyssa Roosevelt",
       gender: "Female",
       city: "San Diego",
       country: "United States",
       flag: "🇺🇸",
-      birthday: "September 24",
-      zodiac: "Libra",
       age: 0,
       money: 0,
       salary: 0,
@@ -923,11 +1002,23 @@
       smarts: 45,
       looks: 65,
       isAlive: true,
+      partner: null,
+      properties: [],
       father: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
       mother: { name: "Emma McCartney", job: "Grocer", age: 40 },
       sister: { name: "Madison McCartney", age: 8 },
       events: []
     };
+
+    // TASKS / MILESTONES SYSTEM
+    let tasks = [
+      { id: "reach18", title: "Reach Adulthood", desc: "Survive and celebrate your 18th birthday.", done: false, reward: 500 },
+      { id: "college", title: "Higher Education", desc: "Graduate from University with a bachelor's degree.", done: false, reward: 2000 },
+      { id: "job50k", title: "Career Climber", desc: "Land any career earning over $50,000/yr.", done: false, reward: 1500 },
+      { id: "house", title: "Homeowner", desc: "Purchase your first property.", done: false, reward: 5000 },
+      { id: "wealth100k", title: "Six-Figure Wealth", desc: "Accumulate $100,000 in your bank balance.", done: false, reward: 10000 },
+      { id: "age70", title: "Golden Years", desc: "Live a long healthy life and reach age 70.", done: false, reward: 8000 }
+    ];
 
     function startNewLife() {
       const firstNames = ["Alyssa", "Sophia", "Chloe", "Emma", "Olivia", "Lucas", "Noah", "Liam", "Ethan", "Oliver"];
@@ -951,15 +1042,19 @@
       char.occupation = "Infant";
       char.occIcon = "🍼";
       char.educationLevel = 0;
-      char.happiness = 75 + Math.floor(Math.random() * 25);
-      char.health = 80 + Math.floor(Math.random() * 20);
-      char.smarts = 30 + Math.floor(Math.random() * 60);
-      char.looks = 30 + Math.floor(Math.random() * 60);
+      char.happiness = 80 + Math.floor(Math.random() * 20);
+      char.health = 85 + Math.floor(Math.random() * 15);
+      char.smarts = 35 + Math.floor(Math.random() * 55);
+      char.looks = 35 + Math.floor(Math.random() * 55);
       char.isAlive = true;
+      char.partner = null;
+      char.properties = [];
 
       char.father = { name: "David " + char.name.split(" ")[1], job: "Engineer", age: 28 };
       char.mother = { name: "Sarah " + char.name.split(" ")[1], job: "Teacher", age: 26 };
       char.sister = { name: "Chloe", age: 3 };
+
+      tasks.forEach(t => t.done = false);
 
       char.events = [
         {
@@ -974,6 +1069,7 @@
         }
       ];
 
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
@@ -981,11 +1077,41 @@
       return Math.max(min, Math.min(max, val));
     }
 
+    function switchTab(pageId, btnId) {
+      document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+
+      document.getElementById(pageId).classList.add('active');
+      document.getElementById(btnId).classList.add('active');
+    }
+
+    function checkMilestones() {
+      tasks.forEach(t => {
+        if (!t.done) {
+          if (t.id === "reach18" && char.age >= 18) completeTask(t);
+          if (t.id === "college" && char.educationLevel >= 2) completeTask(t);
+          if (t.id === "job50k" && char.salary >= 50000) completeTask(t);
+          if (t.id === "house" && char.properties.length > 0) completeTask(t);
+          if (t.id === "wealth100k" && char.money >= 100000) completeTask(t);
+          if (t.id === "age70" && char.age >= 70) completeTask(t);
+        }
+      });
+    }
+
+    function completeTask(task) {
+      task.done = true;
+      char.money += task.reward;
+      char.happiness += 15;
+      recordAction(`🏆 MILESTONE UNLOCKED: "${task.title}"! Received bonus reward of $${task.reward.toLocaleString()}!`);
+    }
+
     function render() {
       char.happiness = clamp(char.happiness, 0, 100);
       char.health = clamp(char.health, 0, 100);
       char.smarts = clamp(char.smarts, 0, 100);
       char.looks = clamp(char.looks, 0, 100);
+
+      checkMilestones();
 
       // Identity Header
       document.getElementById('nameDisplay').innerText = char.name;
@@ -1021,8 +1147,8 @@
       updateStatBar('fillSmarts', 'valSmarts', char.smarts);
       updateStatBar('fillLooks', 'valLooks', char.looks);
 
-      // Story Feed
-      const feed = document.getElementById('storyScroll');
+      // Render Page 1: Life Story Feed
+      const feed = document.getElementById('pageLife');
       feed.innerHTML = '';
       for (let i = char.events.length - 1; i >= 0; i--) {
         const item = char.events[i];
@@ -1043,6 +1169,12 @@
 
         feed.appendChild(card);
       }
+
+      // Render Page 4: Family Relationships
+      renderRelationships();
+
+      // Render Page 5: Tasks & Milestones
+      renderTasksPage();
     }
 
     function updateStatBar(barId, lblId, val) {
@@ -1050,7 +1182,84 @@
       document.getElementById(lblId).innerText = `${val}%`;
     }
 
-    // AGING
+    function renderRelationships() {
+      const box = document.getElementById('familyCardsContainer');
+      box.innerHTML = `
+        <div class="interactive-card">
+          <div class="card-left-group">
+            <div class="card-emoji-box">👨</div>
+            <div class="card-texts">
+              <h4>${char.father.name} (Father, Age ${char.father.age})</h4>
+              <p>Career: ${char.father.job} • Relationship: 100%</p>
+            </div>
+          </div>
+          <button class="btn-card-action" onclick="spendFamily('Father')">Spend Time</button>
+        </div>
+        <div class="interactive-card">
+          <div class="card-left-group">
+            <div class="card-emoji-box">👩</div>
+            <div class="card-texts">
+              <h4>${char.mother.name} (Mother, Age ${char.mother.age})</h4>
+              <p>Career: ${char.mother.job} • Relationship: 100%</p>
+            </div>
+          </div>
+          <button class="btn-card-action" onclick="spendFamily('Mother')">Spend Time</button>
+        </div>
+        <div class="interactive-card">
+          <div class="card-left-group">
+            <div class="card-emoji-box">👧</div>
+            <div class="card-texts">
+              <h4>${char.sister.name} (Sister, Age ${char.sister.age})</h4>
+              <p>Relationship: 95%</p>
+            </div>
+          </div>
+          <button class="btn-card-action" onclick="spendFamily('Sister')">Spend Time</button>
+        </div>
+      `;
+
+      // Partner Status
+      if (char.partner) {
+        document.getElementById('partnerTitle').innerText = `${char.partner.name} (Partner, Age ${char.partner.age})`;
+        document.getElementById('partnerSub').innerText = `Career: ${char.partner.job} • In Love ❤️`;
+        document.getElementById('btnPartnerAction').innerText = "Spend Time";
+      } else {
+        document.getElementById('partnerTitle').innerText = "Find a Date";
+        document.getElementById('partnerSub').innerText = "Meet someone special and go out on a romantic date.";
+        document.getElementById('btnPartnerAction').innerText = "Date";
+      }
+    }
+
+    function renderTasksPage() {
+      const container = document.getElementById('tasksListContainer');
+      container.innerHTML = '';
+      let completedCount = 0;
+
+      tasks.forEach(t => {
+        if (t.done) completedCount++;
+        const card = document.createElement('div');
+        card.className = 'interactive-card';
+        card.innerHTML = `
+          <div class="card-left-group">
+            <div class="card-emoji-box" style="background: ${t.done ? '#E4F7EC' : '#FFF4EE'}; border-color: ${t.done ? '#A7F3D0' : '#F5DFD5'};">
+              ${t.done ? '✅' : '🎯'}
+            </div>
+            <div class="card-texts">
+              <h4 style="text-decoration: ${t.done ? 'line-through' : 'none'}; color: ${t.done ? '#8D99AE' : 'var(--text-title)'}">${t.title}</h4>
+              <p>${t.desc} • Reward: +$${t.reward.toLocaleString()}</p>
+            </div>
+          </div>
+          <button class="btn-card-action ${t.done ? 'success' : ''}" style="opacity: ${t.done ? 0.7 : 1};" disabled>
+            ${t.done ? 'Claimed' : 'In Progress'}
+          </button>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('tasksRatio').innerText = `${completedCount} / ${tasks.length}`;
+      document.getElementById('tasksSummaryText').innerText = `${completedCount} of ${tasks.length} challenges finished`;
+    }
+
+    // AGING LOGIC
     function onAgeClicked() {
       if (!char.isAlive) {
         confirmRestart();
@@ -1061,14 +1270,15 @@
       char.father.age++;
       char.mother.age++;
       char.sister.age++;
+      if (char.partner) char.partner.age++;
 
       const yearNotes = [];
 
-      // Senior decay
+      // Aging health decay
       if (char.age > 45) char.health -= (1 + Math.floor(Math.random() * 3));
       if (char.age > 75) char.health -= (2 + Math.floor(Math.random() * 5));
 
-      // Financials
+      // Financials (Salary minus living expenses)
       if (char.salary > 0) {
         const livingCost = Math.round(char.salary * 0.32) + 750;
         const net = char.salary - livingCost;
@@ -1101,14 +1311,14 @@
         yearNotes.push(`⚰️ At age ${char.age}, I passed away due to poor health conditions. Rest in peace.`);
       } else if (char.age > 72 && Math.random() < ((char.age - 68) / 80)) {
         char.isAlive = false;
-        yearNotes.push(`🕊️ At age ${char.age}, I passed away peacefully in my sleep surrounded by family.`);
+        yearNotes.push(`🕊️ At age ${char.age}, I passed away peacefully in my sleep surrounded by my loved ones.`);
       }
 
       char.events.push({ age: char.age, paragraphs: yearNotes });
       render();
 
       // Occasional dilemmas
-      if (char.isAlive && char.age >= 11 && Math.random() < 0.30) {
+      if (char.isAlive && char.age >= 10 && Math.random() < 0.30) {
         setTimeout(popupDilemma, 320);
       }
     }
@@ -1118,27 +1328,27 @@
       if (roll < 14) {
         char.health -= (10 + Math.floor(Math.random() * 15));
         char.happiness -= 10;
-        list.push("🤒 I caught a severe flu and spent two weeks in bed.");
+        list.push("🤒 I caught a severe seasonal flu and was bedridden for two weeks.");
       } else if (roll < 28) {
-        const found = 60 + Math.floor(Math.random() * 350);
+        const found = 70 + Math.floor(Math.random() * 350);
         char.money += found;
         char.happiness += 8;
-        list.push(`🍀 I found $${found} cash on the sidewalk while walking through town!`);
+        list.push(`🍀 I found $${found} cash on the street while walking through town!`);
       } else if (roll < 42 && char.age >= 16) {
-        char.happiness += 18;
+        char.happiness += 16;
         char.looks += 3;
-        list.push("❤️ I went on a wonderful romantic date with someone special.");
+        list.push("❤️ I enjoyed an unforgettable romantic date under the stars.");
       } else if (roll < 55 && char.salary > 0) {
         const bonus = Math.round(char.salary * 0.15);
         char.money += bonus;
         char.happiness += 12;
-        list.push(`💼 My employer gave me a performance bonus of $${bonus.toLocaleString()}!`);
+        list.push(`💼 My boss gave me an annual performance bonus of $${bonus.toLocaleString()}!`);
       } else {
         list.push("📅 Another peaceful year passed smoothly.");
       }
     }
 
-    // DILEMMAS & DECISIONS
+    // DILEMMAS & CHOICES
     function popupDilemma() {
       const dilemmas = [
         {
@@ -1164,7 +1374,7 @@
         {
           icon: "📈",
           title: "Crypto Opportunity",
-          desc: "A friend shares an early-stage cryptocurrency tip.",
+          desc: "A tech friend shares an early-stage cryptocurrency tip.",
           choices: [
             { text: "Invest $500", fn: () => {
               if (Math.random() > 0.45) {
@@ -1206,13 +1416,13 @@
       }
     }
 
-    // ACTIVITIES
+    // ACTIVITIES ACTIONS
     function doStudy() {
       if (!char.isAlive) return;
       char.smarts += 5 + Math.floor(Math.random() * 5);
       char.happiness -= 2;
       recordAction("📚 I spent hours studying diligently in the library. (+Smarts)");
-      closeModal('modalActivities');
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
@@ -1223,7 +1433,7 @@
       char.happiness += 4;
       char.money -= 30;
       recordAction("🏋️ Completed an intense workout session at the gym. (+Health, +Looks)");
-      closeModal('modalActivities');
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
@@ -1235,8 +1445,8 @@
       }
       if (char.age >= 18) char.money -= 250;
       char.health += 25 + Math.floor(Math.random() * 15);
-      recordAction("🩺 The doctor treated my ailments. (+Health)");
-      closeModal('modalActivities');
+      recordAction("🩺 The doctor treated my ailments thoroughly. (+Health)");
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
@@ -1250,7 +1460,7 @@
       char.happiness += 35;
       char.health += 5;
       recordAction("🏖️ Flew first-class on vacation to Hawaii. (+Happiness)");
-      closeModal('modalActivities');
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
@@ -1263,7 +1473,7 @@
       char.money -= 50;
       const roll = Math.random() * 100;
       if (roll > 95) {
-        const prize = 45000 + Math.floor(Math.random() * 75000);
+        const prize = 50000 + Math.floor(Math.random() * 75000);
         char.money += prize;
         char.happiness += 45;
         recordAction(`🎰 JACKPOT! I won the state lottery for $${prize.toLocaleString()}!`);
@@ -1275,10 +1485,29 @@
       } else {
         recordAction("The lottery ticket was not a winner.");
       }
-      closeModal('modalActivities');
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
+    function doNightclub() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        alert("You must be at least 18 to enter nightclubs!");
+        return;
+      }
+      if (char.money < 80) {
+        alert("Nightclub entry & drinks cost $80!");
+        return;
+      }
+      char.money -= 80;
+      char.happiness += 20;
+      char.looks += 3;
+      recordAction("🪩 Partied all night at an upscale nightclub with friends! (+Happiness, +Looks)");
+      switchTab('pageLife', 'tabBtnLife');
+      render();
+    }
+
+    // CAREER & ASSETS ACTIONS
     function doUniversity() {
       if (!char.isAlive) return;
       if (char.age < 18) {
@@ -1290,7 +1519,7 @@
         return;
       }
       if (char.smarts < 50) {
-        alert("Smarts must be ≥ 50 to qualify for university admission.");
+        alert("Smarts must be ≥ 50 to qualify for university admission. Study harder!");
         return;
       }
       char.educationLevel = 2;
@@ -1299,7 +1528,7 @@
       char.occupation = "College Graduate";
       char.occIcon = "🎓";
       recordAction("🎓 Graduated with honors from University! Executive careers unlocked.");
-      closeModal('modalAssets');
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
@@ -1323,69 +1552,56 @@
       char.salary = pay;
       char.happiness += 12;
       recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
-      closeModal('modalAssets');
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
-    // MODAL HELPERS
-    function openActivitiesModal() {
-      document.getElementById('modalActivities').classList.add('active');
+    function buyProperty(propertyName, price) {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        alert("Must be at least 18 to purchase real estate!");
+        return;
+      }
+      if (char.money < price) {
+        alert(`You need $${price.toLocaleString()} to purchase the ${propertyName}.`);
+        return;
+      }
+      char.money -= price;
+      char.properties.push(propertyName);
+      char.happiness += 25;
+      recordAction(`🏡 Successfully purchased a ${propertyName} for $${price.toLocaleString()}!`);
+      switchTab('pageLife', 'tabBtnLife');
+      render();
     }
 
-    function openAssetsModal() {
-      document.getElementById('modalAssets').classList.add('active');
-    }
-
-    function openRelationshipsModal() {
-      const box = document.getElementById('relSheetContent');
-      box.innerHTML = `
-        <div class="action-card">
-          <div class="card-left">
-            <div class="card-icon-bubble">👨</div>
-            <div class="card-texts">
-              <h4>${char.father.name} (Father, Age ${char.father.age})</h4>
-              <p>Career: ${char.father.job} • Relationship: 100%</p>
-            </div>
-          </div>
-          <button class="btn-pill" onclick="spendFamily('Father')">Spend Time</button>
-        </div>
-        <div class="action-card">
-          <div class="card-left">
-            <div class="card-icon-bubble">👩</div>
-            <div class="card-texts">
-              <h4>${char.mother.name} (Mother, Age ${char.mother.age})</h4>
-              <p>Career: ${char.mother.job} • Relationship: 100%</p>
-            </div>
-          </div>
-          <button class="btn-pill" onclick="spendFamily('Mother')">Spend Time</button>
-        </div>
-        <div class="action-card">
-          <div class="card-left">
-            <div class="card-icon-bubble">👧</div>
-            <div class="card-texts">
-              <h4>${char.sister.name} (Sister, Age ${char.sister.age})</h4>
-              <p>Relationship: 95%</p>
-            </div>
-          </div>
-          <button class="btn-pill" onclick="spendFamily('Sister')">Spend Time</button>
-        </div>
-      `;
-      document.getElementById('modalRel').classList.add('active');
-    }
-
+    // RELATIONSHIPS ACTIONS
     function spendFamily(who) {
       char.happiness += 12;
       recordAction(`I spent quality time chatting and bonding with my ${who}. (+Happiness)`);
-      closeModal('modalRel');
+      switchTab('pageLife', 'tabBtnLife');
       render();
     }
 
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('active');
-    }
-
-    function onOverlayClick(e, id) {
-      if (e.target.id === id) closeModal(id);
+    function findDate() {
+      if (char.age < 16) {
+        alert("Must be at least 16 to start dating!");
+        return;
+      }
+      if (char.partner) {
+        char.happiness += 15;
+        recordAction(`I spent a romantic candlelit dinner with my partner ${char.partner.name}. (+Happiness)`);
+      } else {
+        const dates = [
+          { name: "Jordan Taylor", age: char.age, job: "Photographer" },
+          { name: "Taylor Hayes", age: char.age, job: "Nurse" },
+          { name: "Riley Morgan", age: char.age, job: "Musician" }
+        ];
+        char.partner = dates[Math.floor(Math.random() * dates.length)];
+        char.happiness += 25;
+        recordAction(`💘 I started dating ${char.partner.name}, a wonderful ${char.partner.job}!`);
+      }
+      switchTab('pageLife', 'tabBtnLife');
+      render();
     }
 
     function confirmRestart() {
@@ -1394,7 +1610,7 @@
       }
     }
 
-    // INIT
+    // INITIALIZE
     startNewLife();
 
     // Register OTA Service Worker
