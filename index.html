@@ -44,20 +44,29 @@
       user-select: none;
     }
 
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      position: fixed;
+      touch-action: manipulation;
+    }
+
     body {
       background-color: #EDE6DE;
       color: var(--text-title);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      margin: 0;
     }
 
     .app-viewport {
       width: 100%;
       max-width: 440px;
-      height: 100vh;
+      height: 100%;
       height: 100dvh;
       background: var(--bg-warm);
       display: flex;
@@ -222,12 +231,15 @@
 
     /* MAIN TAB VIEW CONTAINER */
     .tab-viewport {
-      flex: 1;
+      flex: 1 1 auto;
+      min-height: 0;
       overflow-y: auto;
-      padding: 4px 16px 12px;
+      overflow-x: hidden;
+      padding: 4px 16px 14px;
       display: flex;
       flex-direction: column;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
     }
 
     .tab-page {
@@ -248,9 +260,53 @@
     }
 
     /* SECTION HEADERS FOR PAGES */
+    .page-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 6px 0;
+      border-bottom: 1.5px solid #F0E6DD;
+      position: sticky;
+      top: 0;
+      background: var(--bg-warm);
+      z-index: 10;
+    }
+
+    .page-top-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-title);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-close-page {
+      background: #FFFFFF;
+      border: 1.5px solid #F0E6DD;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-title);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: all 0.12s;
+    }
+
+    .btn-close-page:active {
+      transform: scale(0.92);
+      background: #F7EFE8;
+    }
+
     .section-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--text-title);
       display: flex;
@@ -413,10 +469,12 @@
       font-weight: 800;
     }
 
-    /* STATS SECTION (Happiness, Health, Smarts, Looks) */
+    /* STATS SECTION (Happiness, Health, Smarts, Looks) - FIXED AT BOTTOM */
     .stats-section {
       padding: 6px 16px 4px;
       background: var(--bg-warm);
+      flex-shrink: 0;
+      z-index: 40;
     }
 
     .stats-grid {
@@ -467,10 +525,10 @@
       color: var(--text-title);
     }
 
-    /* 5-TAB BOTTOM NAVIGATION DOCK (Life, Assets, Age, Activities, Tasks) */
+    /* 5-TAB BOTTOM NAVIGATION DOCK - FIXED & IMMOVABLE */
     .bottom-dock {
       background: var(--card-white);
-      padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+      padding: 8px 8px calc(10px + env(safe-area-inset-bottom));
       border-top-left-radius: 24px;
       border-top-right-radius: 24px;
       border-top: var(--card-border);
@@ -478,12 +536,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 6px;
+      gap: 4px;
+      flex-shrink: 0;
       z-index: 50;
     }
 
     .tab-nav-btn {
       flex: 1;
+      min-width: 0;
       height: 50px;
       background: transparent;
       border: none;
@@ -494,6 +554,7 @@
       justify-content: center;
       cursor: pointer;
       gap: 2px;
+      padding: 2px 1px;
       color: var(--text-muted);
       transition: all 0.15s;
     }
@@ -508,17 +569,24 @@
     }
 
     .tab-nav-btn span {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      text-align: center;
     }
 
     .tab-nav-btn .nav-icon {
       font-size: 18px;
+      line-height: 1;
     }
 
     /* CENTER HERO AGE BUTTON */
     .hero-age-btn {
-      flex: 1.3;
+      flex: 1.25;
+      min-width: 60px;
       height: 52px;
       background: linear-gradient(135deg, #34D399, #10B981);
       border: 2px solid #FFFFFF;
@@ -528,7 +596,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
       cursor: pointer;
       transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -655,6 +723,7 @@
         <div class="brand-title">Life Journey</div>
       </div>
       <div class="header-actions">
+        <button class="btn-action-pill" onclick="switchTab('pageTasks', '')">🎯 Tasks</button>
         <button class="btn-action-pill" onclick="confirmRestart()">🔄 Restart</button>
       </div>
     </header>
@@ -695,7 +764,10 @@
 
       <!-- ================= PAGE 2: SCHOOL & EDUCATION ================= -->
       <div class="tab-page" id="pageSchool">
-        <div class="section-title"><span id="schoolStageEmoji">🎒</span> <span id="schoolStageTitle">Primary School</span></div>
+        <div class="page-top-bar">
+          <div class="page-top-title"><span id="schoolStageEmoji">🎒</span> <span id="schoolStageTitle">Primary School</span></div>
+          <button class="btn-close-page" onclick="closeToFeed()">✕ Close</button>
+        </div>
 
         <div class="interactive-card" id="schoolMainCard" onclick="doStudyHarder()">
           <div class="card-left-group">
@@ -746,6 +818,11 @@
 
       <!-- ================= PAGE 3: ASSETS & CAREERS ================= -->
       <div class="tab-page" id="pageAssets">
+        <div class="page-top-bar">
+          <div class="page-top-title"><span>🏠</span> Assets & Careers</div>
+          <button class="btn-close-page" onclick="closeToFeed()">✕ Close</button>
+        </div>
+
         <div class="section-title"><span>💼</span> Jobs & Careers</div>
 
         <div class="interactive-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
@@ -830,6 +907,11 @@
 
       <!-- ================= PAGE 3: ACTIVITIES ================= -->
       <div class="tab-page" id="pageActivities">
+        <div class="page-top-bar">
+          <div class="page-top-title"><span>🎡</span> Activities</div>
+          <button class="btn-close-page" onclick="closeToFeed()">✕ Close</button>
+        </div>
+
         <div class="section-title"><span>🧘</span> Mind & Body</div>
 
         <div class="interactive-card" onclick="doStudy()">
@@ -903,6 +985,11 @@
 
       <!-- ================= PAGE 4: RELATIONSHIPS ================= -->
       <div class="tab-page" id="pageRelationships">
+        <div class="page-top-bar">
+          <div class="page-top-title"><span>❤️</span> Relationships</div>
+          <button class="btn-close-page" onclick="closeToFeed()">✕ Close</button>
+        </div>
+
         <div class="section-title"><span>👨‍👩‍👧</span> Immediate Family</div>
         <div id="familyCardsContainer" style="display: flex; flex-direction: column; gap: 10px;">
           <!-- Injected dynamically -->
@@ -924,6 +1011,11 @@
 
       <!-- ================= PAGE 5: TASKS & MILESTONES ================= -->
       <div class="tab-page" id="pageTasks">
+        <div class="page-top-bar">
+          <div class="page-top-title"><span>🎯</span> Tasks & Milestones</div>
+          <button class="btn-close-page" onclick="closeToFeed()">✕ Close</button>
+        </div>
+
         <div class="task-summary-card">
           <div>
             <h3>Life Milestones</h3>
@@ -982,16 +1074,16 @@
       </div>
     </section>
 
-    <!-- 5. 5-TAB BOTTOM NAVIGATION DOCK (Feed, School, Age, Assets, Activities) -->
+    <!-- 5. 5-TAB BOTTOM NAVIGATION DOCK (Role, Assets, Age, Relationships, Activities) -->
     <footer class="bottom-dock">
-      <button class="tab-nav-btn active" id="tabBtnFeed" onclick="switchTab('pageFeed', 'tabBtnFeed')">
-        <span class="nav-icon">📖</span>
-        <span>Life</span>
+      <button class="tab-nav-btn" id="tabBtnRole" onclick="switchTab('pageSchool', 'tabBtnRole')">
+        <span class="nav-icon" id="bottomNavRoleIcon">🍼</span>
+        <span id="bottomNavRoleText">Infant</span>
       </button>
 
-      <button class="tab-nav-btn" id="tabBtnSchool" onclick="switchTab('pageSchool', 'tabBtnSchool')">
-        <span class="nav-icon" id="bottomNavRoleIcon">🎒</span>
-        <span id="bottomNavRoleText">School</span>
+      <button class="tab-nav-btn" id="tabBtnAssets" onclick="switchTab('pageAssets', 'tabBtnAssets')">
+        <span class="nav-icon">🏠</span>
+        <span>Assets</span>
       </button>
 
       <!-- Center Big Hero Age Button -->
@@ -1000,9 +1092,9 @@
         <span class="hero-age-text">Age</span>
       </button>
 
-      <button class="tab-nav-btn" id="tabBtnAssets" onclick="switchTab('pageAssets', 'tabBtnAssets')">
-        <span class="nav-icon">💼</span>
-        <span>Assets</span>
+      <button class="tab-nav-btn" id="tabBtnRelationships" onclick="switchTab('pageRelationships', 'tabBtnRelationships')">
+        <span class="nav-icon">❤️</span>
+        <span>Relationships</span>
       </button>
 
       <button class="tab-nav-btn" id="tabBtnActivities" onclick="switchTab('pageActivities', 'tabBtnActivities')">
@@ -1109,8 +1201,9 @@
         }
       ];
 
-      switchTab('pageFeed', 'tabBtnFeed');
+      closeToFeed();
       render();
+      setTimeout(() => scrollViewportToBottom(false), 50);
     }
 
     function clamp(val, min, max) {
@@ -1118,11 +1211,52 @@
     }
 
     function switchTab(pageId, btnId) {
+      const page = document.getElementById(pageId);
+      const isAlreadyActive = page && page.classList.contains('active');
+
+      // Tapping the active subpage tab button toggles it closed back to the main feed
+      if (isAlreadyActive && pageId !== 'pageFeed') {
+        closeToFeed();
+        return;
+      }
+
       document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
 
-      document.getElementById(pageId).classList.add('active');
-      document.getElementById(btnId).classList.add('active');
+      if (page) page.classList.add('active');
+      if (btnId) {
+        const btn = document.getElementById(btnId);
+        if (btn) btn.classList.add('active');
+      }
+
+      if (pageId === 'pageFeed') {
+        scrollViewportToBottom(true);
+      } else {
+        const vp = document.querySelector('.tab-viewport');
+        if (vp) vp.scrollTop = 0;
+      }
+    }
+
+    function closeToFeed() {
+      document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+      const feed = document.getElementById('pageFeed');
+      if (feed) feed.classList.add('active');
+      scrollViewportToBottom(true);
+    }
+
+    function scrollViewportToBottom(smooth = true) {
+      const vp = document.querySelector('.tab-viewport');
+      if (vp) {
+        try {
+          vp.scrollTo({
+            top: vp.scrollHeight,
+            behavior: smooth ? 'smooth' : 'auto'
+          });
+        } catch(e) {
+          vp.scrollTop = vp.scrollHeight;
+        }
+      }
     }
 
     function checkMilestones() {
@@ -1187,10 +1321,10 @@
       updateStatBar('fillSmarts', 'valSmarts', char.smarts);
       updateStatBar('fillLooks', 'valLooks', char.looks);
 
-      // Render Page 1: Life Story Feed (Clean, pure chronological story only)
+      // Render Page 1: Life Story Feed (Chronological: oldest at top, newest at bottom)
       const feed = document.getElementById('lifeFeedContainer');
       feed.innerHTML = '';
-      for (let i = char.events.length - 1; i >= 0; i--) {
+      for (let i = 0; i < char.events.length; i++) {
         const item = char.events[i];
         const card = document.createElement('div');
         card.className = 'year-entry-card';
@@ -1358,7 +1492,9 @@
       }
 
       char.events.push({ age: char.age, paragraphs: yearNotes });
+      closeToFeed();
       render();
+      setTimeout(() => scrollViewportToBottom(true), 60);
 
       // Occasional dilemmas
       if (char.isAlive && char.age >= 10 && Math.random() < 0.30) {
@@ -1445,7 +1581,6 @@
         b.onclick = () => {
           document.getElementById('modalDilemma').classList.remove('active');
           ch.fn();
-          render();
         };
         choicesBox.appendChild(b);
       });
@@ -1457,6 +1592,9 @@
       if (char.events.length > 0) {
         char.events[char.events.length - 1].paragraphs.push(str);
       }
+      closeToFeed();
+      render();
+      setTimeout(() => scrollViewportToBottom(true), 60);
     }
 
     // ACTIVITIES ACTIONS
@@ -1465,8 +1603,6 @@
       char.smarts += 5 + Math.floor(Math.random() * 5);
       char.happiness -= 2;
       recordAction("📚 I spent hours studying diligently in the library. (+Smarts)");
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     function doGym() {
@@ -1476,8 +1612,6 @@
       char.happiness += 4;
       char.money -= 30;
       recordAction("🏋️ Completed an intense workout session at the gym. (+Health, +Looks)");
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     function doDoctor() {
@@ -1489,8 +1623,6 @@
       if (char.age >= 18) char.money -= 250;
       char.health += 25 + Math.floor(Math.random() * 15);
       recordAction("🩺 The doctor treated my ailments thoroughly. (+Health)");
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     function doVacation() {
@@ -1503,8 +1635,6 @@
       char.happiness += 35;
       char.health += 5;
       recordAction("🏖️ Flew first-class on vacation to Hawaii. (+Happiness)");
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     function doLottery() {
@@ -1528,8 +1658,6 @@
       } else {
         recordAction("The lottery ticket was not a winner.");
       }
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     function doNightclub() {
@@ -1546,8 +1674,6 @@
       char.happiness += 20;
       char.looks += 3;
       recordAction("🪩 Partied all night at an upscale nightclub with friends! (+Happiness, +Looks)");
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     // CAREER & ASSETS ACTIONS
@@ -1571,8 +1697,6 @@
       char.occupation = "College Graduate";
       char.occIcon = "🎓";
       recordAction("🎓 Graduated with honors from University! Executive careers unlocked.");
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     function applyJob(title, pay, reqEdu, reqSmarts, icon) {
@@ -1595,8 +1719,6 @@
       char.salary = pay;
       char.happiness += 12;
       recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     function buyProperty(propertyName, price) {
@@ -1613,16 +1735,12 @@
       char.properties.push(propertyName);
       char.happiness += 25;
       recordAction(`🏡 Successfully purchased a ${propertyName} for $${price.toLocaleString()}!`);
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     // RELATIONSHIPS ACTIONS
     function spendFamily(who) {
       char.happiness += 12;
       recordAction(`I spent quality time chatting and bonding with my ${who}. (+Happiness)`);
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     function findDate() {
@@ -1643,8 +1761,6 @@
         char.happiness += 25;
         recordAction(`💘 I started dating ${char.partner.name}, a wonderful ${char.partner.job}!`);
       }
-      switchTab('pageFeed', 'tabBtnFeed');
-      render();
     }
 
     // SCHOOL & CAREER LOGIC
@@ -1665,26 +1781,26 @@
         mainDesc.innerText = "Stack colorful wooden blocks and learn shapes (+Smarts)";
         clubCard.style.display = "none";
         socialDesc.innerText = "Crawl around and giggle with parents (+Happiness)";
-        navIcon.innerText = "🍼";
-        navText.innerText = "Infant";
-      } else if (char.age < 14) {
-        emojiEl.innerText = "🎒";
-        titleEl.innerText = "Elementary School";
-        mainTitle.innerText = "Study Hard & Homework";
-        mainDesc.innerText = "Pay close attention in class and read books (+Smarts)";
-        clubCard.style.display = "flex";
-        socialDesc.innerText = "Make friends during playground recess (+Happiness)";
-        navIcon.innerText = "🎒";
-        navText.innerText = "School";
+        if (navIcon) navIcon.innerText = "🍼";
+        if (navText) navText.innerText = "Infant";
       } else if (char.age < 18) {
-        emojiEl.innerText = "🏫";
-        titleEl.innerText = "High School";
-        mainTitle.innerText = "Study for Exams";
-        mainDesc.innerText = "Prepare for graduation and university SATs (+Smarts)";
-        clubCard.style.display = "flex";
-        socialDesc.innerText = "Hang out with classmates in the cafeteria (+Happiness)";
-        navIcon.innerText = "🏫";
-        navText.innerText = "High School";
+        if (char.age < 14) {
+          emojiEl.innerText = "🎒";
+          titleEl.innerText = "Elementary School";
+          mainTitle.innerText = "Study Hard & Homework";
+          mainDesc.innerText = "Pay close attention in class and read books (+Smarts)";
+          clubCard.style.display = "flex";
+          socialDesc.innerText = "Make friends during playground recess (+Happiness)";
+        } else {
+          emojiEl.innerText = "🏫";
+          titleEl.innerText = "High School";
+          mainTitle.innerText = "Study for Exams";
+          mainDesc.innerText = "Prepare for graduation and university SATs (+Smarts)";
+          clubCard.style.display = "flex";
+          socialDesc.innerText = "Hang out with classmates in the cafeteria (+Happiness)";
+        }
+        if (navIcon) navIcon.innerText = "🎒";
+        if (navText) navText.innerText = "School";
       } else if (char.educationLevel === 2 && char.salary === 0) {
         emojiEl.innerText = "🎓";
         titleEl.innerText = "University Campus";
@@ -1692,17 +1808,17 @@
         mainDesc.innerText = "Earn high GPA honors for your degree (+Smarts)";
         clubCard.style.display = "flex";
         socialDesc.innerText = "Network with fellow college students (+Happiness)";
-        navIcon.innerText = "🎓";
-        navText.innerText = "College";
+        if (navIcon) navIcon.innerText = "🎓";
+        if (navText) navText.innerText = "University";
       } else {
         emojiEl.innerText = "💼";
-        titleEl.innerText = char.occupation;
-        mainTitle.innerText = "Work Overtime & Upskill";
-        mainDesc.innerText = "Impress your boss and aim for bonuses (+Smarts, +Happiness)";
+        titleEl.innerText = char.occupation || "Career & Employment";
+        mainTitle.innerText = char.salary > 0 ? "Work Overtime & Upskill" : "Seek Employment";
+        mainDesc.innerText = char.salary > 0 ? "Impress your boss and aim for bonuses (+Smarts, +Happiness)" : "Search and apply for job openings in Assets";
         clubCard.style.display = "flex";
-        socialDesc.innerText = "Chat by the watercooler with coworkers (+Happiness)";
-        navIcon.innerText = char.occIcon;
-        navText.innerText = "Career";
+        socialDesc.innerText = char.salary > 0 ? "Chat by the watercooler with coworkers (+Happiness)" : "Network with professionals (+Happiness)";
+        if (navIcon) navIcon.innerText = char.occIcon || "💼";
+        if (navText) navText.innerText = "Career";
       }
     }
 
@@ -1717,7 +1833,6 @@
       } else {
         recordAction("💻 I stayed late and delivered stellar work performance! (+Smarts)");
       }
-      render();
     }
 
     function doExtracurricular() {
@@ -1730,7 +1845,6 @@
       } else {
         recordAction("🏋️ I joined the company softball league with coworkers! (+Health, +Looks)");
       }
-      render();
     }
 
     function interactWithClassmates() {
@@ -1742,7 +1856,6 @@
       } else {
         recordAction("☕ I had coffee and bonded with colleagues during lunch break! (+Happiness)");
       }
-      render();
     }
 
     function confirmRestart() {
