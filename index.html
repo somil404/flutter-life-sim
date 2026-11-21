@@ -5,583 +5,550 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#d50000">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#FFF6ED">
   <link rel="manifest" href="manifest.json">
-  <title>BitLife - Life Simulator</title>
+  <title>Sprout: Cozy Life Journey</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bit-red: #ea1d24;
-      --bit-red-dark: #c41218;
-      --bit-blue: #0288d1;
-      --bit-navy: #153e5c;
-      --bit-navy-dark: #0e2a3f;
-      --bit-green: #2ecc71;
-      --bit-green-dark: #27ae60;
-      --bit-yellow: #f1c40f;
-      --bit-card-border: #dfe6e9;
-      --bit-bg: #f8f9fa;
-      --text-dark: #2d3436;
-      --text-gray: #636e72;
+      --bg-cream: #FFF7ED;
+      --card-white: #FFFFFF;
+      --peach-accent: #FF8A65;
+      --peach-light: #FFE0B2;
+      --mint-green: #66BB6A;
+      --mint-light: #E8F5E9;
+      --sky-blue: #4FC3F7;
+      --sky-light: #E1F5FE;
+      --butter-yellow: #FFD54F;
+      --butter-light: #FFF9C4;
+      --lavender: #BA68C8;
+      --lavender-light: #F3E5F5;
+      --text-main: #3E2723;
+      --text-soft: #795548;
+      --shadow-cozy: 0 8px 24px rgba(121, 85, 72, 0.08);
+      --border-cozy: 2px solid #FFE0B2;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
 
     body {
-      background-color: #1a1a1a;
-      color: var(--text-dark);
+      background-color: #EFEBE9;
+      color: var(--text-main);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      overflow: hidden;
     }
 
-    /* Outer phone container */
-    .app-screen {
+    .cozy-viewport {
       width: 100%;
       max-width: 440px;
       height: 100vh;
       height: 100dvh;
-      background: #ffffff;
+      background: var(--bg-cream);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 40px rgba(93, 64, 55, 0.15);
     }
 
-    /* 1. TOP BITLIFE HEADER */
-    .bit-header {
-      background: var(--bit-red);
-      height: 52px;
-      min-height: 52px;
+    /* 1. TOP HEADER */
+    .cozy-header {
+      padding: 14px 18px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 14px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.18);
-      z-index: 100;
+      background: var(--bg-cream);
+      z-index: 10;
     }
 
-    .btn-circle-menu {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: transparent;
-      border: 2.5px solid #ffffff;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3.5px;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .btn-circle-menu span {
-      display: block;
-      width: 16px;
-      height: 2.5px;
-      background: #ffffff;
-      border-radius: 2px;
-    }
-
-    .logo-container {
+    .brand-title {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .logo-icon {
-      width: 34px;
-      height: 34px;
-      background: #ffffff;
-      border-radius: 50%;
+    .brand-logo-icon {
+      width: 38px;
+      height: 38px;
+      background: #FFE0B2;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 22px;
+      box-shadow: 0 4px 10px rgba(255, 138, 101, 0.2);
     }
 
-    .logo-text {
-      font-family: 'Lilita One', 'Nunito', sans-serif;
-      font-size: 28px;
-      color: #ffeb3b;
-      letter-spacing: -0.5px;
-      text-shadow: 1px 2px 0px rgba(0,0,0,0.25);
+    .brand-name {
+      font-family: 'Fredoka', cursive;
+      font-size: 24px;
+      font-weight: 700;
+      color: #D84315;
+      letter-spacing: -0.3px;
     }
 
-    .bitizen-badge {
-      background: linear-gradient(135deg, #ffd700, #ffae00);
-      color: #7a4600;
-      font-weight: 900;
+    .brand-tag {
       font-size: 11px;
-      padding: 4px 9px;
-      border-radius: 6px;
-      border: 1.5px dashed #a76600;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      letter-spacing: 0.5px;
+      font-weight: 700;
+      color: #8D6E63;
+      background: #FFE0B2;
+      padding: 4px 10px;
+      border-radius: 20px;
     }
 
-    /* 2. CHARACTER IDENTITY CARD */
-    .id-header {
-      background: #ffffff;
-      border-bottom: 2px solid #ebedf0;
-      padding: 10px 14px;
+    .menu-pill {
+      background: #FFFFFF;
+      border: 2px solid #FFE0B2;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #D84315;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: var(--shadow-cozy);
+    }
+
+    /* 2. CHARACTER HERO PASSPORT CARD */
+    .char-card-wrap {
+      padding: 0 16px 10px;
+    }
+
+    .char-passport {
+      background: var(--card-white);
+      border-radius: 24px;
+      padding: 14px 16px;
+      border: var(--border-cozy);
+      box-shadow: var(--shadow-cozy);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .id-left-group {
+    .char-profile-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .char-avatar-box {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #f1f3f6;
-      border: 2px solid #dfe4ea;
+    .avatar-bubble {
+      width: 54px;
+      height: 54px;
+      background: #FFF3E0;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      position: relative;
-    }
-
-    .flag-badge {
-      position: absolute;
-      bottom: -3px;
-      right: -3px;
-      font-size: 14px;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
-    }
-
-    .id-text-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .char-name-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .char-name-title {
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--bit-blue);
-      letter-spacing: -0.3px;
-    }
-
-    .info-btn {
-      width: 17px;
-      height: 17px;
-      background: var(--bit-blue);
-      color: #ffffff;
-      font-size: 11px;
-      font-weight: 900;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: monospace;
-      cursor: pointer;
-    }
-
-    .char-sub-row {
-      font-size: 13px;
-      font-weight: 700;
-      color: #7f8c8d;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 1px;
-    }
-
-    .id-right-group {
-      text-align: right;
-    }
-
-    .balance-amount {
-      font-size: 22px;
-      font-weight: 900;
-      color: #27ae60;
-      letter-spacing: -0.5px;
-    }
-
-    .balance-amount.negative {
-      color: #e74c3c;
-    }
-
-    .balance-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #95a5a6;
-      text-transform: capitalize;
-    }
-
-    /* 3. EVENT LOG / STORY AREA */
-    .story-feed {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px 16px;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .age-year-card {
-      border-bottom: 1.5px solid #f1f2f6;
-      padding-bottom: 14px;
-    }
-
-    .age-year-card:last-child {
-      border-bottom: none;
-    }
-
-    .year-title {
-      font-size: 17px;
-      font-weight: 900;
-      color: #1b4965;
-      margin-bottom: 6px;
-      letter-spacing: -0.2px;
-    }
-
-    .narrative-p {
-      font-size: 14.5px;
-      line-height: 1.55;
-      color: #2f3542;
-      margin-bottom: 7px;
-      font-weight: 600;
-    }
-
-    .narrative-p:last-child {
-      margin-bottom: 0;
-    }
-
-    /* 4. BOTTOM FLOATING CONTROLS & NAV DOCK */
-    .bottom-section {
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 50;
-      box-shadow: 0 -3px 12px rgba(0,0,0,0.06);
-    }
-
-    /* THE BLUE 5-TAB BAR */
-    .nav-dock-bar {
-      height: 60px;
-      background: var(--bit-navy);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      padding: 0 4px;
-    }
-
-    .nav-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #ced6e0;
-      font-size: 11.5px;
-      font-weight: 800;
-      cursor: pointer;
-      gap: 3px;
-      padding: 6px 0;
-      transition: all 0.15s;
-    }
-
-    .nav-btn:active {
-      transform: scale(0.92);
-      color: #ffffff;
-    }
-
-    .nav-icon-circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.14);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-
-    /* THE HERO CIRCULAR GREEN + AGE BUTTON */
-    .age-center-anchor {
-      position: relative;
-      width: 82px;
-      height: 82px;
-      margin-top: -38px;
-      z-index: 60;
-      flex-shrink: 0;
-    }
-
-    .hero-age-btn {
-      width: 82px;
-      height: 82px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #4cd137, #2ecc71 40%, #10ac84 100%);
-      border: 4.5px solid #ffffff;
-      box-shadow: 0 6px 16px rgba(16, 172, 132, 0.45), 0 2px 6px rgba(0,0,0,0.2);
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-    }
-
-    .hero-age-btn:active {
-      transform: scale(0.90);
-      box-shadow: 0 2px 6px rgba(16, 172, 132, 0.4);
-    }
-
-    .hero-age-btn.dead-state {
-      background: radial-gradient(circle, #747d8c, #2f3542);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    .plus-glyph {
       font-size: 32px;
-      font-weight: 900;
-      line-height: 22px;
-      margin-top: -3px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.25);
+      position: relative;
+      border: 2px solid #FFE0B2;
     }
 
-    .label-glyph {
-      font-size: 13.5px;
-      font-weight: 900;
-      letter-spacing: 0.4px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    .avatar-flag {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      font-size: 14px;
+      background: #FFFFFF;
+      border-radius: 50%;
+      padding: 2px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    /* 5. 4 BITLIFE STAT BARS */
-    .stats-tray {
-      background: #f1f2f6;
-      padding: 10px 18px 14px;
-      border-top: 1px solid #dfe4ea;
+    .char-info-block {
       display: flex;
       flex-direction: column;
-      gap: 7px;
     }
 
-    .stat-row-item {
-      display: flex;
-      align-items: center;
+    .char-name-text {
+      font-family: 'Fredoka', cursive;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
     }
 
-    .stat-name-label {
-      width: 102px;
-      font-size: 13px;
-      font-weight: 800;
-      color: #2f3542;
+    .char-status-badge {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #8D6E63;
       display: flex;
       align-items: center;
       gap: 5px;
+      margin-top: 2px;
     }
 
-    .stat-rail {
+    .char-acorns-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .acorn-pill {
+      background: #FFF8E1;
+      border: 2px solid #FFE082;
+      border-radius: 16px;
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Fredoka', cursive;
+      font-size: 16px;
+      font-weight: 700;
+      color: #E65100;
+    }
+
+    .char-age-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: #A1887F;
+      margin-top: 4px;
+    }
+
+    /* 3. COZY STORY FEED */
+    .story-feed {
       flex: 1;
-      height: 19px;
-      background: #dcdde1;
-      border-radius: 4px;
+      overflow-y: auto;
+      padding: 6px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .year-chapter-card {
+      background: var(--card-white);
+      border-radius: 20px;
+      padding: 16px;
+      border: 2px solid #FFF3E0;
+      box-shadow: var(--shadow-cozy);
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chapter-heading {
+      font-family: 'Fredoka', cursive;
+      font-size: 16px;
+      font-weight: 700;
+      color: #E65100;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1.5px dashed #FFE0B2;
+    }
+
+    .story-line {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #4E342E;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .story-line:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 4. STAT PILLS GRID */
+    .stats-dock {
+      padding: 10px 16px 6px;
+      background: var(--bg-cream);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .stat-capsule {
+      background: var(--card-white);
+      border: var(--border-cozy);
+      border-radius: 16px;
+      padding: 8px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      box-shadow: var(--shadow-cozy);
+    }
+
+    .stat-emoji-title {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--text-soft);
+    }
+
+    .stat-meter-mini {
+      width: 100%;
+      height: 8px;
+      background: #F5EFEB;
+      border-radius: 10px;
       overflow: hidden;
-      position: relative;
-      display: flex;
-      align-items: center;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    .stat-meter-fill {
+    .stat-fill-mini {
       height: 100%;
-      background: #2ecc71;
-      transition: width 0.4s ease, background-color 0.4s ease;
+      border-radius: 10px;
+      transition: width 0.35s ease;
+    }
+
+    .stat-percent-label {
+      font-family: 'Fredoka', cursive;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* 5. BOTTOM NAVIGATION BAR & HERO AGE BUTTON */
+    .bottom-nav-wrap {
+      background: var(--card-white);
+      padding: 10px 16px calc(14px + env(safe-area-inset-bottom));
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      border-top: var(--border-cozy);
+      box-shadow: 0 -6px 20px rgba(121, 85, 72, 0.08);
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      padding-right: 7px;
-      font-size: 11.5px;
-      font-weight: 900;
-      color: #ffffff;
-      box-sizing: border-box;
-      min-width: 35px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      justify-content: space-between;
+      gap: 8px;
+      z-index: 50;
     }
 
-    .stat-meter-fill.crit-danger {
-      background: #e74c3c;
+    .nav-bubble-btn {
+      flex: 1;
+      height: 52px;
+      background: #FFF8E1;
+      border: 2px solid #FFE082;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      gap: 2px;
+      color: #E65100;
+      transition: all 0.15s ease;
     }
 
-    .stat-meter-fill.warn-yellow {
-      background: #e67e22;
+    .nav-bubble-btn:active {
+      transform: scale(0.93);
     }
 
-    /* ACTION SLIDE-UP SHEETS */
-    .sheet-backdrop {
+    .nav-bubble-btn span {
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .nav-bubble-btn .ico {
+      font-size: 18px;
+    }
+
+    /* THE HERO SPROUT BUTTON */
+    .hero-sprout-btn {
+      flex: 1.5;
+      height: 56px;
+      background: linear-gradient(135deg, #81C784, #4CAF50);
+      border: 3px solid #FFFFFF;
+      border-radius: 22px;
+      box-shadow: 0 8px 18px rgba(76, 175, 80, 0.35);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .hero-sprout-btn:active {
+      transform: scale(0.92);
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    }
+
+    .hero-sprout-btn.dead {
+      background: #8D6E63;
+      box-shadow: none;
+    }
+
+    .sprout-text {
+      font-family: 'Fredoka', cursive;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    /* 6. COZY MODAL POPUPS */
+    .cozy-modal-backdrop {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0,0,0,0.65);
-      z-index: 200;
+      background: rgba(62, 39, 35, 0.5);
+      z-index: 100;
       display: none;
       align-items: flex-end;
-      backdrop-filter: blur(3px);
+      backdrop-filter: blur(4px);
     }
 
-    .sheet-backdrop.open {
+    .cozy-modal-backdrop.active {
       display: flex;
     }
 
-    .sheet-panel {
+    .cozy-modal-sheet {
       width: 100%;
-      max-height: 82%;
-      background: #ffffff;
-      border-top-left-radius: 22px;
-      border-top-right-radius: 22px;
+      max-height: 80%;
+      background: var(--bg-cream);
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      border-top: 3px solid #FFE0B2;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.15);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      animation: popUp 0.22s cubic-bezier(0.165, 0.84, 0.44, 1);
-      box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
+      animation: sheetUp 0.22s ease-out;
     }
 
-    @keyframes popUp {
+    @keyframes sheetUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
 
-    .sheet-top {
-      background: var(--bit-navy);
-      color: #ffffff;
-      padding: 15px 20px;
+    .cozy-sheet-top {
+      padding: 16px 20px;
+      background: var(--card-white);
+      border-bottom: 2px solid #FFE0B2;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-weight: 900;
-      font-size: 18px;
     }
 
-    .sheet-x-btn {
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      width: 30px;
-      height: 30px;
+    .sheet-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 20px;
+      font-weight: 700;
+      color: #D84315;
+    }
+
+    .sheet-close-btn {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
+      background: #FFF3E0;
+      border: 2px solid #FFE0B2;
+      color: #D84315;
+      font-size: 14px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
     }
 
-    .sheet-content {
-      padding: 16px;
+    .cozy-sheet-body {
+      padding: 14px 16px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .sheet-item-card {
+    .cozy-action-card {
+      background: var(--card-white);
+      border: 2px solid #FFE0B2;
+      border-radius: 18px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 13px 15px;
-      background: #f8f9fa;
-      border: 1.5px solid #edf2f7;
-      border-radius: 12px;
+      box-shadow: var(--shadow-cozy);
       cursor: pointer;
       transition: all 0.15s;
     }
 
-    .sheet-item-card:active {
-      transform: scale(0.98);
-      background: #edf2f7;
+    .cozy-action-card:active {
+      transform: scale(0.97);
     }
 
-    .item-left {
+    .action-left-box {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
-    .item-emoji-circle {
+    .action-icon-pill {
       width: 44px;
       height: 44px;
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 12px;
+      background: #FFF8E1;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border: 1.5px solid #FFE082;
     }
 
-    .item-texts h4 {
+    .action-text-box h4 {
+      font-family: 'Fredoka', cursive;
       font-size: 15px;
-      font-weight: 800;
-      color: #2d3436;
-    }
-
-    .item-texts p {
-      font-size: 12px;
-      color: #718096;
-      margin-top: 2px;
       font-weight: 600;
+      color: var(--text-main);
     }
 
-    .btn-act-callout {
-      background: var(--bit-blue);
-      color: #ffffff;
+    .action-text-box p {
+      font-size: 12px;
+      font-weight: 600;
+      color: #8D6E63;
+      margin-top: 2px;
+    }
+
+    .cozy-btn-pill {
+      background: #FF7043;
+      color: #FFFFFF;
       border: none;
-      padding: 7px 15px;
-      border-radius: 8px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: 'Fredoka', cursive;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 112, 67, 0.3);
     }
 
-    /* SCENARIO DIALOG */
-    .scenario-overlay {
+    /* 7. DILEMMA CHOICE CARD */
+    .dilemma-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 300;
+      background: rgba(62, 39, 35, 0.6);
+      z-index: 150;
       display: none;
       align-items: center;
       justify-content: center;
@@ -589,872 +556,808 @@
       backdrop-filter: blur(4px);
     }
 
-    .scenario-overlay.open {
+    .dilemma-overlay.active {
       display: flex;
     }
 
-    .scenario-card {
+    .dilemma-bubble {
       width: 100%;
-      max-width: 350px;
-      background: #ffffff;
-      border-radius: 20px;
+      max-width: 360px;
+      background: var(--bg-cream);
+      border: 3px solid #FFCC80;
+      border-radius: 26px;
       padding: 22px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      text-align: center;
       display: flex;
       flex-direction: column;
-      text-align: center;
-      gap: 14px;
-      animation: popUp 0.2s ease-out;
+      gap: 12px;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.25);
     }
 
-    .scen-badge {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto;
-      border-radius: 50%;
-      background: #f1f2f6;
+    .dilemma-icon-circle {
+      width: 58px;
+      height: 58px;
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 2px solid #FFE0B2;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 34px;
+      font-size: 32px;
+      margin: 0 auto;
     }
 
-    .scen-title {
+    .dilemma-title {
+      font-family: 'Fredoka', cursive;
       font-size: 20px;
-      font-weight: 900;
-      color: var(--bit-navy);
+      font-weight: 700;
+      color: #D84315;
     }
 
-    .scen-desc {
-      font-size: 14px;
-      line-height: 1.5;
-      color: #4a5568;
+    .dilemma-desc {
+      font-size: 13.5px;
       font-weight: 600;
+      line-height: 1.5;
+      color: #5D4037;
     }
 
-    .scen-options {
+    .dilemma-options {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-top: 6px;
     }
 
-    .opt-btn {
+    .cozy-opt-btn {
+      background: var(--card-white);
+      border: 2px solid #FFE0B2;
+      border-radius: 16px;
       padding: 12px;
-      border: 1.5px solid #cbd5e0;
-      border-radius: 10px;
-      background: #f7fafc;
-      font-weight: 800;
-      font-size: 13.5px;
-      color: #2d3748;
+      font-family: 'Fredoka', cursive;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
       cursor: pointer;
       transition: all 0.15s;
     }
 
-    .opt-btn:active {
-      background: #edf2f7;
-      transform: scale(0.97);
+    .cozy-opt-btn:active {
+      transform: scale(0.96);
+      background: #FFF3E0;
     }
 
-    .opt-btn.highlight {
-      background: var(--bit-blue);
-      color: #ffffff;
-      border-color: var(--bit-blue);
+    .cozy-opt-btn.primary {
+      background: #FF7043;
+      color: #FFFFFF;
+      border-color: #FF5722;
+      box-shadow: 0 4px 12px rgba(255, 112, 67, 0.35);
     }
   </style>
 </head>
 <body>
 
-  <div class="app-screen">
+  <div class="cozy-viewport">
 
-    <!-- 1. RED BITLIFE APP HEADER -->
-    <header class="bit-header">
-      <button class="btn-circle-menu" onclick="promptRestart()" title="Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <div class="logo-container">
-        <div class="logo-icon">👶</div>
-        <div class="logo-text">BitLife</div>
+    <!-- 1. HEADER -->
+    <header class="cozy-header">
+      <div class="brand-title">
+        <div class="brand-logo-icon">🌱</div>
+        <div>
+          <div class="brand-name">Sprout</div>
+        </div>
       </div>
-
-      <div class="bitizen-badge">BITIZEN</div>
+      <button class="menu-pill" onclick="confirmReset()">🔄 Reincarnate</button>
     </header>
 
-    <!-- 2. CHARACTER IDENTITY & BANK BALANCE BAR -->
-    <section class="id-header">
-      <div class="id-left-group">
-        <div class="char-avatar-box" id="avatarBox">
-          👶
-          <span class="flag-badge" id="flagBadge">🇺🇸</span>
-        </div>
-        <div class="id-text-group">
-          <div class="char-name-row">
-            <span class="char-name-title" id="nameDisplay">Alyssa Roosevelt</span>
-            <div class="info-btn" onclick="openAssetsSheet()" title="Info">i</div>
+    <!-- 2. CHARACTER PASSPORT -->
+    <section class="char-card-wrap">
+      <div class="char-passport">
+        <div class="char-profile-left">
+          <div class="avatar-bubble" id="heroAvatar">
+            👶
+            <span class="avatar-flag" id="flagDisplay">🇯🇵</span>
           </div>
-          <div class="char-sub-row">
-            <span id="occIconDisplay">🍼</span>
-            <span id="occTitleDisplay">Infant</span>
+          <div class="char-info-block">
+            <span class="char-name-text" id="nameText">Hana Tanaka</span>
+            <span class="char-status-badge">
+              <span id="roleIcon">🍼</span>
+              <span id="roleText">Infant</span>
+            </span>
           </div>
         </div>
-      </div>
 
-      <div class="id-right-group">
-        <div class="balance-amount" id="balanceDisplay">$0</div>
-        <div class="balance-label">Bank Balance</div>
+        <div class="char-acorns-right">
+          <div class="acorn-pill">
+            <span>🌰</span>
+            <span id="acornCount">0</span>
+          </div>
+          <div class="char-age-tag" id="ageBadge">Age: 0 yrs</div>
+        </div>
       </div>
     </section>
 
-    <!-- 3. SCROLLING STORY / EVENTS FEED -->
-    <main class="story-feed" id="storyFeed">
-      <!-- Dynamic Story Nodes -->
+    <!-- 3. SCROLLING STORY JOURNAL -->
+    <main class="story-feed" id="journalFeed">
+      <!-- Generated dynamically -->
     </main>
 
-    <!-- 4. BOTTOM BAR WITH 5 TABS + CENTER GREEN AGE BUTTON -->
-    <footer class="bottom-section">
-      <div class="nav-dock-bar">
-        <div class="nav-btn" onclick="openAssetsSheet()">
-          <div class="nav-icon-circle">👶</div>
-          <span id="navRoleTitle">Infant</span>
+    <!-- 4. STAT CAPSULES GRID -->
+    <section class="stats-dock">
+      <div class="stats-grid">
+        <!-- Joy -->
+        <div class="stat-capsule">
+          <span class="stat-emoji-title">✨ Joy</span>
+          <div class="stat-meter-mini">
+            <div class="stat-fill-mini" id="fillJoy" style="width: 100%; background: #FFB74D;"></div>
+          </div>
+          <span class="stat-percent-label" id="lblJoy">100%</span>
         </div>
 
-        <div class="nav-btn" onclick="openAssetsSheet()">
-          <div class="nav-icon-circle">🏠</div>
-          <span>Assets</span>
+        <!-- Vitality -->
+        <div class="stat-capsule">
+          <span class="stat-emoji-title">🌿 Vitality</span>
+          <div class="stat-meter-mini">
+            <div class="stat-fill-mini" id="fillVit" style="width: 100%; background: #81C784;"></div>
+          </div>
+          <span class="stat-percent-label" id="lblVit">100%</span>
         </div>
 
-        <!-- HERO AGE CIRCLE BUTTON -->
-        <div class="age-center-anchor">
-          <button class="hero-age-btn" id="heroAgeBtn" onclick="onAgeTap()">
-            <div class="plus-glyph">+</div>
-            <div class="label-glyph">Age</div>
-          </button>
+        <!-- Wisdom -->
+        <div class="stat-capsule">
+          <span class="stat-emoji-title">💡 Wisdom</span>
+          <div class="stat-meter-mini">
+            <div class="stat-fill-mini" id="fillWis" style="width: 50%; background: #4FC3F7;"></div>
+          </div>
+          <span class="stat-percent-label" id="lblWis">50%</span>
         </div>
 
-        <div class="nav-btn" onclick="openRelSheet()">
-          <div class="nav-icon-circle">❤️</div>
-          <span>Relationships</span>
-        </div>
-
-        <div class="nav-btn" onclick="openActivitiesSheet()">
-          <div class="nav-icon-circle">💬</div>
-          <span>Activities</span>
+        <!-- Charm -->
+        <div class="stat-capsule">
+          <span class="stat-emoji-title">🌸 Charm</span>
+          <div class="stat-meter-mini">
+            <div class="stat-fill-mini" id="fillCha" style="width: 50%; background: #BA68C8;"></div>
+          </div>
+          <span class="stat-percent-label" id="lblCha">50%</span>
         </div>
       </div>
+    </section>
 
-      <!-- 5. 4 BITLIFE HORIZONTAL STAT BARS -->
-      <div class="stats-tray">
-        <div class="stat-row-item">
-          <span class="stat-name-label">Happiness <span id="happyFace">😊</span></span>
-          <div class="stat-rail">
-            <div class="stat-meter-fill" id="meterHappy" style="width: 100%;">100%</div>
-          </div>
-        </div>
+    <!-- 5. BOTTOM NAVIGATION BAR -->
+    <footer class="bottom-nav-wrap">
+      <button class="nav-bubble-btn" onclick="openActivities()">
+        <span class="ico">🍵</span>
+        <span>Living</span>
+      </button>
 
-        <div class="stat-row-item">
-          <span class="stat-name-label">Health <span>❤️</span></span>
-          <div class="stat-rail">
-            <div class="stat-meter-fill" id="meterHealth" style="width: 100%;">100%</div>
-          </div>
-        </div>
+      <!-- Center Big Sprout Button -->
+      <button class="hero-sprout-btn" id="sproutAgeBtn" onclick="growYear()">
+        <span style="font-size: 22px;">🌱</span>
+        <span class="sprout-text">Sprout +1</span>
+      </button>
 
-        <div class="stat-row-item">
-          <span class="stat-name-label">Smarts <span>🤓</span></span>
-          <div class="stat-rail">
-            <div class="stat-meter-fill" id="meterSmarts" style="width: 50%;">50%</div>
-          </div>
-        </div>
+      <button class="nav-bubble-btn" onclick="openCareers()">
+        <span class="ico">🏡</span>
+        <span>Calling</span>
+      </button>
 
-        <div class="stat-row-item">
-          <span class="stat-name-label">Looks <span>✨</span></span>
-          <div class="stat-rail">
-            <div class="stat-meter-fill" id="meterLooks" style="width: 50%;">50%</div>
-          </div>
-        </div>
-      </div>
+      <button class="nav-bubble-btn" onclick="openKinship()">
+        <span class="ico">💛</span>
+        <span>Kinship</span>
+      </button>
     </footer>
 
-    <!-- ACTIVITIES MODAL -->
-    <div id="modalActivities" class="sheet-backdrop" onclick="backdropClick(event, 'modalActivities')">
-      <div class="sheet-panel">
-        <div class="sheet-top">
-          <span>Activities</span>
-          <button class="sheet-x-btn" onclick="closeSheet('modalActivities')">✕</button>
+    <!-- LIVING / ACTIVITIES MODAL -->
+    <div id="modalLiving" class="cozy-modal-backdrop" onclick="onModalBg(event, 'modalLiving')">
+      <div class="cozy-modal-sheet">
+        <div class="cozy-sheet-top">
+          <span class="sheet-title">🍵 Daily Living</span>
+          <button class="sheet-close-btn" onclick="closeSheet('modalLiving')">✕</button>
         </div>
-        <div class="sheet-content">
-          <div class="sheet-item-card" onclick="doStudy()">
-            <div class="item-left">
-              <div class="item-emoji-circle">📚</div>
-              <div class="item-texts">
-                <h4>Read Books & Study</h4>
-                <p>Spend hours studying to boost Smarts.</p>
+        <div class="cozy-sheet-body">
+          <div class="cozy-action-card" onclick="doReadBooks()">
+            <div class="action-left-box">
+              <div class="action-icon-pill">📚</div>
+              <div class="action-text-box">
+                <h4>Read in the Garden</h4>
+                <p>Nourish your mind with cozy books. (+Wisdom)</p>
               </div>
             </div>
-            <button class="btn-act-callout">Study</button>
+            <button class="cozy-btn-pill">Read</button>
           </div>
 
-          <div class="sheet-item-card" onclick="doGym()">
-            <div class="item-left">
-              <div class="item-emoji-circle">🏋️</div>
-              <div class="item-texts">
-                <h4>Gym & Workout</h4>
-                <p>Cardio and heavy lifting. Boosts Health & Looks.</p>
+          <div class="cozy-action-card" onclick="doNatureWalk()">
+            <div class="action-left-box">
+              <div class="action-icon-pill">🌲</div>
+              <div class="action-text-box">
+                <h4>Morning Forest Stroll</h4>
+                <p>Breathe cedar air and pick wildflowers. (+Vitality, +Charm)</p>
               </div>
             </div>
-            <button class="btn-act-callout">Workout</button>
+            <button class="cozy-btn-pill">Walk</button>
           </div>
 
-          <div class="sheet-item-card" onclick="doDoctor()">
-            <div class="item-left">
-              <div class="item-emoji-circle">🩺</div>
-              <div class="item-texts">
-                <h4>Doctor Consultation ($250)</h4>
-                <p>Cures diseases, flu and restores Health.</p>
+          <div class="cozy-action-card" onclick="doApothecary()">
+            <div class="action-left-box">
+              <div class="action-icon-pill">🍯</div>
+              <div class="action-text-box">
+                <h4>Herbal Apothecary (150 🌰)</h4>
+                <p>Warm chamomile brews to cure seasonal colds.</p>
               </div>
             </div>
-            <button class="btn-act-callout">Visit</button>
+            <button class="cozy-btn-pill">Visit</button>
           </div>
 
-          <div class="sheet-item-card" onclick="doVacation()">
-            <div class="item-left">
-              <div class="item-emoji-circle">🏖️</div>
-              <div class="item-texts">
-                <h4>Luxury Vacation ($1,200)</h4>
-                <p>Fly first-class to tropical beach resort. Max Happiness.</p>
+          <div class="cozy-action-card" onclick="doHotSprings()">
+            <div class="action-left-box">
+              <div class="action-icon-pill">♨️</div>
+              <div class="action-text-box">
+                <h4>Onsen Hot Springs Retreat (800 🌰)</h4>
+                <p>Unwind in steaming mineral baths. (+Joy)</p>
               </div>
             </div>
-            <button class="btn-act-callout">Fly</button>
+            <button class="cozy-btn-pill">Soak</button>
           </div>
 
-          <div class="sheet-item-card" onclick="doLottery()">
-            <div class="item-left">
-              <div class="item-emoji-circle">🎰</div>
-              <div class="item-texts">
-                <h4>Lottery Tickets ($50)</h4>
-                <p>Chance to win up to $100,000 jackpot!</p>
+          <div class="cozy-action-card" onclick="doWishingWell()">
+            <div class="action-left-box">
+              <div class="action-icon-pill">⛲</div>
+              <div class="action-text-box">
+                <h4>Wishing Well (30 🌰)</h4>
+                <p>Toss a coin for fortune and unexpected gifts.</p>
               </div>
             </div>
-            <button class="btn-act-callout">Play</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ASSETS & CAREERS MODAL -->
-    <div id="modalAssets" class="sheet-backdrop" onclick="backdropClick(event, 'modalAssets')">
-      <div class="sheet-panel">
-        <div class="sheet-top">
-          <span>Assets & Careers</span>
-          <button class="sheet-x-btn" onclick="closeSheet('modalAssets')">✕</button>
-        </div>
-        <div class="sheet-content">
-          <div class="sheet-item-card" onclick="doUniversity()">
-            <div class="item-left">
-              <div class="item-emoji-circle">🎓</div>
-              <div class="item-texts">
-                <h4>University ($12,000)</h4>
-                <p>Requires Smarts ≥ 50. Unlocks high-income career ladder.</p>
-              </div>
-            </div>
-            <button class="btn-act-callout">Enroll</button>
-          </div>
-
-          <div class="sheet-item-card" onclick="takeJob('Fast Food Crew', 18000, 0, 10, '🍔')">
-            <div class="item-left">
-              <div class="item-emoji-circle">🍔</div>
-              <div class="item-texts">
-                <h4>Fast Food Crew ($18,000/yr)</h4>
-                <p>No education requirements. Entry level.</p>
-              </div>
-            </div>
-            <button class="btn-act-callout">Apply</button>
-          </div>
-
-          <div class="sheet-item-card" onclick="takeJob('Graphic Designer', 42000, 1, 30, '🎨')">
-            <div class="item-left">
-              <div class="item-emoji-circle">🎨</div>
-              <div class="item-texts">
-                <h4>Graphic Designer ($42,000/yr)</h4>
-                <p>Requires High School diploma & Smarts ≥ 30.</p>
-              </div>
-            </div>
-            <button class="btn-act-callout">Apply</button>
-          </div>
-
-          <div class="sheet-item-card" onclick="takeJob('Software Engineer', 98000, 2, 60, '💻')">
-            <div class="item-left">
-              <div class="item-emoji-circle">💻</div>
-              <div class="item-texts">
-                <h4>Software Engineer ($98,000/yr)</h4>
-                <p>Requires University degree & Smarts ≥ 60.</p>
-              </div>
-            </div>
-            <button class="btn-act-callout">Apply</button>
-          </div>
-
-          <div class="sheet-item-card" onclick="takeJob('Medical Surgeon', 190000, 2, 80, '🩺')">
-            <div class="item-left">
-              <div class="item-emoji-circle">🩺</div>
-              <div class="item-texts">
-                <h4>Medical Surgeon ($190,000/yr)</h4>
-                <p>Requires University degree & Smarts ≥ 80.</p>
-              </div>
-            </div>
-            <button class="btn-act-callout">Apply</button>
-          </div>
-
-          <div class="sheet-item-card" onclick="takeJob('Chief Executive Officer', 420000, 2, 90, '👑')">
-            <div class="item-left">
-              <div class="item-emoji-circle">👑</div>
-              <div class="item-texts">
-                <h4>Corporate CEO ($420,000/yr)</h4>
-                <p>Requires University degree & Smarts ≥ 90.</p>
-              </div>
-            </div>
-            <button class="btn-act-callout">Apply</button>
+            <button class="cozy-btn-pill">Wish</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- RELATIONSHIPS MODAL -->
-    <div id="modalRel" class="sheet-backdrop" onclick="backdropClick(event, 'modalRel')">
-      <div class="sheet-panel">
-        <div class="sheet-top">
-          <span>Relationships</span>
-          <button class="sheet-x-btn" onclick="closeSheet('modalRel')">✕</button>
+    <!-- CALLING & CRAFTS MODAL -->
+    <div id="modalCareers" class="cozy-modal-backdrop" onclick="onModalBg(event, 'modalCareers')">
+      <div class="cozy-modal-sheet">
+        <div class="cozy-sheet-top">
+          <span class="sheet-title">🏡 Calling & Craft</span>
+          <button class="sheet-close-btn" onclick="closeSheet('modalCareers')">✕</button>
         </div>
-        <div class="sheet-content" id="relSheetContent">
-          <!-- Dynamic relatives -->
+        <div class="cozy-sheet-body">
+          <div class="cozy-action-card" onclick="doAcademy()">
+            <div class="action-left-box">
+              <div class="action-icon-pill">📜</div>
+              <div class="action-text-box">
+                <h4>Botanical Academy (5,000 🌰)</h4>
+                <p>Requires Wisdom ≥ 50. Unlocks master artisan callings.</p>
+              </div>
+            </div>
+            <button class="cozy-btn-pill">Enroll</button>
+          </div>
+
+          <div class="cozy-action-card" onclick="takeRole('Village Bakery Apprentice', 16000, 0, 10, '🥖')">
+            <div class="action-left-box">
+              <div class="action-icon-pill">🥖</div>
+              <div class="action-text-box">
+                <h4>Bakery Apprentice (16k 🌰/yr)</h4>
+                <p>Knead sourdough and cinnamon rolls.</p>
+              </div>
+            </div>
+            <button class="cozy-btn-pill">Apply</button>
+          </div>
+
+          <div class="cozy-action-card" onclick="takeRole('Pottery Artisan', 38000, 1, 30, '🏺')">
+            <div class="action-left-box">
+              <div class="action-icon-pill">🏺</div>
+              <div class="action-text-box">
+                <h4>Pottery Artisan (38k 🌰/yr)</h4>
+                <p>Requires Schooling & Wisdom ≥ 30.</p>
+              </div>
+            </div>
+            <button class="cozy-btn-pill">Apply</button>
+          </div>
+
+          <div class="cozy-action-card" onclick="takeRole('Landscape Architect', 88000, 2, 60, '🌿')">
+            <div class="action-left-box">
+              <div class="action-icon-pill">🌿</div>
+              <div class="action-text-box">
+                <h4>Landscape Architect (88k 🌰/yr)</h4>
+                <p>Requires Academy graduate & Wisdom ≥ 60.</p>
+              </div>
+            </div>
+            <button class="cozy-btn-pill">Apply</button>
+          </div>
+
+          <div class="cozy-action-card" onclick="takeRole('Master Botanical Doctor', 170000, 2, 80, '🌸')">
+            <div class="action-left-box">
+              <div class="action-icon-pill">🌸</div>
+              <div class="action-text-box">
+                <h4>Master Botanist (170k 🌰/yr)</h4>
+                <p>Requires Academy graduate & Wisdom ≥ 80.</p>
+              </div>
+            </div>
+            <button class="cozy-btn-pill">Apply</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- DILEMMA / SCENARIO POPUP -->
-    <div id="dialogOverlay" class="scenario-overlay">
-      <div class="scenario-card">
-        <div class="scen-badge" id="scenBadge">🤔</div>
-        <div class="scen-title" id="scenTitle">Life Dilemma</div>
-        <div class="scen-desc" id="scenDesc">What will you decide?</div>
-        <div class="scen-options" id="scenOptions"></div>
+    <!-- KINSHIP MODAL -->
+    <div id="modalKinship" class="cozy-modal-backdrop" onclick="onModalBg(event, 'modalKinship')">
+      <div class="cozy-modal-sheet">
+        <div class="cozy-sheet-top">
+          <span class="sheet-title">💛 Beloved Kinship</span>
+          <button class="sheet-close-btn" onclick="closeSheet('modalKinship')">✕</button>
+        </div>
+        <div class="cozy-sheet-body" id="kinshipList">
+          <!-- Populated from state -->
+        </div>
+      </div>
+    </div>
+
+    <!-- DILEMMA CHOICE CARD -->
+    <div id="modalDilemma" class="dilemma-overlay">
+      <div class="dilemma-bubble">
+        <div class="dilemma-icon-circle" id="dIcon">🐿️</div>
+        <div class="dilemma-title" id="dTitle">Forest Encounter</div>
+        <div class="dilemma-desc" id="dDesc">A little squirrel dropped an acorn at your feet. What do you do?</div>
+        <div class="dilemma-options" id="dOpts"></div>
       </div>
     </div>
 
   </div>
 
   <script>
-    // GAME CORE STATE
-    let p = {
-      name: "Alyssa Roosevelt",
+    // CHARACTER STATE
+    let me = {
+      name: "Hana Tanaka",
       gender: "Female",
-      city: "San Diego",
-      country: "United States",
-      flag: "🇺🇸",
-      birthday: "September 24",
-      zodiac: "Libra",
+      hometown: "Kyoto",
+      region: "Japan",
+      flag: "🇯🇵",
       age: 0,
-      cash: 0,
+      acorns: 50,
       salary: 0,
-      occupation: "Infant",
-      occIcon: "🍼",
-      education: 0, // 0: None, 1: High School, 2: University
-      happy: 90,
-      health: 95,
-      smarts: 45,
-      looks: 65,
+      role: "Infant",
+      roleIcon: "🍼",
+      education: 0,
+      joy: 92,
+      vitality: 95,
+      wisdom: 48,
+      charm: 62,
       alive: true,
-      dad: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
-      mom: { name: "Emma McCartney", job: "Grocer", age: 40 },
-      sister: { name: "Madison McCartney", age: 8 },
-      story: []
+      kin: [
+        { name: "Kenji", rel: "Father", age: 28, job: "Tea Master", emoji: "🍵" },
+        { name: "Aoi", rel: "Mother", age: 27, job: "Kimono Weaver", emoji: "🧵" },
+        { name: "Ren", rel: "Brother", age: 4, job: "Playful toddler", emoji: "🪁" }
+      ],
+      journal: []
     };
 
-    function startFreshLife() {
-      const fNames = ["Alyssa", "Sophia", "Chloe", "Emma", "Olivia", "Lucas", "Noah", "Liam", "Ethan", "Alexander"];
-      const lNames = ["Roosevelt", "Sterling", "Vance", "Mercer", "Sinclair", "Hayes", "Brooks", "Montgomery"];
-      const locations = [
-        { city: "San Diego", country: "United States", flag: "🇺🇸" },
-        { city: "London", country: "United Kingdom", flag: "🇬🇧" },
-        { city: "Sydney", country: "Australia", flag: "🇦🇺" },
-        { city: "Toronto", country: "Canada", flag: "🇨🇦" }
+    function initSproutLife() {
+      const names = [
+        { name: "Hana Tanaka", gender: "Female", city: "Kyoto", region: "Japan", flag: "🇯🇵" },
+        { name: "Oliver Sterling", gender: "Male", city: "Cotswolds", region: "United Kingdom", flag: "🇬🇧" },
+        { name: "Amélie Dubois", gender: "Female", city: "Provence", region: "France", flag: "🇫🇷" },
+        { name: "Milo Evergreen", gender: "Male", city: "Maple Ridge", region: "Canada", flag: "🇨🇦" }
       ];
 
-      const loc = locations[Math.floor(Math.random() * locations.length)];
-      p.name = fNames[Math.floor(Math.random() * fNames.length)] + " " + lNames[Math.floor(Math.random() * lNames.length)];
-      p.gender = Math.random() > 0.5 ? "Female" : "Male";
-      p.city = loc.city;
-      p.country = loc.country;
-      p.flag = loc.flag;
-      p.age = 0;
-      p.cash = 0;
-      p.salary = 0;
-      p.occupation = "Infant";
-      p.occIcon = "🍼";
-      p.education = 0;
-      p.happy = 80 + Math.floor(Math.random() * 20);
-      p.health = 85 + Math.floor(Math.random() * 15);
-      p.smarts = 35 + Math.floor(Math.random() * 55);
-      p.looks = 35 + Math.floor(Math.random() * 55);
-      p.alive = true;
+      const chosen = names[Math.floor(Math.random() * names.length)];
+      me.name = chosen.name;
+      me.gender = chosen.gender;
+      me.hometown = chosen.city;
+      me.region = chosen.region;
+      me.flag = chosen.flag;
+      me.age = 0;
+      me.acorns = 50;
+      me.salary = 0;
+      me.role = "Infant";
+      me.roleIcon = "🍼";
+      me.education = 0;
+      me.joy = 85 + Math.floor(Math.random() * 15);
+      me.vitality = 90 + Math.floor(Math.random() * 10);
+      me.wisdom = 35 + Math.floor(Math.random() * 45);
+      me.charm = 40 + Math.floor(Math.random() * 50);
+      me.alive = true;
 
-      p.dad = { name: "Marcus " + p.name.split(" ")[1], job: "Architect", age: 29 };
-      p.mom = { name: "Hannah " + p.name.split(" ")[1], job: "Physician", age: 27 };
-      p.sister = { name: "Maya", age: 4 };
-
-      p.story = [
+      me.journal = [
         {
-          age: 0,
-          paragraphs: [
-            `I was born a ${p.gender.toLowerCase()} in ${p.city}, ${p.country}. I was conceived on the beach in Hawaii.`,
-            `My birthday is ${p.birthday}. I am a ${p.zodiac}.`,
-            `My name is ${p.name}.`,
-            `My father is ${p.dad.name}, a ${p.dad.job} (age ${p.dad.age}).`,
-            `My mother is ${p.mom.name}, a ${p.mom.job} (age ${p.mom.age}).`,
-            `I have an older sister named ${p.sister.name} (age ${p.sister.age}).`
+          year: 0,
+          notes: [
+            `🌱 A tiny sprout in this big world! I was born in the peaceful town of ${me.hometown}, ${me.region}.`,
+            `My father is ${me.kin[0].name}, a gentle ${me.kin[0].job}.`,
+            `My mother is ${me.kin[1].name}, an artisan ${me.kin[1].job}.`,
+            `The sun warms the garden as my journey begins.`
           ]
         }
       ];
 
-      render();
+      updateDisplay();
     }
 
-    function clampVal(val, min, max) {
+    function clamp(val, min, max) {
       return Math.max(min, Math.min(max, val));
     }
 
-    function render() {
-      // Clamps
-      p.happy = clampVal(p.happy, 0, 100);
-      p.health = clampVal(p.health, 0, 100);
-      p.smarts = clampVal(p.smarts, 0, 100);
-      p.looks = clampVal(p.looks, 0, 100);
+    function updateDisplay() {
+      me.joy = clamp(me.joy, 0, 100);
+      me.vitality = clamp(me.vitality, 0, 100);
+      me.wisdom = clamp(me.wisdom, 0, 100);
+      me.charm = clamp(me.charm, 0, 100);
 
-      // Top identity card
-      document.getElementById('nameDisplay').innerText = p.name;
-      document.getElementById('flagBadge').innerText = p.flag;
-      document.getElementById('occIconDisplay').innerText = p.occIcon;
-      document.getElementById('occTitleDisplay').innerText = p.occupation;
+      // Passport
+      document.getElementById('nameText').innerText = me.name;
+      document.getElementById('flagDisplay').innerText = me.flag;
+      document.getElementById('roleIcon').innerText = me.roleIcon;
+      document.getElementById('roleText').innerText = me.role;
+      document.getElementById('acornCount').innerText = me.acorns.toLocaleString();
+      document.getElementById('ageBadge').innerText = `Age: ${me.age} yrs`;
 
-      const bal = document.getElementById('balanceDisplay');
-      bal.innerText = (p.cash >= 0 ? '$' : '-$') + Math.abs(p.cash).toLocaleString();
-      bal.className = p.cash >= 0 ? 'balance-amount' : 'balance-amount negative';
-
-      // Avatar emoji by age
-      const av = document.getElementById('avatarBox');
+      // Avatar
+      const av = document.getElementById('heroAvatar');
       let base = "👶";
-      if (p.age >= 60) base = p.gender === "Female" ? "👵" : "👴";
-      else if (p.age >= 18) base = p.gender === "Female" ? "👩" : "👨";
-      else if (p.age >= 6) base = p.gender === "Female" ? "👧" : "👦";
-      av.innerHTML = `${base}<span class="flag-badge" id="flagBadge">${p.flag}</span>`;
+      if (me.age >= 60) base = me.gender === "Female" ? "👵" : "👴";
+      else if (me.age >= 18) base = me.gender === "Female" ? "👩" : "👨";
+      else if (me.age >= 6) base = me.gender === "Female" ? "👧" : "👦";
+      av.innerHTML = `${base}<span class="avatar-flag" id="flagDisplay">${me.flag}</span>`;
 
-      // Nav label
-      const navRole = document.getElementById('navRoleTitle');
-      if (p.age < 6) navRole.innerText = "Infant";
-      else if (p.age < 18) navRole.innerText = "Student";
-      else navRole.innerText = "Career";
-
-      // Hero button
-      const hero = document.getElementById('heroAgeBtn');
-      if (p.alive) {
-        hero.className = 'hero-age-btn';
-        hero.innerHTML = '<div class="plus-glyph">+</div><div class="label-glyph">Age</div>';
+      // Button
+      const btn = document.getElementById('sproutAgeBtn');
+      if (me.alive) {
+        btn.className = "hero-sprout-btn";
+        btn.innerHTML = `<span style="font-size: 22px;">🌱</span><span class="sprout-text">Sprout +1</span>`;
       } else {
-        hero.className = 'hero-age-btn dead-state';
-        hero.innerHTML = '<div style="font-size:24px;">⚰️</div><div class="label-glyph">Rip</div>';
+        btn.className = "hero-sprout-btn dead";
+        btn.innerHTML = `<span style="font-size: 22px;">🍂</span><span class="sprout-text">Reincarnate</span>`;
       }
 
-      // Stats bars
-      fillBar('meterHappy', p.happy);
-      fillBar('meterHealth', p.health);
-      fillBar('meterSmarts', p.smarts);
-      fillBar('meterLooks', p.looks);
+      // Stats
+      setMiniBar('fillJoy', 'lblJoy', me.joy);
+      setMiniBar('fillVit', 'lblVit', me.vitality);
+      setMiniBar('fillWis', 'lblWis', me.wisdom);
+      setMiniBar('fillCha', 'lblCha', me.charm);
 
-      // Render Story Feed
-      const feed = document.getElementById('storyFeed');
-      feed.innerHTML = '';
-      for (let i = p.story.length - 1; i >= 0; i--) {
-        const item = p.story[i];
+      // Journal
+      const journalEl = document.getElementById('journalFeed');
+      journalEl.innerHTML = '';
+      for (let i = me.journal.length - 1; i >= 0; i--) {
+        const item = me.journal[i];
         const card = document.createElement('div');
-        card.className = 'age-year-card';
+        card.className = 'year-chapter-card';
 
-        const title = document.createElement('div');
-        title.className = 'year-title';
-        title.innerText = `Age: ${item.age} years`;
-        card.appendChild(title);
+        const head = document.createElement('div');
+        head.className = 'chapter-heading';
+        head.innerHTML = `<span>📖</span> Year ${item.year} Memories`;
+        card.appendChild(head);
 
-        item.paragraphs.forEach(pg => {
-          const pEl = document.createElement('p');
-          pEl.className = 'narrative-p';
-          pEl.innerText = pg;
-          card.appendChild(pEl);
+        item.notes.forEach(txt => {
+          const p = document.createElement('p');
+          p.className = 'story-line';
+          p.innerText = txt;
+          card.appendChild(p);
         });
 
-        feed.appendChild(card);
+        journalEl.appendChild(card);
       }
     }
 
-    function fillBar(id, val) {
-      const el = document.getElementById(id);
-      el.style.width = `${Math.max(val, 6)}%`;
-      el.innerText = `${val}%`;
-
-      if (val < 20) {
-        el.className = 'stat-meter-fill crit-danger';
-      } else if (val < 45) {
-        el.className = 'stat-meter-fill warn-yellow';
-      } else {
-        el.className = 'stat-meter-fill';
-      }
+    function setMiniBar(barId, lblId, val) {
+      document.getElementById(barId).style.width = `${Math.max(val, 6)}%`;
+      document.getElementById(lblId).innerText = `${val}%`;
     }
 
-    // AGE CLICK
-    function onAgeTap() {
-      if (!p.alive) {
-        promptRestart();
+    // GROW YEAR
+    function growYear() {
+      if (!me.alive) {
+        confirmReset();
         return;
       }
 
-      p.age++;
-      p.dad.age++;
-      p.mom.age++;
-      p.sister.age++;
+      me.age++;
+      me.kin.forEach(k => k.age++);
 
-      const yearNotes = [];
+      const memories = [];
 
-      // Senior decay
-      if (p.age > 45) p.health -= (1 + Math.floor(Math.random() * 3));
-      if (p.age > 75) p.health -= (2 + Math.floor(Math.random() * 5));
+      // Senior gentle decline
+      if (me.age > 50) me.vitality -= (1 + Math.floor(Math.random() * 2));
+      if (me.age > 75) me.vitality -= (2 + Math.floor(Math.random() * 4));
 
-      // Finances
-      if (p.salary > 0) {
-        const living = Math.round(p.salary * 0.30) + 700;
-        const net = p.salary - living;
-        p.cash += net;
+      // Harvest income
+      if (me.salary > 0) {
+        const livingCost = Math.round(me.salary * 0.28) + 500;
+        const net = me.salary - livingCost;
+        me.acorns += net;
       }
 
       // Milestones
-      if (p.age === 6) {
-        p.occupation = "Elementary Student";
-        p.occIcon = "🎒";
-        yearNotes.push("I started attending Elementary School!");
-      } else if (p.age === 14) {
-        p.occupation = "High School Student";
-        p.occIcon = "🎒";
-        yearNotes.push("I entered High School.");
-      } else if (p.age === 18) {
-        p.education = Math.max(p.education, 1);
-        if (p.salary === 0) {
-          p.occupation = "High School Graduate";
-          p.occIcon = "🎓";
+      if (me.age === 6) {
+        me.role = "Village School Pupil";
+        me.roleIcon = "🎒";
+        memories.push("🎒 I started attending the village school under the weeping willow tree!");
+      } else if (me.age === 15) {
+        memories.push("🌸 Teenage years have arrived! I love spending afternoons baking and painting.");
+      } else if (me.age === 18) {
+        me.education = Math.max(me.education, 1);
+        if (me.salary === 0) {
+          me.role = "Village Free Spirit";
+          me.roleIcon = "🌾";
         }
-        yearNotes.push("🎓 I graduated from High School!");
+        memories.push("🎓 I finished basic village school. The wide world awaits my calling!");
       } else {
-        annualRandomEvents(yearNotes);
+        triggerGentleRandomEvents(memories);
       }
 
-      // Death logic
-      if (p.health <= 0) {
-        p.alive = false;
-        yearNotes.push(`⚰️ At age ${p.age}, I passed away due to failing health. Rest in peace.`);
-      } else if (p.age > 72 && Math.random() < ((p.age - 68) / 80)) {
-        p.alive = false;
-        yearNotes.push(`🕊️ At age ${p.age}, I passed away peacefully in my sleep surrounded by my family.`);
+      // Peaceful End of Life
+      if (me.vitality <= 0) {
+        me.alive = false;
+        memories.push(`🍂 At age ${me.age}, my earthly journey gently came to rest. A peaceful life well lived.`);
+      } else if (me.age > 78 && Math.random() < ((me.age - 72) / 60)) {
+        me.alive = false;
+        memories.push(`🕊️ At age ${me.age}, I fell asleep peacefully under the autumn leaves, surrounded by warm tea and loved ones.`);
       }
 
-      p.story.push({ age: p.age, paragraphs: yearNotes });
-      render();
+      me.journal.push({ year: me.age, notes: memories });
+      updateDisplay();
 
-      // Dilemma popups
-      if (p.alive && p.age >= 11 && Math.random() < 0.32) {
-        setTimeout(showScenarioDialog, 350);
+      // Gentle interactive choices
+      if (me.alive && me.age >= 10 && Math.random() < 0.3) {
+        setTimeout(popupDilemma, 300);
       }
     }
 
-    function annualRandomEvents(list) {
+    function triggerGentleRandomEvents(list) {
       const roll = Math.random() * 100;
-      if (roll < 14) {
-        p.health -= (10 + Math.floor(Math.random() * 15));
-        p.happy -= 10;
-        list.push("I caught a terrible case of pneumonia and was bedridden for two weeks.");
-      } else if (roll < 28) {
-        const cashFound = 80 + Math.floor(Math.random() * 400);
-        p.cash += cashFound;
-        p.happy += 8;
-        list.push(`I found an envelope containing $${cashFound} cash in an abandoned coat!`);
-      } else if (roll < 42 && p.age >= 16) {
-        p.happy += 18;
-        list.push("I went on a magical date with someone special under the stars.");
-      } else if (roll < 55 && p.salary > 0) {
-        const bonus = Math.round(p.salary * 0.16);
-        p.cash += bonus;
-        p.happy += 14;
-        list.push(`Promoted for stellar performance! Received an annual bonus of $${bonus.toLocaleString()}!`);
+      if (roll < 15) {
+        me.vitality -= (8 + Math.floor(Math.random() * 12));
+        me.joy -= 8;
+        list.push("🌧️ Caught a seasonal winter chill and drank ginger tea by the fireplace for a week.");
+      } else if (roll < 30) {
+        const gift = 60 + Math.floor(Math.random() * 250);
+        me.acorns += gift;
+        me.joy += 8;
+        list.push(`🍄 While foraging in the mossy grove, I found ${gift} shiny acorns hidden under a toadstool!`);
+      } else if (roll < 45 && me.age >= 16) {
+        me.joy += 18;
+        me.charm += 4;
+        list.push("💌 Shared an unforgettable sunset picnic with someone truly beloved.");
+      } else if (roll < 60 && me.salary > 0) {
+        const bonus = Math.round(me.salary * 0.15);
+        me.acorns += bonus;
+        me.joy += 12;
+        list.push(`✨ The village guild rewarded my fine craft with a seasonal harvest bonus of ${bonus.toLocaleString()} 🌰!`);
       } else {
-        list.push("Another peaceful year went by without incident.");
+        list.push("🍃 A serene, gentle year passed listening to birdsong and creek water.");
       }
     }
 
-    // SCENARIO DILEMMAS
-    function showScenarioDialog() {
-      const scenarios = [
+    // DILEMMAS
+    function popupDilemma() {
+      const dilemmas = [
         {
-          badge: "🐕",
-          title: "Abandoned Puppy",
-          desc: "You found a shivering, neglected puppy sitting alone by the trash cans.",
+          icon: "🐿️",
+          title: "Injured Chipmunk",
+          desc: "You discover a little chipmunk with a hurt paw nestled in clover.",
           opts: [
-            { txt: "Adopt it and take it home", fn: () => { p.happy += 18; p.cash -= 120; recordAction("I rescued the abandoned puppy and welcomed him into my home!"); } },
-            { txt: "Take it to the local shelter", fn: () => { p.happy += 6; recordAction("I took the puppy to a certified no-kill animal shelter."); } },
-            { txt: "Ignore it and walk away", fn: () => { p.happy -= 10; recordAction("I walked away from the puppy feeling guilty."); } }
+            { text: "Nurse it back to health with berries", fn: () => { me.joy += 15; me.acorns -= 20; addNote("I bandaged the chipmunk's paw; it now visits my porch every morning!"); } },
+            { text: "Gently place it in a hollow cedar tree", fn: () => { me.joy += 6; addNote("I placed the chipmunk safely out of reach of foxes."); } }
           ]
         },
         {
-          badge: "🥊",
-          title: "School Rival",
-          desc: "A hot-tempered classmate confronts you in the hallway and tries to start a fight.",
+          icon: "🎨",
+          title: "Village Lantern Festival",
+          desc: "The annual lantern floating ceremony is tonight. What craft will you bring?",
           opts: [
-            { txt: "Stand your ground and fight back", fn: () => { p.health -= 12; p.looks += 4; p.happy += 12; recordAction("I fought back bravely! I took a punch but earned immense respect."); } },
-            { txt: "Walk away peacefully", fn: () => { p.smarts += 4; p.happy += 4; recordAction("I took the high road and walked away with my head held high."); } },
-            { txt: "Apologize and give in", fn: () => { p.happy -= 12; recordAction("I backed down and felt humiliated all week."); } }
+            { text: "Hand-paint an intricate silk lantern (50 🌰)", fn: () => { me.acorns -= 50; me.charm += 8; me.joy += 16; addNote("My silk lantern won first praise across the entire village canal!"); } },
+            { text: "Enjoy the floating lanterns from the bridge", fn: () => { me.joy += 8; addNote("I watched glowing lanterns drift under the starry moonlight."); } }
           ]
         },
         {
-          badge: "🚀",
-          title: "Crypto Opportunity",
-          desc: "A tech friend tells you about an early-stage cryptocurrency with high upside.",
+          icon: "☕",
+          title: "Cozy Tea Shop Idea",
+          desc: "An elderly neighbor offers to teach you their secret lavender honey blend.",
           opts: [
-            { txt: "Invest $600", fn: () => {
-              if (Math.random() > 0.45) {
-                p.cash += 3200; p.happy += 25; recordAction("The token mooned! I made $3,200 pure profit.");
-              } else {
-                p.cash -= 600; p.happy -= 15; recordAction("The crypto token plummeted to zero! I lost $600.");
-              }
-            }},
-            { txt: "Decline and keep savings safe", fn: () => { recordAction("I wisely chose not to gamble my savings on volatile tokens."); } }
+            { text: "Spend the afternoon learning the recipe", fn: () => { me.wisdom += 10; me.joy += 10; addNote("Learned how to brew divine lavender honey tea!"); } },
+            { text: "Politely decline and nap in the hammock", fn: () => { me.vitality += 6; addNote("Had a delightfully restful afternoon nap."); } }
           ]
         }
       ];
 
-      const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
-      document.getElementById('scenBadge').innerText = sc.badge;
-      document.getElementById('scenTitle').innerText = sc.title;
-      document.getElementById('scenDesc').innerText = sc.desc;
+      const item = dilemmas[Math.floor(Math.random() * dilemmas.length)];
+      document.getElementById('dIcon').innerText = item.icon;
+      document.getElementById('dTitle').innerText = item.title;
+      document.getElementById('dDesc').innerText = item.desc;
 
-      const optsBox = document.getElementById('scenOptions');
+      const optsBox = document.getElementById('dOpts');
       optsBox.innerHTML = '';
-      sc.opts.forEach((o, i) => {
+      item.opts.forEach((opt, idx) => {
         const b = document.createElement('button');
-        b.className = i === 0 ? 'opt-btn highlight' : 'opt-btn';
-        b.innerText = o.txt;
+        b.className = idx === 0 ? 'cozy-opt-btn primary' : 'cozy-opt-btn';
+        b.innerText = opt.text;
         b.onclick = () => {
-          document.getElementById('dialogOverlay').classList.remove('open');
-          o.fn();
-          render();
+          document.getElementById('modalDilemma').classList.remove('active');
+          opt.fn();
+          updateDisplay();
         };
         optsBox.appendChild(b);
       });
 
-      document.getElementById('dialogOverlay').classList.add('open');
+      document.getElementById('modalDilemma').classList.add('active');
     }
 
-    function recordAction(msg) {
-      if (p.story.length > 0) {
-        p.story[p.story.length - 1].paragraphs.push(msg);
+    function addNote(str) {
+      if (me.journal.length > 0) {
+        me.journal[me.journal.length - 1].notes.push(str);
       }
     }
 
-    // ACTIVITIES
-    function doStudy() {
-      if (!p.alive) return;
-      p.smarts += 5 + Math.floor(Math.random() * 5);
-      p.happy -= 2;
-      recordAction("I spent late nights reading textbooks at the library. (+Smarts)");
-      closeSheet('modalActivities');
-      render();
+    // LIVING ACTIONS
+    function doReadBooks() {
+      if (!me.alive) return;
+      me.wisdom += 5 + Math.floor(Math.random() * 5);
+      me.joy += 3;
+      addNote("📚 Spent a lovely afternoon reading poetry and herbology by the brook. (+Wisdom)");
+      closeSheet('modalLiving');
+      updateDisplay();
     }
 
-    function doGym() {
-      if (!p.alive) return;
-      p.health += 6 + Math.floor(Math.random() * 6);
-      p.looks += 5;
-      p.happy += 4;
-      p.cash -= 30;
-      recordAction("I completed an intense gym workout session. (+Health, +Looks)");
-      closeSheet('modalActivities');
-      render();
+    function doNatureWalk() {
+      if (!me.alive) return;
+      me.vitality += 6 + Math.floor(Math.random() * 6);
+      me.charm += 4;
+      me.joy += 6;
+      addNote("🌲 Strolled along the pine ridge, collecting cedar cones. (+Vitality, +Charm)");
+      closeSheet('modalLiving');
+      updateDisplay();
     }
 
-    function doDoctor() {
-      if (!p.alive) return;
-      if (p.age >= 18 && p.cash < 250) {
-        alert("Medical appointment fee is $250. Insufficient funds!");
+    function doApothecary() {
+      if (!me.alive) return;
+      if (me.acorns < 150) {
+        alert("The herbalist asks for 150 🌰 for fresh medicinal tinctures.");
         return;
       }
-      if (p.age >= 18) p.cash -= 250;
-      p.health += 25 + Math.floor(Math.random() * 15);
-      recordAction("The doctor thoroughly treated my health conditions. (+Health)");
-      closeSheet('modalActivities');
-      render();
+      me.acorns -= 150;
+      me.vitality += 26;
+      addNote("🍯 Drank fragrant elderberry and honey tonics. Restored good health!");
+      closeSheet('modalLiving');
+      updateDisplay();
     }
 
-    function doVacation() {
-      if (!p.alive) return;
-      if (p.cash < 1200) {
-        alert("Luxury vacation costs $1,200. Save more money first!");
+    function doHotSprings() {
+      if (!me.alive) return;
+      if (me.acorns < 800) {
+        alert("The Onsen hot springs bath costs 800 🌰.");
         return;
       }
-      p.cash -= 1200;
-      p.happy += 35;
-      p.health += 5;
-      recordAction("I took a luxury tropical vacation to Hawaii. (+Happiness)");
-      closeSheet('modalActivities');
-      render();
+      me.acorns -= 800;
+      me.joy += 32;
+      me.vitality += 6;
+      addNote("♨️ Soaked in cedarwood thermal baths while snowflakes melted in the water. (+Joy)");
+      closeSheet('modalLiving');
+      updateDisplay();
     }
 
-    function doLottery() {
-      if (!p.alive) return;
-      if (p.cash < 50) {
-        alert("Lottery ticket costs $50!");
+    function doWishingWell() {
+      if (!me.alive) return;
+      if (me.acorns < 30) {
+        alert("Tossing a coin costs 30 🌰.");
         return;
       }
-      p.cash -= 50;
+      me.acorns -= 30;
       const roll = Math.random() * 100;
-      if (roll > 95) {
-        const prize = 50000 + Math.floor(Math.random() * 80000);
-        p.cash += prize;
-        p.happy += 45;
-        recordAction(`🎰 GRAND JACKPOT! I won the state lottery for $${prize.toLocaleString()}!`);
-      } else if (roll > 75) {
-        const prize = 250 + Math.floor(Math.random() * 300);
-        p.cash += prize;
-        p.happy += 12;
-        recordAction(`🎫 Won $${prize} on a scratch-off ticket!`);
+      if (roll > 92) {
+        const gift = 8000 + Math.floor(Math.random() * 15000);
+        me.acorns += gift;
+        me.joy += 40;
+        addNote(`✨ The Wishing Well sparkled! You received an ancient blessing of ${gift.toLocaleString()} 🌰!`);
+      } else if (roll > 70) {
+        me.acorns += 180;
+        me.joy += 10;
+        addNote("🍀 A friendly water sprite tossed back 180 🌰!");
       } else {
-        recordAction("The lottery ticket was a dud.");
+        addNote("Your coin rippled peacefully into the deep cool well water.");
       }
-      closeSheet('modalActivities');
-      render();
+      closeSheet('modalLiving');
+      updateDisplay();
     }
 
-    function doUniversity() {
-      if (!p.alive) return;
-      if (p.age < 18) {
-        alert("Must be 18 to attend college!");
+    function doAcademy() {
+      if (!me.alive) return;
+      if (me.age < 18) {
+        alert("You must be 18 to attend the Botanical Academy.");
         return;
       }
-      if (p.education >= 2) {
-        alert("You already graduated from University!");
+      if (me.education >= 2) {
+        alert("You already graduated from the Academy!");
         return;
       }
-      if (p.smarts < 50) {
-        alert("Your Smarts must be ≥ 50 to qualify for university admission.");
+      if (me.wisdom < 50) {
+        alert("Your Wisdom must be ≥ 50 to pass entrance exams. Read more books!");
         return;
       }
-      p.education = 2;
-      p.cash -= 12000;
-      p.smarts += 20;
-      p.occupation = "College Graduate";
-      p.occIcon = "🎓";
-      recordAction("🎓 Graduated with honors from University! Executive careers unlocked.");
-      closeSheet('modalAssets');
-      render();
+      me.education = 2;
+      me.acorns -= 5000;
+      me.wisdom += 22;
+      me.role = "Academy Scholar";
+      me.roleIcon = "📜";
+      addNote("🎓 Completed the Botanical Academy degree with honors!");
+      closeSheet('modalCareers');
+      updateDisplay();
     }
 
-    function takeJob(title, pay, reqEdu, reqSmarts, icon) {
-      if (!p.alive) return;
-      if (p.age < 18) {
-        alert("Must be at least 18 to work full-time!");
+    function takeRole(title, pay, reqEdu, reqWis, icon) {
+      if (!me.alive) return;
+      if (me.age < 18) {
+        alert("Must be at least 18 for full-time master artisan callings.");
         return;
       }
-      if (p.education < reqEdu) {
-        alert(`Requires higher education level (${reqEdu})!`);
+      if (me.education < reqEdu) {
+        alert(`Requires higher academy training (Level ${reqEdu}).`);
         return;
       }
-      if (p.smarts < reqSmarts) {
-        alert(`Failed interview. Requires Smarts ≥ ${reqSmarts}.`);
+      if (me.wisdom < reqWis) {
+        alert(`Requires Wisdom ≥ ${reqWis}.`);
         return;
       }
 
-      p.occupation = title;
-      p.occIcon = icon;
-      p.salary = pay;
-      p.happy += 12;
-      recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
-      closeSheet('modalAssets');
-      render();
+      me.role = title;
+      me.roleIcon = icon;
+      me.salary = pay;
+      me.joy += 14;
+      addNote(`🎉 Began my calling as a ${title} earning ${pay.toLocaleString()} 🌰/year!`);
+      closeSheet('modalCareers');
+      updateDisplay();
     }
 
-    // MODAL TRIGGERS
-    function openActivitiesSheet() {
-      document.getElementById('modalActivities').classList.add('open');
+    // MODAL OPENERS
+    function openActivities() {
+      document.getElementById('modalLiving').classList.add('active');
     }
 
-    function openAssetsSheet() {
-      document.getElementById('modalAssets').classList.add('open');
+    function openCareers() {
+      document.getElementById('modalCareers').classList.add('active');
     }
 
-    function openRelSheet() {
-      const box = document.getElementById('relSheetContent');
-      box.innerHTML = `
-        <div class="sheet-item-card">
-          <div class="item-left">
-            <div class="item-emoji-circle">👨</div>
-            <div class="item-texts">
-              <h4>${p.dad.name} (Father, Age ${p.dad.age})</h4>
-              <p>Career: ${p.dad.job} • Relationship: 100%</p>
+    function openKinship() {
+      const box = document.getElementById('kinshipList');
+      box.innerHTML = '';
+      me.kin.forEach(k => {
+        const card = document.createElement('div');
+        card.className = 'cozy-action-card';
+        card.innerHTML = `
+          <div class="action-left-box">
+            <div class="action-icon-pill">${k.emoji}</div>
+            <div class="action-text-box">
+              <h4>${k.name} (${k.rel}, Age ${k.age})</h4>
+              <p>${k.job} • Loving Kinship</p>
             </div>
           </div>
-          <button class="btn-act-callout" onclick="spendFamily('Father')">Spend Time</button>
-        </div>
-        <div class="sheet-item-card">
-          <div class="item-left">
-            <div class="item-emoji-circle">👩</div>
-            <div class="item-texts">
-              <h4>${p.mom.name} (Mother, Age ${p.mom.age})</h4>
-              <p>Career: ${p.mom.job} • Relationship: 100%</p>
-            </div>
-          </div>
-          <button class="btn-act-callout" onclick="spendFamily('Mother')">Spend Time</button>
-        </div>
-        <div class="sheet-item-card">
-          <div class="item-left">
-            <div class="item-emoji-circle">👧</div>
-            <div class="item-texts">
-              <h4>${p.sister.name} (Sister, Age ${p.sister.age})</h4>
-              <p>Relationship: 95%</p>
-            </div>
-          </div>
-          <button class="btn-act-callout" onclick="spendFamily('Sister')">Spend Time</button>
-        </div>
-      `;
-      document.getElementById('modalRel').classList.add('open');
+          <button class="cozy-btn-pill" onclick="spendKinTime('${k.name}', '${k.rel}')">Tea Time</button>
+        `;
+        box.appendChild(card);
+      });
+      document.getElementById('modalKinship').classList.add('active');
     }
 
-    function spendFamily(who) {
-      p.happy += 12;
-      recordAction(`I spent wonderful quality time bonding with my ${who}. (+Happiness)`);
-      closeSheet('modalRel');
-      render();
+    function spendKinTime(name, rel) {
+      me.joy += 12;
+      addNote(`🍵 Shared sweet persimmons and brewed tea with my beloved ${rel} ${name}. (+Joy)`);
+      closeSheet('modalKinship');
+      updateDisplay();
     }
 
     function closeSheet(id) {
-      document.getElementById(id).classList.remove('open');
+      document.getElementById(id).classList.remove('active');
     }
 
-    function backdropClick(e, id) {
+    function onModalBg(e, id) {
       if (e.target.id === id) closeSheet(id);
     }
 
-    function promptRestart() {
-      if (confirm("Start a brand new random life?")) {
-        startFreshLife();
+    function confirmReset() {
+      if (confirm("Begin a fresh new cozy life journey?")) {
+        initSproutLife();
       }
     }
 
-    // INIT
-    startFreshLife();
+    // INITIALIZE
+    initSproutLife();
 
     // Register OTA Service Worker
     if ('serviceWorker' in navigator) {
