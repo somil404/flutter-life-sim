@@ -11,35 +11,34 @@
   <title>Life Journey - Life Simulator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-warm: #FFF9F2;
+      --bg-warm: #F8FAFC;
       --card-white: #FFFFFF;
-      --peach: #FF7A59;
-      --peach-light: #FFE8E0;
-      --green-soft: #2EB872;
-      --green-light: #E4F7EC;
-      --yellow-soft: #F9A825;
-      --yellow-light: #FFF4D9;
-      --blue-soft: #3880FF;
-      --blue-light: #E8F0FE;
-      --pink-soft: #F06292;
-      --pink-light: #FDE8EF;
-      --purple-soft: #8E44AD;
-      --purple-light: #F4ECF7;
-      --text-title: #2B2D42;
-      --text-body: #4A4E69;
-      --text-muted: #8D99AE;
-      --card-shadow: 0 6px 20px rgba(43, 45, 66, 0.06);
-      --card-border: 1.5px solid #F0E6DD;
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      --green-soft: #16A34A;
+      --green-light: #F0FDF4;
+      --blue-soft: #2563EB;
+      --blue-light: #EFF6FF;
+      --yellow-soft: #EAB308;
+      --yellow-light: #FEFCE8;
+      --pink-soft: #EC4899;
+      --pink-light: #FDF2F8;
+      --text-title: #0F172A;
+      --text-body: #334155;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --card-border: 1px solid #E2E8F0;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
@@ -56,7 +55,7 @@
     }
 
     body {
-      background-color: #EDE6DE;
+      background-color: #E2E8F0;
       color: var(--text-title);
       display: flex;
       justify-content: center;
@@ -73,17 +72,19 @@
       flex-direction: column;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
     }
 
     /* TOP HEADER */
     .app-header {
-      padding: 12px 18px 8px;
+      padding: 10px 16px 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--bg-warm);
-      z-index: 10;
+      background: #FFFFFF;
+      border-bottom: 1px solid #E2E8F0;
+      flex-shrink: 0;
+      z-index: 20;
     }
 
     .header-brand {
@@ -93,22 +94,22 @@
     }
 
     .brand-icon {
-      width: 36px;
-      height: 36px;
-      background: #FFE8E0;
-      border-radius: 12px;
+      width: 32px;
+      height: 32px;
+      background: #EFF6FF;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 18px;
+      border: 1px solid #DBEAFE;
     }
 
     .brand-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--peach);
-      letter-spacing: -0.3px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: -0.2px;
     }
 
     .header-actions {
@@ -118,37 +119,38 @@
     }
 
     .btn-action-pill {
-      background: #FFFFFF;
-      border: var(--card-border);
-      border-radius: 20px;
-      padding: 6px 12px;
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 5px 12px;
       font-size: 12px;
-      font-weight: 700;
-      color: var(--text-title);
+      font-weight: 600;
+      color: #334155;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 4px;
-      box-shadow: var(--card-shadow);
-      transition: all 0.15s;
+      transition: all 0.12s;
     }
 
     .btn-action-pill:active {
       transform: scale(0.95);
-      background: #F7EFE8;
+      background: #E2E8F0;
     }
 
     /* IDENTITY & BALANCE CARD */
     .id-card-wrap {
-      padding: 0 16px 8px;
+      padding: 8px 14px 4px;
+      flex-shrink: 0;
+      z-index: 20;
     }
 
     .id-card {
-      background: var(--card-white);
-      border-radius: 20px;
-      padding: 12px 16px;
-      border: var(--card-border);
-      box-shadow: var(--card-shadow);
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 10px 14px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -161,27 +163,27 @@
     }
 
     .avatar-wrapper {
-      width: 48px;
-      height: 48px;
-      background: #FFF4EE;
-      border-radius: 15px;
+      width: 44px;
+      height: 44px;
+      background: #F1F5F9;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 26px;
       position: relative;
-      border: 1.5px solid #F5DFD5;
+      border: 1px solid #E2E8F0;
     }
 
     .avatar-flag {
       position: absolute;
       bottom: -3px;
       right: -3px;
-      font-size: 13px;
+      font-size: 12px;
       background: #FFFFFF;
       border-radius: 50%;
       padding: 1px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     }
 
     .id-text-group {
@@ -190,17 +192,16 @@
     }
 
     .id-name {
-      font-family: 'Outfit', sans-serif;
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 700;
-      color: var(--text-title);
+      color: #0F172A;
       letter-spacing: -0.2px;
     }
 
     .id-sub {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      color: #64748B;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -212,21 +213,20 @@
     }
 
     .balance-val {
-      font-family: 'Outfit', sans-serif;
-      font-size: 19px;
-      font-weight: 800;
-      color: var(--green-soft);
-      letter-spacing: -0.5px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #16A34A;
+      letter-spacing: -0.3px;
     }
 
     .balance-val.debt {
-      color: #E63946;
+      color: #DC2626;
     }
 
     .balance-lbl {
       font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
+      font-weight: 500;
+      color: #94A3B8;
     }
 
     /* MAIN TAB VIEW CONTAINER */
@@ -235,9 +235,10 @@
       min-height: 0;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 4px 16px 14px;
+      padding: 8px 14px 14px;
       display: flex;
       flex-direction: column;
+      gap: 10px;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior-y: contain;
     }
@@ -245,17 +246,17 @@
     .tab-page {
       display: none;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
     }
 
     .tab-page.active {
       display: flex;
-      animation: fadeIn 0.18s ease-out;
+      animation: fadeIn 0.15s ease-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+      from { opacity: 0; transform: translateY(3px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -264,9 +265,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
-      padding: 6px 0;
-      border-bottom: 1.5px solid #F0E6DD;
+      margin-bottom: 6px;
+      padding: 6px 0 8px;
+      border-bottom: 1px solid #E2E8F0;
       position: sticky;
       top: 0;
       background: var(--bg-warm);
@@ -274,10 +275,9 @@
     }
 
     .page-top-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text-title);
+      font-size: 16px;
+      font-weight: 700;
+      color: #0F172A;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -285,68 +285,68 @@
 
     .btn-close-page {
       background: #FFFFFF;
-      border: 1.5px solid #F0E6DD;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-title);
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
       transition: all 0.12s;
     }
 
     .btn-close-page:active {
-      transform: scale(0.92);
-      background: #F7EFE8;
+      transform: scale(0.95);
+      background: #F1F5F9;
     }
 
     .section-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--text-title);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748B;
       display: flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 6px;
+      gap: 5px;
+      margin-top: 10px;
+      margin-bottom: 2px;
     }
 
     .section-title span {
-      font-size: 19px;
+      font-size: 14px;
     }
 
     /* STORY LOG FEED (PAGE: LIFE) */
     .year-entry-card {
-      background: var(--card-white);
-      border-radius: 18px;
-      padding: 14px 16px;
-      border: var(--card-border);
-      box-shadow: var(--card-shadow);
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .year-entry-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 700;
-      color: var(--peach);
-      margin-bottom: 7px;
-      padding-bottom: 5px;
-      border-bottom: 1px dashed #F0E6DD;
+      color: #1D4ED8;
       display: flex;
       align-items: center;
       gap: 6px;
+      margin-bottom: 2px;
     }
 
     .year-entry-text {
       font-size: 13.5px;
-      line-height: 1.55;
-      color: var(--text-body);
-      margin-bottom: 6px;
-      font-weight: 500;
+      line-height: 1.5;
+      color: #334155;
+      font-weight: 400;
     }
 
     .year-entry-text:last-child {
@@ -355,124 +355,132 @@
 
     /* CARDS FOR ASSETS, ACTIVITIES, TASKS */
     .interactive-card {
-      background: var(--card-white);
-      border: var(--card-border);
-      border-radius: 18px;
-      padding: 13px 15px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 11px 13px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: var(--card-shadow);
+      gap: 12px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: background 0.12s, border-color 0.12s;
     }
 
     .interactive-card:active {
-      transform: scale(0.98);
-      background: #FAF5F0;
+      background: #F8FAFC;
+      border-color: #CBD5E1;
     }
 
     .card-left-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
     }
 
     .card-emoji-box {
-      width: 44px;
-      height: 44px;
-      background: #FFF4EE;
-      border-radius: 14px;
+      width: 38px;
+      height: 38px;
+      background: #F1F5F9;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      border: 1px solid #F5DFD5;
+      font-size: 19px;
+      border: 1px solid #E2E8F0;
       flex-shrink: 0;
+    }
+
+    .card-texts {
+      flex: 1;
+      min-width: 0;
     }
 
     .card-texts h4 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 14.5px;
-      font-weight: 700;
-      color: var(--text-title);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #0F172A;
+      line-height: 1.3;
     }
 
     .card-texts p {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-top: 2px;
+      font-size: 11.5px;
+      font-weight: 400;
+      color: #64748B;
+      margin-top: 1px;
+      line-height: 1.35;
     }
 
     .btn-card-action {
-      background: var(--peach);
+      background: #2563EB;
       color: #FFFFFF;
       border: none;
-      padding: 7px 14px;
-      border-radius: 18px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 12.5px;
-      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(255, 122, 89, 0.25);
       flex-shrink: 0;
+      transition: background 0.12s;
+    }
+
+    .btn-card-action:active {
+      background: #1D4ED8;
     }
 
     .btn-card-action.secondary {
-      background: var(--blue-soft);
-      box-shadow: 0 4px 10px rgba(56, 128, 255, 0.25);
+      background: #475569;
     }
 
     .btn-card-action.success {
-      background: var(--green-soft);
-      box-shadow: 0 4px 10px rgba(46, 184, 114, 0.25);
+      background: #16A34A;
     }
 
     .btn-card-action:disabled {
-      background: #B0BEC5;
-      box-shadow: none;
+      background: #94A3B8;
       cursor: not-allowed;
     }
 
     /* TASKS PROGRESS OVERVIEW */
     .task-summary-card {
-      background: linear-gradient(135deg, #FF8A65, #FF7043);
+      background: #0F172A;
       color: #FFFFFF;
-      border-radius: 20px;
-      padding: 16px;
-      box-shadow: 0 8px 20px rgba(255, 112, 67, 0.25);
+      border-radius: 12px;
+      padding: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .task-summary-card h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
+      font-size: 15px;
+      font-weight: 700;
     }
 
     .task-summary-card p {
-      font-size: 12.5px;
-      opacity: 0.9;
+      font-size: 12px;
+      color: #94A3B8;
       margin-top: 2px;
-      font-weight: 500;
     }
 
     .task-badge-pill {
-      background: rgba(255, 255, 255, 0.25);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
+      background: #1E293B;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #38BDF8;
+      border: 1px solid #334155;
     }
 
     /* STATS SECTION (Happiness, Health, Smarts, Looks) - FIXED AT BOTTOM */
     .stats-section {
-      padding: 6px 16px 4px;
-      background: var(--bg-warm);
+      padding: 6px 14px 4px;
+      background: #FFFFFF;
+      border-top: 1px solid #E2E8F0;
       flex-shrink: 0;
       z-index: 40;
     }
@@ -480,25 +488,24 @@
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 7px;
+      gap: 6px;
     }
 
     .stat-pill {
-      background: var(--card-white);
-      border: var(--card-border);
-      border-radius: 14px;
-      padding: 7px 5px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 6px 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 3px;
-      box-shadow: var(--card-shadow);
     }
 
     .stat-head {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-title);
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #334155;
       display: flex;
       align-items: center;
       gap: 3px;
@@ -506,33 +513,30 @@
 
     .stat-track {
       width: 100%;
-      height: 6px;
-      background: #F0EAE4;
-      border-radius: 10px;
+      height: 5px;
+      background: #E2E8F0;
+      border-radius: 4px;
       overflow: hidden;
     }
 
     .stat-fill {
       height: 100%;
-      border-radius: 10px;
+      border-radius: 4px;
       transition: width 0.35s ease;
     }
 
     .stat-val-text {
-      font-family: 'Outfit', sans-serif;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--text-title);
+      font-size: 11px;
+      font-weight: 600;
+      color: #0F172A;
     }
 
     /* 5-TAB BOTTOM NAVIGATION DOCK - FIXED & IMMOVABLE */
     .bottom-dock {
-      background: var(--card-white);
-      padding: 8px 8px calc(10px + env(safe-area-inset-bottom));
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-      border-top: var(--card-border);
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+      background: #FFFFFF;
+      padding: 8px 6px calc(10px + env(safe-area-inset-bottom));
+      border-top: 1px solid #E2E8F0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -544,10 +548,10 @@
     .tab-nav-btn {
       flex: 1;
       min-width: 0;
-      height: 50px;
+      height: 48px;
       background: transparent;
       border: none;
-      border-radius: 14px;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -555,22 +559,22 @@
       cursor: pointer;
       gap: 2px;
       padding: 2px 1px;
-      color: var(--text-muted);
-      transition: all 0.15s;
+      color: #64748B;
+      transition: all 0.12s;
     }
 
     .tab-nav-btn.active {
-      color: var(--peach);
-      background: #FFF4EE;
+      color: #2563EB;
+      background: #EFF6FF;
     }
 
     .tab-nav-btn:active {
-      transform: scale(0.92);
+      transform: scale(0.94);
     }
 
     .tab-nav-btn span {
       font-size: 10px;
-      font-weight: 700;
+      font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -587,128 +591,146 @@
     .hero-age-btn {
       flex: 1.25;
       min-width: 60px;
-      height: 52px;
-      background: linear-gradient(135deg, #34D399, #10B981);
-      border: 2px solid #FFFFFF;
-      border-radius: 18px;
-      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+      height: 48px;
+      background: #16A34A;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
       color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 4px;
       cursor: pointer;
-      transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.12s;
     }
 
     .hero-age-btn:active {
-      transform: scale(0.92);
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+      transform: scale(0.94);
+      background: #15803D;
     }
 
     .hero-age-btn.dead {
-      background: #6B7280;
+      background: #475569;
       box-shadow: none;
     }
 
     .hero-age-text {
-      font-family: 'Outfit', sans-serif;
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
     }
 
-    /* DILEMMA / SCENARIO CARD */
-    .dilemma-overlay {
+    /* CUSTOM IN-GAME POPUP MODALS (NO BROWSER ALERTS) */
+    .game-modal-overlay, .dilemma-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(43, 45, 66, 0.65);
-      z-index: 150;
+      background: rgba(15, 23, 42, 0.55);
+      z-index: 200;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
     }
 
-    .dilemma-overlay.active {
+    .game-modal-overlay.active, .dilemma-overlay.active {
       display: flex;
+      animation: modalFadeIn 0.14s ease-out;
     }
 
-    .dilemma-box {
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .game-modal-box, .dilemma-box {
       width: 100%;
-      max-width: 360px;
-      background: var(--bg-warm);
-      border: 2px solid #F0E6DD;
-      border-radius: 24px;
-      padding: 22px;
+      max-width: 320px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 20px;
       text-align: center;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 14px 35px rgba(0,0,0,0.25);
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     }
 
-    .dilemma-icon-bubble {
-      width: 56px;
-      height: 56px;
-      background: #FFFFFF;
-      border-radius: 18px;
-      border: 1.5px solid #F0E6DD;
+    .modal-icon-bubble, .dilemma-icon-bubble {
+      width: 46px;
+      height: 46px;
+      background: #F1F5F9;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
+      font-size: 24px;
       margin: 0 auto;
     }
 
-    .dilemma-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 19px;
-      font-weight: 800;
-      color: var(--text-title);
+    .modal-title-text, .dilemma-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1.3;
     }
 
-    .dilemma-desc {
-      font-size: 13.5px;
-      font-weight: 500;
+    .modal-body-text, .dilemma-desc {
+      font-size: 13px;
+      font-weight: 400;
       line-height: 1.5;
-      color: var(--text-body);
+      color: #475569;
     }
 
-    .dilemma-choices {
+    .modal-actions-group, .dilemma-choices {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
       margin-top: 4px;
     }
 
-    .choice-btn {
-      background: var(--card-white);
-      border: 1.5px solid #EADBCE;
-      border-radius: 14px;
-      padding: 12px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--text-title);
+    .modal-btn, .choice-btn {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid #CBD5E1;
+      background: #F8FAFC;
+      color: #0F172A;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.12s;
     }
 
-    .choice-btn:active {
-      transform: scale(0.96);
-      background: #F7EFE8;
+    .modal-btn:active, .choice-btn:active {
+      background: #E2E8F0;
     }
 
-    .choice-btn.primary {
-      background: var(--peach);
+    .modal-btn.primary, .choice-btn.primary {
+      background: #2563EB;
       color: #FFFFFF;
-      border-color: var(--peach);
-      box-shadow: 0 4px 12px rgba(255, 122, 89, 0.35);
+      border-color: #2563EB;
+    }
+
+    .modal-btn.primary:active, .choice-btn.primary:active {
+      background: #1D4ED8;
+    }
+
+    .modal-btn.danger {
+      background: #DC2626;
+      color: #FFFFFF;
+      border-color: #DC2626;
+    }
+
+    .modal-btn.danger:active {
+      background: #B91C1C;
     }
   </style>
 </head>
@@ -1110,6 +1132,18 @@
         <div class="dilemma-title" id="dTitle">Life Decision</div>
         <div class="dilemma-desc" id="dDesc">What will you choose?</div>
         <div class="dilemma-choices" id="dChoices"></div>
+      </div>
+    </div>
+
+    <!-- CUSTOM POPUP MODAL (REPLACES BROWSER ALERTS & CONFIRMS) -->
+    <div id="gameModal" class="game-modal-overlay">
+      <div class="game-modal-box">
+        <div class="modal-icon-bubble" id="modalIcon">ℹ️</div>
+        <div class="modal-title-text" id="modalTitle">Notice</div>
+        <div class="modal-body-text" id="modalBody">Notification details</div>
+        <div class="modal-actions-group" id="modalActions">
+          <button class="modal-btn primary" onclick="closeModal()">OK</button>
+        </div>
       </div>
     </div>
 
@@ -1597,6 +1631,41 @@
       setTimeout(() => scrollViewportToBottom(true), 60);
     }
 
+    // IN-GAME MODAL POPUPS (REPLACES BROWSER ALERTS)
+    function showPopup(message, title = "Notice", icon = "ℹ️", onOk = null) {
+      document.getElementById('modalIcon').innerText = icon;
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalBody').innerText = message;
+      const actions = document.getElementById('modalActions');
+      actions.innerHTML = `<button class="modal-btn primary" id="modalBtnOk">OK</button>`;
+      document.getElementById('modalBtnOk').onclick = () => {
+        closeModal();
+        if (onOk) onOk();
+      };
+      document.getElementById('gameModal').classList.add('active');
+    }
+
+    function showConfirm(message, onConfirm, title = "Confirm", icon = "❓", confirmText = "Confirm") {
+      document.getElementById('modalIcon').innerText = icon;
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalBody').innerText = message;
+      const actions = document.getElementById('modalActions');
+      actions.innerHTML = `
+        <button class="modal-btn" id="modalBtnCancel">Cancel</button>
+        <button class="modal-btn danger" id="modalBtnConfirm">${confirmText}</button>
+      `;
+      document.getElementById('modalBtnCancel').onclick = closeModal;
+      document.getElementById('modalBtnConfirm').onclick = () => {
+        closeModal();
+        if (onConfirm) onConfirm();
+      };
+      document.getElementById('gameModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('gameModal').classList.remove('active');
+    }
+
     // ACTIVITIES ACTIONS
     function doStudy() {
       if (!char.isAlive) return;
@@ -1617,7 +1686,7 @@
     function doDoctor() {
       if (!char.isAlive) return;
       if (char.age >= 18 && char.money < 250) {
-        alert("Doctor appointment fee is $250. Insufficient funds!");
+        showPopup("Doctor appointment fee is $250. Insufficient funds in bank!", "Medical Clinic", "🩺");
         return;
       }
       if (char.age >= 18) char.money -= 250;
@@ -1628,7 +1697,7 @@
     function doVacation() {
       if (!char.isAlive) return;
       if (char.money < 1200) {
-        alert("Luxury vacation costs $1,200. Save up first!");
+        showPopup("Luxury first-class vacation costs $1,200. Save up more money first!", "Vacation", "🏖️");
         return;
       }
       char.money -= 1200;
@@ -1640,7 +1709,7 @@
     function doLottery() {
       if (!char.isAlive) return;
       if (char.money < 50) {
-        alert("Lottery ticket costs $50!");
+        showPopup("A lottery ticket costs $50. Insufficient funds!", "Lottery", "🎰");
         return;
       }
       char.money -= 50;
@@ -1663,11 +1732,11 @@
     function doNightclub() {
       if (!char.isAlive) return;
       if (char.age < 18) {
-        alert("You must be at least 18 to enter nightclubs!");
+        showPopup("You must be at least 18 years old to enter nightclubs!", "Age Restriction", "🪩");
         return;
       }
       if (char.money < 80) {
-        alert("Nightclub entry & drinks cost $80!");
+        showPopup("Nightclub cover charge & drinks cost $80!", "Nightclub", "🪩");
         return;
       }
       char.money -= 80;
@@ -1680,15 +1749,15 @@
     function doUniversity() {
       if (!char.isAlive) return;
       if (char.age < 18) {
-        alert("Must be 18 to enroll in University!");
+        showPopup("You must be at least 18 to enroll in University!", "University", "🎓");
         return;
       }
       if (char.educationLevel >= 2) {
-        alert("You already graduated from University!");
+        showPopup("You have already earned your University degree!", "University", "🎓");
         return;
       }
       if (char.smarts < 50) {
-        alert("Smarts must be ≥ 50 to qualify for university admission. Study harder!");
+        showPopup("Your Smarts must be ≥ 50 to qualify for university admission. Study harder first!", "University Admissions", "📚");
         return;
       }
       char.educationLevel = 2;
@@ -1702,15 +1771,15 @@
     function applyJob(title, pay, reqEdu, reqSmarts, icon) {
       if (!char.isAlive) return;
       if (char.age < 18) {
-        alert("Must be at least 18 to work full-time!");
+        showPopup("You must be at least 18 years old to work full-time!", "Job Market", "💼");
         return;
       }
       if (char.educationLevel < reqEdu) {
-        alert(`Requires higher education level (${reqEdu})!`);
+        showPopup("This career position requires a University degree!", "Job Requirements", "🎓");
         return;
       }
       if (char.smarts < reqSmarts) {
-        alert(`Failed the job interview. Requires Smarts ≥ ${reqSmarts}.`);
+        showPopup(`Failed the job interview for ${title}. Requires Smarts ≥ ${reqSmarts}.`, "Job Interview", "💼");
         return;
       }
 
@@ -1724,11 +1793,11 @@
     function buyProperty(propertyName, price) {
       if (!char.isAlive) return;
       if (char.age < 18) {
-        alert("Must be at least 18 to purchase real estate!");
+        showPopup("You must be at least 18 years old to purchase real estate!", "Real Estate", "🏠");
         return;
       }
       if (char.money < price) {
-        alert(`You need $${price.toLocaleString()} to purchase the ${propertyName}.`);
+        showPopup(`You need $${price.toLocaleString()} in your bank balance to purchase the ${propertyName}.`, "Mortgage Declined", "🏠");
         return;
       }
       char.money -= price;
@@ -1745,7 +1814,7 @@
 
     function findDate() {
       if (char.age < 16) {
-        alert("Must be at least 16 to start dating!");
+        showPopup("You must be at least 16 years old to start dating!", "Dating", "💘");
         return;
       }
       if (char.partner) {
@@ -1859,9 +1928,9 @@
     }
 
     function confirmRestart() {
-      if (confirm("Start a brand new life?")) {
+      showConfirm("Are you sure you want to start a brand new life? Current life progress will be reset.", () => {
         startNewLife();
-      }
+      }, "Restart Life", "🔄", "Restart");
     }
 
     // INITIALIZE
