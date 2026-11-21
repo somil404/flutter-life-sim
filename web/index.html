@@ -686,9 +686,47 @@
     <!-- 3. MULTI-PAGE TAB VIEWPORT -->
     <main class="tab-viewport">
 
-      <!-- ================= PAGE 1: LIFE STORY FEED ================= -->
-      <div class="tab-page active" id="pageLife">
-        <!-- Injected dynamically from char.events -->
+      <!-- ================= PAGE 1: SCHOOL & OCCUPATION ================= -->
+      <div class="tab-page" id="pageSchool">
+        <div class="section-title"><span id="schoolStageEmoji">🎒</span> <span id="schoolStageTitle">Primary School</span></div>
+
+        <div class="interactive-card" id="schoolMainCard" onclick="doStudyHarder()">
+          <div class="card-left-group">
+            <div class="card-emoji-box" id="schoolMainIcon">📚</div>
+            <div class="card-texts">
+              <h4 id="schoolActionTitle">Study Harder</h4>
+              <p id="schoolActionDesc">Apply yourself in class and do extra homework (+Smarts)</p>
+            </div>
+          </div>
+          <button class="btn-card-action">Study</button>
+        </div>
+
+        <div class="interactive-card" id="schoolExtracurricularCard" onclick="doExtracurricular()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">⚽</div>
+            <div class="card-texts">
+              <h4 id="schoolClubTitle">Join Athletics & School Clubs</h4>
+              <p>Participate in sports teams and academic debate (+Health, +Looks)</p>
+            </div>
+          </div>
+          <button class="btn-card-action secondary">Join</button>
+        </div>
+
+        <div class="interactive-card" id="schoolClassmatesCard" onclick="interactWithClassmates()">
+          <div class="card-left-group">
+            <div class="card-emoji-box">👥</div>
+            <div class="card-texts">
+              <h4>Classmates & Teachers</h4>
+              <p id="schoolSocialDesc">Socialize, make friends, and chat with teachers (+Happiness)</p>
+            </div>
+          </div>
+          <button class="btn-card-action success">Socialize</button>
+        </div>
+
+        <div class="section-title"><span>📜</span> Year Journal & Life Events</div>
+        <div id="schoolEventsFeed" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Year cards rendered here -->
+        </div>
       </div>
 
       <!-- ================= PAGE 2: ASSETS & CAREERS ================= -->
@@ -942,11 +980,11 @@
       </div>
     </section>
 
-    <!-- 5. 5-TAB BOTTOM NAVIGATION DOCK (Life, Assets, Age, Activities, Tasks) -->
+    <!-- 5. 5-TAB BOTTOM NAVIGATION DOCK (School/Career, Assets, Age, Activities, Tasks) -->
     <footer class="bottom-dock">
-      <button class="tab-nav-btn active" id="tabBtnLife" onclick="switchTab('pageLife', 'tabBtnLife')">
-        <span class="nav-icon">📖</span>
-        <span>Life</span>
+      <button class="tab-nav-btn active" id="tabBtnSchool" onclick="switchTab('pageSchool', 'tabBtnSchool')">
+        <span class="nav-icon" id="bottomNavRoleIcon">🎒</span>
+        <span id="bottomNavRoleText">School</span>
       </button>
 
       <button class="tab-nav-btn" id="tabBtnAssets" onclick="switchTab('pageAssets', 'tabBtnAssets')">
@@ -1069,7 +1107,7 @@
         }
       ];
 
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1147,8 +1185,10 @@
       updateStatBar('fillSmarts', 'valSmarts', char.smarts);
       updateStatBar('fillLooks', 'valLooks', char.looks);
 
-      // Render Page 1: Life Story Feed
-      const feed = document.getElementById('pageLife');
+      // Render Page 1: School & Career Dashboard
+      updateSchoolDashboard();
+
+      const feed = document.getElementById('schoolEventsFeed');
       feed.innerHTML = '';
       for (let i = char.events.length - 1; i >= 0; i--) {
         const item = char.events[i];
@@ -1422,7 +1462,7 @@
       char.smarts += 5 + Math.floor(Math.random() * 5);
       char.happiness -= 2;
       recordAction("📚 I spent hours studying diligently in the library. (+Smarts)");
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1433,7 +1473,7 @@
       char.happiness += 4;
       char.money -= 30;
       recordAction("🏋️ Completed an intense workout session at the gym. (+Health, +Looks)");
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1446,7 +1486,7 @@
       if (char.age >= 18) char.money -= 250;
       char.health += 25 + Math.floor(Math.random() * 15);
       recordAction("🩺 The doctor treated my ailments thoroughly. (+Health)");
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1460,7 +1500,7 @@
       char.happiness += 35;
       char.health += 5;
       recordAction("🏖️ Flew first-class on vacation to Hawaii. (+Happiness)");
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1485,7 +1525,7 @@
       } else {
         recordAction("The lottery ticket was not a winner.");
       }
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1503,7 +1543,7 @@
       char.happiness += 20;
       char.looks += 3;
       recordAction("🪩 Partied all night at an upscale nightclub with friends! (+Happiness, +Looks)");
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1528,7 +1568,7 @@
       char.occupation = "College Graduate";
       char.occIcon = "🎓";
       recordAction("🎓 Graduated with honors from University! Executive careers unlocked.");
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1552,7 +1592,7 @@
       char.salary = pay;
       char.happiness += 12;
       recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1570,7 +1610,7 @@
       char.properties.push(propertyName);
       char.happiness += 25;
       recordAction(`🏡 Successfully purchased a ${propertyName} for $${price.toLocaleString()}!`);
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1578,7 +1618,7 @@
     function spendFamily(who) {
       char.happiness += 12;
       recordAction(`I spent quality time chatting and bonding with my ${who}. (+Happiness)`);
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
       render();
     }
 
@@ -1600,7 +1640,105 @@
         char.happiness += 25;
         recordAction(`💘 I started dating ${char.partner.name}, a wonderful ${char.partner.job}!`);
       }
-      switchTab('pageLife', 'tabBtnLife');
+      switchTab('pageSchool', 'tabBtnSchool');
+      render();
+    }
+
+    // SCHOOL & CAREER LOGIC
+    function updateSchoolDashboard() {
+      const emojiEl = document.getElementById('schoolStageEmoji');
+      const titleEl = document.getElementById('schoolStageTitle');
+      const mainTitle = document.getElementById('schoolActionTitle');
+      const mainDesc = document.getElementById('schoolActionDesc');
+      const clubCard = document.getElementById('schoolExtracurricularCard');
+      const socialDesc = document.getElementById('schoolSocialDesc');
+      const navIcon = document.getElementById('bottomNavRoleIcon');
+      const navText = document.getElementById('bottomNavRoleText');
+
+      if (char.age < 6) {
+        emojiEl.innerText = "🍼";
+        titleEl.innerText = "Infancy & Early Years";
+        mainTitle.innerText = "Play with Educational Toys";
+        mainDesc.innerText = "Stack colorful wooden blocks and learn shapes (+Smarts)";
+        clubCard.style.display = "none";
+        socialDesc.innerText = "Crawl around and giggle with parents (+Happiness)";
+        navIcon.innerText = "🍼";
+        navText.innerText = "Infant";
+      } else if (char.age < 14) {
+        emojiEl.innerText = "🎒";
+        titleEl.innerText = "Elementary School";
+        mainTitle.innerText = "Study Hard & Homework";
+        mainDesc.innerText = "Pay close attention in class and read books (+Smarts)";
+        clubCard.style.display = "flex";
+        socialDesc.innerText = "Make friends during playground recess (+Happiness)";
+        navIcon.innerText = "🎒";
+        navText.innerText = "School";
+      } else if (char.age < 18) {
+        emojiEl.innerText = "🏫";
+        titleEl.innerText = "High School";
+        mainTitle.innerText = "Study for Exams";
+        mainDesc.innerText = "Prepare for graduation and university SATs (+Smarts)";
+        clubCard.style.display = "flex";
+        socialDesc.innerText = "Hang out with classmates in the cafeteria (+Happiness)";
+        navIcon.innerText = "🏫";
+        navText.innerText = "High School";
+      } else if (char.educationLevel === 2 && char.salary === 0) {
+        emojiEl.innerText = "🎓";
+        titleEl.innerText = "University Campus";
+        mainTitle.innerText = "Attend Lectures & Labs";
+        mainDesc.innerText = "Earn high GPA honors for your degree (+Smarts)";
+        clubCard.style.display = "flex";
+        socialDesc.innerText = "Network with fellow college students (+Happiness)";
+        navIcon.innerText = "🎓";
+        navText.innerText = "College";
+      } else {
+        emojiEl.innerText = "💼";
+        titleEl.innerText = char.occupation;
+        mainTitle.innerText = "Work Overtime & Upskill";
+        mainDesc.innerText = "Impress your boss and aim for bonuses (+Smarts, +Happiness)";
+        clubCard.style.display = "flex";
+        socialDesc.innerText = "Chat by the watercooler with coworkers (+Happiness)";
+        navIcon.innerText = char.occIcon;
+        navText.innerText = "Career";
+      }
+    }
+
+    function doStudyHarder() {
+      if (!char.isAlive) return;
+      char.smarts += 6 + Math.floor(Math.random() * 5);
+      char.happiness -= 2;
+      if (char.age < 6) {
+        recordAction("🧩 I played with brain puzzles and learned ABCs! (+Smarts)");
+      } else if (char.age < 18) {
+        recordAction("📚 I studied diligently and aced my school homework! (+Smarts)");
+      } else {
+        recordAction("💻 I stayed late and delivered stellar work performance! (+Smarts)");
+      }
+      render();
+    }
+
+    function doExtracurricular() {
+      if (!char.isAlive) return;
+      char.health += 5 + Math.floor(Math.random() * 5);
+      char.looks += 3;
+      char.happiness += 6;
+      if (char.age < 18) {
+        recordAction("⚽ I played varsity soccer and joined the chess club! (+Health, +Looks)");
+      } else {
+        recordAction("🏋️ I joined the company softball league with coworkers! (+Health, +Looks)");
+      }
+      render();
+    }
+
+    function interactWithClassmates() {
+      if (!char.isAlive) return;
+      char.happiness += 12;
+      char.looks += 2;
+      if (char.age < 18) {
+        recordAction("🤝 I spent lunch chatting and laughing with my favorite classmates! (+Happiness)");
+      } else {
+        recordAction("☕ I had coffee and bonded with colleagues during lunch break! (+Happiness)");
+      }
       render();
     }
 
