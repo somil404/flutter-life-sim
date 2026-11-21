@@ -6,821 +6,1369 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#d32f2f">
   <link rel="manifest" href="manifest.json">
-  <title>🌟 Life Journey Simulator</title>
+  <title>BitJourney Life Simulator</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --border: #334155;
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --health: #ef4444;
-      --happy: #f59e0b;
-      --smarts: #38bdf8;
-      --looks: #ec4899;
-      --cash: #10b981;
+      --header-red: #d32f2f;
+      --header-red-dark: #b71c1c;
+      --nav-blue: #1b4965;
+      --nav-blue-dark: #133549;
+      --stat-green: #2e7d32;
+      --stat-red: #c62828;
+      --stat-orange: #ef6c00;
+      --age-btn: #2e7d32;
+      --age-btn-hover: #1b5e20;
+      --bg: #f8f9fa;
+      --text: #212529;
+      --text-muted: #6c757d;
+      --border: #e9ecef;
+      --primary-accent: #0288d1;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
     body {
-      background-color: var(--bg);
+      background-color: #212529;
       color: var(--text);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 12px;
+      margin: 0;
     }
 
-    .device-container {
+    .app-viewport {
       width: 100%;
       max-width: 480px;
-      height: 94vh;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      height: 100vh;
+      max-height: 100vh;
+      background: #ffffff;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
     }
 
-    /* App Bar */
-    .app-bar {
-      background: var(--card-bg);
-      padding: 16px 20px;
+    /* TOP RED APP BAR */
+    .top-bar {
+      background: var(--header-red);
+      height: 54px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      z-index: 10;
     }
 
-    .app-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .icon-btn {
+    .menu-btn {
       background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1.25rem;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 6px;
-      border-radius: 8px;
-      transition: all 0.2s;
+      font-size: 16px;
+      cursor: pointer;
     }
 
-    .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text);
-    }
-
-    /* Status Header */
-    .status-header {
-      background: var(--card-bg);
-      padding: 12px 20px;
+    .app-logo {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 24px;
+      letter-spacing: -0.5px;
     }
 
-    .age-badge {
-      font-size: 1.25rem;
-      font-weight: 800;
+    .app-logo span {
+      color: #ffeb3b;
     }
 
-    .job-badge {
-      font-size: 0.85rem;
-      color: #a5b4fc;
-      margin-top: 2px;
+    .badge-citizen {
+      background: #ffd54f;
+      color: #b78103;
+      font-weight: 900;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px dashed #b78103;
+      letter-spacing: 0.5px;
     }
 
-    .money-badge {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--cash);
-      text-align: right;
-    }
-
-    .salary-badge {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-align: right;
-    }
-
-    /* Stats Grid */
-    .stats-card {
-      margin: 12px 16px;
-      padding: 12px 16px;
-      background: var(--card-bg);
-      border-radius: 16px;
-      border: 1px solid var(--border);
+    /* IDENTITY & BALANCE BAR */
+    .identity-bar {
+      background: #ffffff;
+      border-bottom: 2px solid #eaeaea;
+      padding: 10px 16px;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .stat-row {
+    .id-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .stat-label {
-      width: 105px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .stat-bar-bg {
-      flex: 1;
-      height: 10px;
-      background: #090d16;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .stat-bar-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.4s ease, background-color 0.4s ease;
-    }
-
-    .stat-value {
-      width: 38px;
-      text-align: right;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    /* Actions Grid */
-    .actions-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      padding: 0 16px 10px;
-    }
-
-    .action-btn {
-      background: rgba(99, 102, 241, 0.1);
-      color: #c7d2fe;
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      padding: 8px 6px;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
+    .avatar-circle {
+      width: 46px;
+      height: 46px;
+      background: #f1f5f9;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      transition: all 0.2s;
+      font-size: 26px;
+      border: 1px solid #cbd5e1;
+      position: relative;
     }
 
-    .action-btn:hover:not(:disabled) {
-      background: rgba(99, 102, 241, 0.25);
-      border-color: var(--primary);
-      transform: translateY(-1px);
+    .country-flag {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      font-size: 14px;
     }
 
-    .action-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* Event Logs Feed */
-    .logs-feed {
-      flex: 1;
-      margin: 0 16px 12px;
-      padding: 12px;
-      background: #0b1120;
-      border-radius: 14px;
-      border: 1px solid #1e293b;
-      overflow-y: auto;
+    .id-details {
       display: flex;
       flex-direction: column;
-      gap: 8px;
     }
 
-    .log-item {
-      font-size: 0.88rem;
-      line-height: 1.4;
-      padding: 6px 10px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.02);
-      border-left: 3px solid #3b82f6;
-      color: #cbd5e1;
-      animation: fadeIn 0.3s ease;
+    .char-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0288d1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .log-item.latest {
-      border-left-color: var(--primary);
+    .char-info-icon {
+      background: #0288d1;
       color: #fff;
-      background: rgba(99, 102, 241, 0.12);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 1px 5px;
+    }
+
+    .char-occupation {
+      font-size: 13px;
+      color: #546e7a;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .id-right {
+      text-align: right;
+    }
+
+    .char-cash {
+      font-size: 20px;
+      font-weight: 900;
+      color: #2e7d32;
+    }
+
+    .char-cash.debt {
+      color: #c62828;
+    }
+
+    .cash-label {
+      font-size: 11px;
+      color: #78909c;
       font-weight: 600;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* MAIN STORY / EVENT LOG FEED */
+    .story-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: #ffffff;
+      -webkit-overflow-scrolling: touch;
     }
 
-    /* Primary Bottom Button */
-    .bottom-bar {
-      padding: 12px 16px 16px;
-      background: var(--card-bg);
-      border-top: 1px solid var(--border);
+    .year-block {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f1f3f5;
     }
 
-    .age-up-btn {
-      width: 100%;
-      height: 52px;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      font-size: 1.05rem;
-      font-weight: 700;
+    .year-header {
+      font-size: 18px;
+      font-weight: 900;
+      color: #1b4965;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .year-event {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #333333;
+      margin-bottom: 6px;
+    }
+
+    .year-event.highlight {
+      font-weight: 600;
+      color: #0d47a1;
+    }
+
+    /* BOTTOM CONTROLS & NAV DOCK */
+    .bottom-dock {
+      background: #ffffff;
+      border-top: 2px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 20;
+    }
+
+    /* 5-TAB BAR WITH FLOATING AGE BUTTON */
+    .tabs-bar {
+      height: 64px;
+      background: var(--nav-blue);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      position: relative;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #e0f2f1;
+      font-size: 11px;
+      font-weight: 600;
       cursor: pointer;
+      gap: 3px;
+      padding-top: 4px;
+      transition: background 0.15s;
+    }
+
+    .tab-item:active {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .tab-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
-      transition: all 0.2s;
+      font-size: 16px;
     }
 
-    .age-up-btn:hover {
-      background: var(--primary-hover);
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    /* CIRCULAR FLOATING AGE BUTTON */
+    .age-btn-wrapper {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      margin-top: -38px;
+      z-index: 30;
+      flex-shrink: 0;
     }
 
-    .age-up-btn.dead {
-      background: #475569;
-      box-shadow: none;
+    .age-button {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #43a047 0%, #2e7d32 100%);
+      border: 4px solid #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 900;
+      transition: transform 0.1s, box-shadow 0.1s;
     }
 
-    /* Modal / Dialog */
-    .modal-overlay {
+    .age-button:active {
+      transform: scale(0.92);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .age-plus {
+      font-size: 26px;
+      line-height: 20px;
+      margin-top: -2px;
+    }
+
+    .age-text {
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    .age-button.dead {
+      background: #616161;
+    }
+
+    /* BITLIFE 4 STAT BARS */
+    .stats-footer {
+      background: #f8f9fa;
+      padding: 10px 20px 14px;
+      border-top: 1px solid #eeeeee;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .stat-bar-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .stat-title {
+      width: 95px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #424242;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-track {
+      flex: 1;
+      height: 18px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .stat-fill {
+      height: 100%;
+      background: var(--stat-green);
+      transition: width 0.35s ease, background-color 0.35s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #ffffff;
+      box-sizing: border-box;
+      min-width: 32px;
+    }
+
+    .stat-fill.danger {
+      background: var(--stat-red);
+    }
+
+    .stat-fill.warn {
+      background: var(--stat-orange);
+    }
+
+    /* MODAL POPUPS */
+    .sheet-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      visibility: hidden;
-      opacity: 0;
-      transition: all 0.25s ease;
+      background: rgba(0,0,0,0.65);
       z-index: 100;
+      display: none;
+      align-items: flex-end;
+      backdrop-filter: blur(2px);
     }
 
-    .modal-overlay.active {
-      visibility: visible;
-      opacity: 1;
+    .sheet-overlay.active {
+      display: flex;
     }
 
-    .modal-content {
+    .sheet-modal {
       width: 100%;
       max-height: 80%;
-      background: var(--card-bg);
+      background: #ffffff;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
-      padding: 20px;
-      overflow-y: auto;
-      border: 1px solid var(--border);
-      border-bottom: none;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.25s ease-out;
     }
 
-    .modal-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 14px;
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .sheet-header {
+      background: var(--nav-blue);
+      color: #ffffff;
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 800;
+      font-size: 17px;
     }
 
-    .career-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      margin-bottom: 8px;
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-
-    .career-info h4 {
-      font-size: 0.95rem;
-      color: #f1f5f9;
-      margin-bottom: 4px;
-    }
-
-    .career-info p {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .apply-btn {
-      background: var(--primary);
-      color: #fff;
+    .sheet-close {
+      background: transparent;
       border: none;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.85rem;
+      color: #fff;
+      font-size: 20px;
       cursor: pointer;
     }
 
-    /* Toast notification */
-    .toast {
-      position: absolute;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background: #334155;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      pointer-events: none;
-      opacity: 0;
-      transition: all 0.3s ease;
-      z-index: 200;
-      white-space: nowrap;
+    .sheet-body {
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .action-row:hover {
+      background: #f1f3f5;
+    }
+
+    .action-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .action-emoji {
+      font-size: 24px;
+    }
+
+    .action-texts h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #212529;
+    }
+
+    .action-texts p {
+      font-size: 11px;
+      color: #6c757d;
+      margin-top: 2px;
+    }
+
+    .action-btn {
+      background: var(--nav-blue);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* CHOICE DIALOG */
+    .choice-dialog {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 86%;
+      max-width: 360px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      z-index: 150;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .choice-dialog.active {
+      display: flex;
+    }
+
+    .dialog-icon {
+      font-size: 40px;
+    }
+
+    .dialog-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #1b4965;
+    }
+
+    .dialog-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #495057;
+    }
+
+    .dialog-choices {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .choice-btn {
+      padding: 10px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      background: #f8f9fa;
+      font-weight: 700;
+      font-size: 13px;
+      color: #212529;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .choice-btn:hover {
+      background: #e9ecef;
+    }
+
+    .choice-btn.primary {
+      background: var(--nav-blue);
+      color: #ffffff;
+      border-color: var(--nav-blue);
     }
   </style>
 </head>
 <body>
 
-  <div class="device-container">
-    <div id="toast" class="toast"></div>
-
-    <!-- App Bar -->
-    <header class="app-bar">
-      <div class="app-title">🌟 Life Journey Simulator</div>
-      <button class="icon-btn" onclick="confirmRestart()" title="Restart Game">🔄</button>
+  <div class="app-viewport">
+    
+    <!-- 1. TOP RED BITLIFE BAR -->
+    <header class="top-bar">
+      <button class="menu-btn" onclick="startNewLifeDialog()" title="Menu">☰</button>
+      <div class="app-logo">
+        👶 <span>BitLife</span>
+      </div>
+      <div class="badge-citizen">BITIZEN</div>
     </header>
 
-    <!-- Character Status -->
-    <div class="status-header">
-      <div>
-        <div class="age-badge" id="ageBadge">Age: 0</div>
-        <div class="job-badge" id="jobBadge">Infant</div>
+    <!-- 2. CHARACTER IDENTITY & BANK BAR -->
+    <section class="identity-bar">
+      <div class="id-left">
+        <div class="avatar-circle" id="charAvatar">
+          👶
+          <span class="country-flag" id="charFlag">🇺🇸</span>
+        </div>
+        <div class="id-details">
+          <div class="char-name">
+            <span id="charName">Alyssa Roosevelt</span>
+            <span class="char-info-icon" title="Details">i</span>
+          </div>
+          <div class="char-occupation">
+            <span id="charJobIcon">🍼</span>
+            <span id="charOccupation">Infant</span>
+          </div>
+        </div>
       </div>
-      <div>
-        <div class="money-badge" id="moneyBadge">$0</div>
-        <div class="salary-badge" id="salaryBadge">Salary: $0/yr</div>
+      <div class="id-right">
+        <div class="char-cash" id="charCash">$0</div>
+        <div class="cash-label">Bank Balance</div>
+      </div>
+    </section>
+
+    <!-- 3. MAIN STORY / YEAR EVENT FEED -->
+    <main class="story-scroll" id="storyScroll">
+      <!-- Generated dynamically -->
+    </main>
+
+    <!-- 4. BOTTOM DOCK (5 TABS + CENTER AGE BUTTON + 4 STATS) -->
+    <footer class="bottom-dock">
+
+      <!-- 5-Tab Bar with Center Green + Age Button -->
+      <div class="tabs-bar">
+        <div class="tab-item" onclick="openProfileSheet()">
+          <div class="tab-circle">👶</div>
+          <span id="navRoleLabel">Infant</span>
+        </div>
+
+        <div class="tab-item" onclick="openAssetsSheet()">
+          <div class="tab-circle">🏠</div>
+          <span>Assets</span>
+        </div>
+
+        <!-- Center Big Green Plus Age Button -->
+        <div class="age-btn-wrapper">
+          <button class="age-button" id="ageButton" onclick="onAgeClicked()">
+            <div class="age-plus">+</div>
+            <div class="age-text">Age</div>
+          </button>
+        </div>
+
+        <div class="tab-item" onclick="openRelationshipsSheet()">
+          <div class="tab-circle">❤️</div>
+          <span>Relationships</span>
+        </div>
+
+        <div class="tab-item" onclick="openActivitiesSheet()">
+          <div class="tab-circle">💬</div>
+          <span>Activities</span>
+        </div>
+      </div>
+
+      <!-- 4 BitLife Stats Progress Bars -->
+      <div class="stats-footer">
+        <div class="stat-bar-item">
+          <span class="stat-title">Happiness <span id="happyEmoji">😊</span></span>
+          <div class="stat-track">
+            <div class="stat-fill" id="happyBar" style="width: 100%;">100%</div>
+          </div>
+        </div>
+
+        <div class="stat-bar-item">
+          <span class="stat-title">Health <span id="healthEmoji">❤️</span></span>
+          <div class="stat-track">
+            <div class="stat-fill" id="healthBar" style="width: 100%;">100%</div>
+          </div>
+        </div>
+
+        <div class="stat-bar-item">
+          <span class="stat-title">Smarts <span id="smartsEmoji">🤓</span></span>
+          <div class="stat-track">
+            <div class="stat-fill" id="smartsBar" style="width: 50%;">50%</div>
+          </div>
+        </div>
+
+        <div class="stat-bar-item">
+          <span class="stat-title">Looks <span id="looksEmoji">✨</span></span>
+          <div class="stat-track">
+            <div class="stat-fill" id="looksBar" style="width: 50%;">50%</div>
+          </div>
+        </div>
+      </div>
+
+    </footer>
+
+    <!-- ACTIVITIES MODAL -->
+    <div id="activitiesModal" class="sheet-overlay" onclick="onOverlayClick(event, 'activitiesModal')">
+      <div class="sheet-modal">
+        <div class="sheet-header">
+          <span>Activities</span>
+          <button class="sheet-close" onclick="closeSheet('activitiesModal')">✕</button>
+        </div>
+        <div class="sheet-body">
+          <div class="action-row" onclick="actionStudy()">
+            <div class="action-left">
+              <span class="action-emoji">📚</span>
+              <div class="action-texts">
+                <h4>Study Harder / Read Books</h4>
+                <p>Sharpen your mind and increase Smarts.</p>
+              </div>
+            </div>
+            <button class="action-btn">Study</button>
+          </div>
+
+          <div class="action-row" onclick="actionGym()">
+            <div class="action-left">
+              <span class="action-emoji">🏋️</span>
+              <div class="action-texts">
+                <h4>Gym & Fitness</h4>
+                <p>Cardio and lifting weights. Increases Health & Looks.</p>
+              </div>
+            </div>
+            <button class="action-btn">Workout</button>
+          </div>
+
+          <div class="action-row" onclick="actionDoctor()">
+            <div class="action-left">
+              <span class="action-emoji">🩺</span>
+              <div class="action-texts">
+                <h4>Medical Doctor ($250)</h4>
+                <p>Visit medical clinic for diagnosis and curing disease.</p>
+              </div>
+            </div>
+            <button class="action-btn">Visit</button>
+          </div>
+
+          <div class="action-row" onclick="actionVacation()">
+            <div class="action-left">
+              <span class="action-emoji">🏖️</span>
+              <div class="action-texts">
+                <h4>First-Class Vacation ($1,200)</h4>
+                <p>Take a rejuvenating trip to boost Happiness.</p>
+              </div>
+            </div>
+            <button class="action-btn">Fly</button>
+          </div>
+
+          <div class="action-row" onclick="actionLottery()">
+            <div class="action-left">
+              <span class="action-emoji">🎰</span>
+              <div class="action-texts">
+                <h4>Lottery Tickets ($50)</h4>
+                <p>Test your luck for a massive jackpot.</p>
+              </div>
+            </div>
+            <button class="action-btn">Play</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Stats Bars -->
-    <div class="stats-card">
-      <div class="stat-row">
-        <span class="stat-label">❤️ Health</span>
-        <div class="stat-bar-bg"><div id="healthBar" class="stat-bar-fill" style="background: var(--health); width: 100%;"></div></div>
-        <span class="stat-value" id="healthVal">100%</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">😄 Happiness</span>
-        <div class="stat-bar-bg"><div id="happyBar" class="stat-bar-fill" style="background: var(--happy); width: 100%;"></div></div>
-        <span class="stat-value" id="happyVal">100%</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">🧠 Smarts</span>
-        <div class="stat-bar-bg"><div id="smartsBar" class="stat-bar-fill" style="background: var(--smarts); width: 50%;"></div></div>
-        <span class="stat-value" id="smartsVal">50%</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">✨ Looks</span>
-        <div class="stat-bar-bg"><div id="looksBar" class="stat-bar-fill" style="background: var(--looks); width: 50%;"></div></div>
-        <span class="stat-value" id="looksVal">50%</span>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="actions-grid">
-      <button class="action-btn" onclick="studyHard()">📚 Study</button>
-      <button class="action-btn" onclick="gymWorkout()">🏋️ Gym</button>
-      <button class="action-btn" onclick="visitDoctor()">🩺 Doctor</button>
-      <button class="action-btn" onclick="takeVacation()">🏖️ Vacation</button>
-      <button class="action-btn" onclick="openCareers()">💼 Career</button>
-      <button class="action-btn" onclick="playLottery()">🎰 Lottery</button>
-    </div>
-
-    <!-- Activity Log -->
-    <div class="logs-feed" id="logsFeed">
-      <!-- Items generated dynamically -->
-    </div>
-
-    <!-- Bottom Controls -->
-    <div class="bottom-bar">
-      <button id="ageUpBtn" class="age-up-btn" onclick="handleAgeUp()">
-        🎂 Age Up (+1 Year)
-      </button>
-    </div>
-
-    <!-- Modal Dialog for Careers & Education -->
-    <div id="careerModal" class="modal-overlay" onclick="closeModalOnBg(event)">
-      <div class="modal-content">
-        <div class="modal-title">
-          <span>💼 Education & Careers</span>
-          <button class="icon-btn" onclick="closeCareers()">✕</button>
+    <!-- CAREER & ASSETS MODAL -->
+    <div id="assetsModal" class="sheet-overlay" onclick="onOverlayClick(event, 'assetsModal')">
+      <div class="sheet-modal">
+        <div class="sheet-header">
+          <span>Assets & Career</span>
+          <button class="sheet-close" onclick="closeSheet('assetsModal')">✕</button>
         </div>
-
-        <div class="career-item">
-          <div class="career-info">
-            <h4>🎓 Attend University ($8,000)</h4>
-            <p>Requires Smarts ≥ 50. Opens high-paying career paths.</p>
+        <div class="sheet-body">
+          <div class="action-row" onclick="actionUniversity()">
+            <div class="action-left">
+              <span class="action-emoji">🎓</span>
+              <div class="action-texts">
+                <h4>University ($12,000)</h4>
+                <p>Requires Smarts ≥ 50. Unlocks professional executive careers.</p>
+              </div>
+            </div>
+            <button class="action-btn">Enroll</button>
           </div>
-          <button class="apply-btn" onclick="attendUniversity()">Enroll</button>
-        </div>
 
-        <div class="career-item">
-          <div class="career-info">
-            <h4>🍔 Fast Food Crew ($18,000/yr)</h4>
-            <p>No requirements. Age ≥ 18.</p>
+          <div class="action-row" onclick="applyJob('Fast Food Crew', 18000, 0, 10, '🍔')">
+            <div class="action-left">
+              <span class="action-emoji">🍔</span>
+              <div class="action-texts">
+                <h4>Fast Food Worker ($18,000/yr)</h4>
+                <p>No education prerequisites.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
           </div>
-          <button class="apply-btn" onclick="applyJob('Fast Food Worker', 18000, 0, 10)">Apply</button>
-        </div>
 
-        <div class="career-item">
-          <div class="career-info">
-            <h4>🎨 Junior Designer ($35,000/yr)</h4>
-            <p>Requires High School & Smarts ≥ 30.</p>
+          <div class="action-row" onclick="applyJob('Graphic Designer', 38000, 1, 30, '🎨')">
+            <div class="action-left">
+              <span class="action-emoji">🎨</span>
+              <div class="action-texts">
+                <h4>Graphic Designer ($38,000/yr)</h4>
+                <p>Requires High School diploma & Smarts ≥ 30.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
           </div>
-          <button class="apply-btn" onclick="applyJob('Junior Designer', 35000, 1, 30)">Apply</button>
-        </div>
 
-        <div class="career-item">
-          <div class="career-info">
-            <h4>💻 Software Engineer ($85,000/yr)</h4>
-            <p>Requires University degree & Smarts ≥ 60.</p>
+          <div class="action-row" onclick="applyJob('Software Engineer', 95000, 2, 60, '💻')">
+            <div class="action-left">
+              <span class="action-emoji">💻</span>
+              <div class="action-texts">
+                <h4>Software Engineer ($95,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 60.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
           </div>
-          <button class="apply-btn" onclick="applyJob('Software Engineer', 85000, 2, 60)">Apply</button>
-        </div>
 
-        <div class="career-item">
-          <div class="career-info">
-            <h4>🩺 Medical Doctor ($160,000/yr)</h4>
-            <p>Requires University degree & Smarts ≥ 80.</p>
+          <div class="action-row" onclick="applyJob('Medical Surgeon', 185000, 2, 80, '🩺')">
+            <div class="action-left">
+              <span class="action-emoji">🩺</span>
+              <div class="action-texts">
+                <h4>Medical Surgeon ($185,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 80.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
           </div>
-          <button class="apply-btn" onclick="applyJob('Medical Doctor', 160000, 2, 80)">Apply</button>
-        </div>
 
-        <div class="career-item">
-          <div class="career-info">
-            <h4>👑 Corporate Executive ($320,000/yr)</h4>
-            <p>Requires University degree & Smarts ≥ 90.</p>
+          <div class="action-row" onclick="applyJob('Chief Executive Officer', 380000, 2, 90, '👑')">
+            <div class="action-left">
+              <span class="action-emoji">👑</span>
+              <div class="action-texts">
+                <h4>CEO ($380,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 90.</p>
+              </div>
+            </div>
+            <button class="action-btn">Apply</button>
           </div>
-          <button class="apply-btn" onclick="applyJob('Corporate Executive', 320000, 2, 90)">Apply</button>
         </div>
       </div>
     </div>
+
+    <!-- RELATIONSHIPS MODAL -->
+    <div id="relModal" class="sheet-overlay" onclick="onOverlayClick(event, 'relModal')">
+      <div class="sheet-modal">
+        <div class="sheet-header">
+          <span>Relationships</span>
+          <button class="sheet-close" onclick="closeSheet('relModal')">✕</button>
+        </div>
+        <div class="sheet-body" id="familyList">
+          <!-- Populated from state -->
+        </div>
+      </div>
+    </div>
+
+    <!-- CHOICE / SCENARIO DIALOG -->
+    <div id="choiceOverlay" class="sheet-overlay">
+      <div class="choice-dialog active" id="choiceBox">
+        <div class="dialog-icon" id="dIcon">🤔</div>
+        <div class="dialog-title" id="dTitle">Life Decision</div>
+        <div class="dialog-desc" id="dDesc">A classmate offers you a cigarette in the bathroom behind school. What do you do?</div>
+        <div class="dialog-choices" id="dChoices">
+          <!-- buttons -->
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // Game State
-    let state = {
+    // CHARACTER STATE
+    let char = {
+      name: "Alyssa Roosevelt",
+      gender: "Female",
+      city: "San Diego",
+      country: "United States",
+      flag: "🇺🇸",
+      birthday: "September 24",
+      zodiac: "Libra",
       age: 0,
-      health: 100,
-      happiness: 100,
-      intelligence: 50,
-      looks: 50,
-      money: 0,
-      job: 'Infant',
+      cash: 0,
       salary: 0,
-      educationLevel: 0, // 0: None, 1: High School, 2: College
+      occupation: "Infant",
+      occIcon: "🍼",
+      educationLevel: 0, // 0: None, 1: High School, 2: University
+      happiness: 85,
+      health: 95,
+      smarts: 45,
+      looks: 60,
       isAlive: true,
-      logs: []
+      father: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
+      mother: { name: "Emma McCartney", job: "Grocer", age: 40 },
+      sister: { name: "Madison McCartney", age: 8 },
+      history: []
     };
 
-    function initGame() {
-      state.age = 0;
-      state.health = 85 + Math.floor(Math.random() * 15);
-      state.happiness = 85 + Math.floor(Math.random() * 15);
-      state.intelligence = 35 + Math.floor(Math.random() * 45);
-      state.looks = 35 + Math.floor(Math.random() * 55);
-      state.money = 0;
-      state.job = 'Infant';
-      state.salary = 0;
-      state.educationLevel = 0;
-      state.isAlive = true;
-      state.logs = ['👶 Welcome to the world! You were born healthy.'];
-      updateUI();
+    function startNewLife() {
+      const firstNames = ["Alyssa", "Jessica", "Sophia", "Lucas", "Noah", "Liam", "Emma", "Ethan", "Olivia", "Oliver"];
+      const lastNames = ["Roosevelt", "Kennedy", "Sterling", "Vance", "Mercer", "Sinclair", "Hayes", "Brooks"];
+      const cities = [
+        { city: "San Diego", country: "United States", flag: "🇺🇸" },
+        { city: "London", country: "United Kingdom", flag: "🇬🇧" },
+        { city: "Sydney", country: "Australia", flag: "🇦🇺" },
+        { city: "Toronto", country: "Canada", flag: "🇨🇦" }
+      ];
+
+      const c = cities[Math.floor(Math.random() * cities.length)];
+      char.name = firstNames[Math.floor(Math.random() * firstNames.length)] + " " + lastNames[Math.floor(Math.random() * lastNames.length)];
+      char.gender = Math.random() > 0.5 ? "Female" : "Male";
+      char.city = c.city;
+      char.country = c.country;
+      char.flag = c.flag;
+      char.age = 0;
+      char.cash = 0;
+      char.salary = 0;
+      char.occupation = "Infant";
+      char.occIcon = "🍼";
+      char.educationLevel = 0;
+      char.happiness = 75 + Math.floor(Math.random() * 25);
+      char.health = 80 + Math.floor(Math.random() * 20);
+      char.smarts = 30 + Math.floor(Math.random() * 60);
+      char.looks = 30 + Math.floor(Math.random() * 60);
+      char.isAlive = true;
+
+      char.father = { name: "David " + char.name.split(" ")[1], job: "Engineer", age: 28 };
+      char.mother = { name: "Sarah " + char.name.split(" ")[1], job: "Teacher", age: 26 };
+      char.sister = { name: "Chloe", age: 3 };
+
+      char.history = [];
+      char.history.push({
+        age: 0,
+        events: [
+          `I was born a ${char.gender.toLowerCase()} in ${char.city}, ${char.country}.`,
+          `My name is ${char.name}.`,
+          `My father is ${char.father.name}, a ${char.father.job} (age ${char.father.age}).`,
+          `My mother is ${char.mother.name}, a ${char.mother.job} (age ${char.mother.age}).`,
+          `I have an older sister named ${char.sister.name} (age ${char.sister.age}).`
+        ]
+      });
+
+      renderUI();
     }
 
     function clamp(val, min, max) {
       return Math.max(min, Math.min(max, val));
     }
 
-    function notify(msg) {
-      const toast = document.getElementById('toast');
-      toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2200);
-    }
-
-    function updateUI() {
+    function renderUI() {
       // Clamping
-      state.health = clamp(state.health, 0, 100);
-      state.happiness = clamp(state.happiness, 0, 100);
-      state.intelligence = clamp(state.intelligence, 0, 100);
-      state.looks = clamp(state.looks, 0, 100);
+      char.happiness = clamp(char.happiness, 0, 100);
+      char.health = clamp(char.health, 0, 100);
+      char.smarts = clamp(char.smarts, 0, 100);
+      char.looks = clamp(char.looks, 0, 100);
 
-      // Elements
-      document.getElementById('ageBadge').innerText = `Age: ${state.age}`;
-      document.getElementById('jobBadge').innerText = state.job;
-      document.getElementById('moneyBadge').innerText = (state.money >= 0 ? '$' : '-$') + Math.abs(state.money).toLocaleString();
-      document.getElementById('moneyBadge').style.color = state.money >= 0 ? 'var(--cash)' : '#ef4444';
-      document.getElementById('salaryBadge').innerText = `Salary: $${state.salary.toLocaleString()}/yr`;
+      // Identity bar
+      document.getElementById("charName").innerText = char.name;
+      document.getElementById("charFlag").innerText = char.flag;
+      document.getElementById("charJobIcon").innerText = char.occIcon;
+      document.getElementById("charOccupation").innerText = char.occupation;
+      
+      const cashEl = document.getElementById("charCash");
+      cashEl.innerText = (char.cash >= 0 ? "$" : "-$") + Math.abs(char.cash).toLocaleString();
+      cashEl.className = char.cash >= 0 ? "char-cash" : "char-cash debt";
 
-      // Stat bars
-      document.getElementById('healthBar').style.width = `${state.health}%`;
-      document.getElementById('healthVal').innerText = `${state.health}%`;
-
-      document.getElementById('happyBar').style.width = `${state.happiness}%`;
-      document.getElementById('happyVal').innerText = `${state.happiness}%`;
-
-      document.getElementById('smartsBar').style.width = `${state.intelligence}%`;
-      document.getElementById('smartsVal').innerText = `${state.intelligence}%`;
-
-      document.getElementById('looksBar').style.width = `${state.looks}%`;
-      document.getElementById('looksVal').innerText = `${state.looks}%`;
-
-      // Age up button
-      const ageBtn = document.getElementById('ageUpBtn');
-      if (state.isAlive) {
-        ageBtn.className = 'age-up-btn';
-        ageBtn.innerHTML = '🎂 Age Up (+1 Year)';
+      // Age Button & Nav label
+      const ageBtn = document.getElementById("ageButton");
+      const navRole = document.getElementById("navRoleLabel");
+      if (char.isAlive) {
+        ageBtn.className = "age-button";
+        ageBtn.innerHTML = '<div class="age-plus">+</div><div class="age-text">Age</div>';
       } else {
-        ageBtn.className = 'age-up-btn dead';
-        ageBtn.innerHTML = '⚰️ Reincarnate (New Life)';
+        ageBtn.className = "age-button dead";
+        ageBtn.innerHTML = '<div style="font-size:20px;">⚰️</div><div class="age-text">Rip</div>';
       }
 
-      // Action buttons disabled if dead
-      const actionBtns = document.querySelectorAll('.action-btn');
-      actionBtns.forEach(b => b.disabled = !state.isAlive);
+      if (char.age < 6) navRole.innerText = "Infant";
+      else if (char.age < 18) navRole.innerText = "Student";
+      else navRole.innerText = "Career";
 
-      // Render logs
-      const feed = document.getElementById('logsFeed');
-      feed.innerHTML = '';
-      state.logs.forEach((log, index) => {
-        const div = document.createElement('div');
-        div.className = `log-item ${index === 0 ? 'latest' : ''}`;
-        div.innerText = log;
-        feed.appendChild(div);
-      });
+      // Dynamic Avatar based on age
+      const av = document.getElementById("charAvatar");
+      let baseEmoji = "👶";
+      if (char.age >= 60) baseEmoji = char.gender === "Female" ? "👵" : "👴";
+      else if (char.age >= 18) baseEmoji = char.gender === "Female" ? "👩" : "👨";
+      else if (char.age >= 6) baseEmoji = char.gender === "Female" ? "👧" : "👦";
+      av.innerHTML = `${baseEmoji}<span class="country-flag" id="charFlag">${char.flag}</span>`;
+
+      // Stats Bars
+      renderBar("happyBar", char.happiness);
+      renderBar("healthBar", char.health);
+      renderBar("smartsBar", char.smarts);
+      renderBar("looksBar", char.looks);
+
+      // Render Story Feed
+      const feed = document.getElementById("storyScroll");
+      feed.innerHTML = "";
+      for (let i = char.history.length - 1; i >= 0; i--) {
+        const block = char.history[i];
+        const blockDiv = document.createElement("div");
+        blockDiv.className = "year-block";
+
+        const title = document.createElement("div");
+        title.className = "year-header";
+        title.innerText = `Age: ${block.age} years`;
+        blockDiv.appendChild(title);
+
+        block.events.forEach(evt => {
+          const p = document.createElement("div");
+          p.className = "year-event";
+          p.innerText = evt;
+          blockDiv.appendChild(p);
+        });
+
+        feed.appendChild(blockDiv);
+      }
     }
 
-    function addLog(msg) {
-      state.logs.unshift(msg);
-      if (state.logs.length > 50) state.logs.pop();
+    function renderBar(id, val) {
+      const el = document.getElementById(id);
+      el.style.width = `${Math.max(val, 6)}%`;
+      el.innerText = `${val}%`;
+
+      if (val < 20) {
+        el.className = "stat-fill danger";
+      } else if (val < 45) {
+        el.className = "stat-fill warn";
+      } else {
+        el.className = "stat-fill";
+      }
     }
 
-    function handleAgeUp() {
-      if (!state.isAlive) {
-        initGame();
+    // AGING
+    function onAgeClicked() {
+      if (!char.isAlive) {
+        startNewLifeDialog();
         return;
       }
 
-      state.age++;
+      char.age++;
+      char.father.age++;
+      char.mother.age++;
+      char.sister.age++;
 
-      // Natural aging impact
-      if (state.age > 45) state.health -= (1 + Math.floor(Math.random() * 3));
-      if (state.age > 75) state.health -= (2 + Math.floor(Math.random() * 5));
+      const yearEvents = [];
+
+      // Aging health decay
+      if (char.age > 45) char.health -= (1 + Math.floor(Math.random() * 3));
+      if (char.age > 75) char.health -= (2 + Math.floor(Math.random() * 5));
 
       // Financials
-      if (state.salary > 0) {
-        const expenses = Math.round(state.salary * 0.35) + 600;
-        state.money += (state.salary - expenses);
+      if (char.salary > 0) {
+        const taxAndLiving = Math.round(char.salary * 0.32) + 800;
+        const net = char.salary - taxAndLiving;
+        char.cash += net;
       }
 
       // Milestones
-      if (state.age === 6) {
-        addLog('🎒 Age 6: You began elementary school!');
-      } else if (state.age === 18) {
-        state.educationLevel = Math.max(state.educationLevel, 1);
-        if (state.job === 'Infant' || state.job === 'Student') {
-          state.job = 'High School Graduate';
+      if (char.age === 6) {
+        char.occupation = "Primary School Student";
+        char.occIcon = "🎒";
+        yearEvents.push("I started attending Elementary School!");
+      } else if (char.age === 14) {
+        char.occupation = "High School Student";
+        char.occIcon = "🎒";
+        yearEvents.push("I started High School.");
+      } else if (char.age === 18) {
+        char.educationLevel = Math.max(char.educationLevel, 1);
+        if (char.salary === 0) {
+          char.occupation = "Unemployed";
+          char.occIcon = "💼";
         }
-        addLog('🎓 Age 18: You graduated from High School!');
+        yearEvents.push("I graduated from High School!");
       } else {
-        triggerAnnualEvent();
+        // Random events
+        triggerRandomYearEvent(yearEvents);
       }
 
-      // Death checks
-      if (state.health <= 0) {
-        state.isAlive = false;
-        addLog(`⚰️ At age ${state.age}, your health failed completely. Rest in peace.`);
-      } else if (state.age > 70 && Math.random() < ((state.age - 65) / 100)) {
-        state.isAlive = false;
-        addLog(`🕊️ At age ${state.age}, you peacefully passed away of old age.`);
+      // Death check
+      if (char.health <= 0) {
+        char.isAlive = false;
+        yearEvents.push(`⚰️ At age ${char.age}, I passed away due to poor health conditions. Rest in peace.`);
+      } else if (char.age > 72 && Math.random() < ((char.age - 68) / 80)) {
+        char.isAlive = false;
+        yearEvents.push(`🕊️ At age ${char.age}, I passed away peacefully in my sleep surrounded by loved ones.`);
       }
 
-      updateUI();
+      char.history.push({ age: char.age, events: yearEvents });
+      renderUI();
+
+      // Occasional random pop-up dilemmas
+      if (char.isAlive && char.age >= 10 && Math.random() < 0.28) {
+        setTimeout(triggerScenarioDialog, 350);
+      }
     }
 
-    function triggerAnnualEvent() {
+    function triggerRandomYearEvent(list) {
       const roll = Math.random() * 100;
-      if (roll < 15) {
-        state.health -= (10 + Math.floor(Math.random() * 15));
-        state.happiness -= 10;
-        addLog(`🤒 Age ${state.age}: You caught an aggressive flu and spent weeks in bed.`);
-      } else if (roll < 30) {
-        const bonus = 100 + Math.floor(Math.random() * 400);
-        state.money += bonus;
-        state.happiness += 8;
-        addLog(`🍀 Age ${state.age}: You found $${bonus} in an old winter coat!`);
-      } else if (roll < 45 && state.age >= 16) {
-        state.happiness += 15;
-        addLog(`❤️ Age ${state.age}: You experienced a wonderful romance.`);
-      } else if (roll < 60 && state.salary > 0) {
-        const bonus = Math.round(state.salary * 0.12);
-        state.money += bonus;
-        state.happiness += 12;
-        addLog(`💼 Age ${state.age}: Received an annual performance bonus of $${bonus.toLocaleString()}!`);
+      if (roll < 14) {
+        char.health -= (10 + Math.floor(Math.random() * 15));
+        char.happiness -= 10;
+        list.push("I caught a bad illness and spent two weeks coughing in bed.");
+      } else if (roll < 28) {
+        const found = 50 + Math.floor(Math.random() * 350);
+        char.cash += found;
+        char.happiness += 8;
+        list.push(`I found $${found} cash on the ground while walking around town!`);
+      } else if (roll < 42 && char.age >= 16) {
+        char.happiness += 16;
+        list.push("I went on an unforgettable romantic date with a wonderful partner.");
+      } else if (roll < 55 && char.salary > 0) {
+        const bonus = Math.round(char.salary * 0.15);
+        char.cash += bonus;
+        char.happiness += 12;
+        list.push(`My boss gave me a glowing performance review and an annual bonus of $${bonus.toLocaleString()}!`);
       } else {
-        addLog(`📅 Age ${state.age}: A peaceful, uneventful year passed.`);
+        list.push("Another peaceful year has passed.");
       }
     }
 
-    // Actions
-    function studyHard() {
-      if (!state.isAlive) return;
-      state.intelligence += 4 + Math.floor(Math.random() * 4);
-      state.happiness -= 2;
-      addLog('📚 You studied diligently and learned new skills (+Smarts)');
-      updateUI();
+    // DILEMMAS & CHOICES
+    function triggerScenarioDialog() {
+      const scenarios = [
+        {
+          icon: "🐶",
+          title: "Stray Puppy",
+          desc: "You found an abandoned puppy shivering under a park bench.",
+          choices: [
+            { text: "Take it home and adopt it", fn: () => { char.happiness += 15; char.cash -= 100; addEvent("I adopted the cute stray puppy and named him Buster!"); } },
+            { text: "Take it to the animal shelter", fn: () => { char.happiness += 5; addEvent("I dropped the puppy off safely at a no-kill shelter."); } },
+            { text: "Ignore it and walk away", fn: () => { char.happiness -= 8; addEvent("I walked away from the shivering puppy feeling guilty."); } }
+          ]
+        },
+        {
+          icon: "👊",
+          title: "School Bully",
+          desc: "A bully in the hallway shoves you and demands your lunch money.",
+          choices: [
+            { text: "Stand your ground and fight back", fn: () => { char.health -= 10; char.looks += 5; char.happiness += 10; addEvent("I fought the bully! I got a bruised cheek, but earned massive respect."); } },
+            { text: "Hand over the lunch money", fn: () => { char.cash -= 15; char.happiness -= 12; addEvent("I surrendered my money to the bully and felt humiliated."); } },
+            { text: "Report them to the principal", fn: () => { char.smarts += 4; addEvent("I reported the bully and they received two weeks detention."); } }
+          ]
+        },
+        {
+          icon: "📈",
+          title: "Crypto Investment Tip",
+          desc: "A friend tells you about an underground new cryptocurrency ready to rocket.",
+          choices: [
+            { text: "Invest $500", fn: () => {
+              if (Math.random() > 0.45) {
+                char.cash += 2500; char.happiness += 20; addEvent("The coin went 5x! I made $2,500 profit in cryptocurrency.");
+              } else {
+                char.cash -= 500; char.happiness -= 15; addEvent("The coin was a rug pull scam! I lost $500.");
+              }
+            }},
+            { text: "Politely pass on the offer", fn: () => { addEvent("I decided not to risk my savings on sketchy meme coins."); } }
+          ]
+        }
+      ];
+
+      const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
+      document.getElementById("dIcon").innerText = sc.icon;
+      document.getElementById("dTitle").innerText = sc.title;
+      document.getElementById("dDesc").innerText = sc.desc;
+
+      const container = document.getElementById("dChoices");
+      container.innerHTML = "";
+      sc.choices.forEach((ch, idx) => {
+        const btn = document.createElement("button");
+        btn.className = idx === 0 ? "choice-btn primary" : "choice-btn";
+        btn.innerText = ch.text;
+        btn.onclick = () => {
+          document.getElementById("choiceOverlay").style.display = "none";
+          ch.fn();
+          renderUI();
+        };
+        container.appendChild(btn);
+      });
+
+      document.getElementById("choiceOverlay").style.display = "flex";
     }
 
-    function gymWorkout() {
-      if (!state.isAlive) return;
-      state.health += 5 + Math.floor(Math.random() * 5);
-      state.looks += 3;
-      state.happiness += 4;
-      state.money -= 25;
-      addLog('🏋️ Completed an intense workout at the gym. (+Health, +Looks)');
-      updateUI();
+    function addEvent(txt) {
+      if (char.history.length > 0) {
+        char.history[char.history.length - 1].events.push(txt);
+      }
     }
 
-    function visitDoctor() {
-      if (!state.isAlive) return;
-      if (state.age >= 18 && state.money < 200) {
-        notify('Doctor fee is $200. You need more funds!');
+    // ACTIVITIES
+    function actionStudy() {
+      if (!char.isAlive) return;
+      char.smarts += 5 + Math.floor(Math.random() * 5);
+      char.happiness -= 2;
+      addEvent("I spent many nights studying in the library. (+Smarts)");
+      closeSheet('activitiesModal');
+      renderUI();
+    }
+
+    function actionGym() {
+      if (!char.isAlive) return;
+      char.health += 6 + Math.floor(Math.random() * 6);
+      char.looks += 4;
+      char.happiness += 4;
+      char.cash -= 30;
+      addEvent("I hit the gym and completed a grueling workout. (+Health, +Looks)");
+      closeSheet('activitiesModal');
+      renderUI();
+    }
+
+    function actionDoctor() {
+      if (!char.isAlive) return;
+      if (char.age >= 18 && char.cash < 250) {
+        alert("You need $250 to pay doctor consultation fees!");
         return;
       }
-      if (state.age >= 18) state.money -= 200;
-      state.health += 25 + Math.floor(Math.random() * 15);
-      addLog('🩺 Doctor examined and treated you. (+Health)');
-      updateUI();
+      if (char.age >= 18) char.cash -= 250;
+      char.health += 25 + Math.floor(Math.random() * 15);
+      addEvent("The doctor examined me and treated all my ailments. (+Health)");
+      closeSheet('activitiesModal');
+      renderUI();
     }
 
-    function takeVacation() {
-      if (!state.isAlive) return;
-      if (state.money < 1000) {
-        notify('Vacation costs $1,000. You need more savings!');
+    function actionVacation() {
+      if (!char.isAlive) return;
+      if (char.cash < 1200) {
+        alert("You need at least $1,200 for a luxury vacation!");
         return;
       }
-      state.money -= 1000;
-      state.happiness += 30;
-      state.health += 5;
-      addLog('🏖️ Spent a week relaxing in a beachfront villa. (+Happiness)');
-      updateUI();
+      char.cash -= 1200;
+      char.happiness += 35;
+      char.health += 5;
+      addEvent("I flew first-class to Hawaii for an idyllic week at the beach. (+Happiness)");
+      closeSheet('activitiesModal');
+      renderUI();
     }
 
-    function playLottery() {
-      if (!state.isAlive) return;
-      if (state.money < 50) {
-        notify('Lottery ticket costs $50.');
+    function actionLottery() {
+      if (!char.isAlive) return;
+      if (char.cash < 50) {
+        alert("A lottery ticket costs $50!");
         return;
       }
-      state.money -= 50;
+      char.cash -= 50;
       const roll = Math.random() * 100;
-      if (roll > 96) {
-        const jackpot = 35000 + Math.floor(Math.random() * 50000);
-        state.money += jackpot;
-        state.happiness += 40;
-        addLog(`🎰 JACKPOT! You won the grand lottery prize of $${jackpot.toLocaleString()}!`);
+      if (roll > 95) {
+        const prize = 45000 + Math.floor(Math.random() * 75000);
+        char.cash += prize;
+        char.happiness += 45;
+        addEvent(`🎰 JACKPOT! I won the grand lottery prize of $${prize.toLocaleString()}!`);
       } else if (roll > 75) {
-        const prize = 150 + Math.floor(Math.random() * 300);
-        state.money += prize;
-        state.happiness += 10;
-        addLog(`🎫 Nice! You won $${prize} on a scratch-off card.`);
+        const prize = 200 + Math.floor(Math.random() * 300);
+        char.cash += prize;
+        char.happiness += 10;
+        addEvent(`🎫 I won $${prize} on a scratch-off card!`);
       } else {
-        addLog('❌ The lottery ticket was not a winner.');
+        addEvent("My lottery ticket was a loser.");
       }
-      updateUI();
+      closeSheet('activitiesModal');
+      renderUI();
     }
 
-    function openCareers() {
-      if (!state.isAlive) return;
-      document.getElementById('careerModal').classList.add('active');
+    function actionUniversity() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        alert("You must be at least 18 to enroll in University!");
+        return;
+      }
+      if (char.educationLevel >= 2) {
+        alert("You already graduated from University!");
+        return;
+      }
+      if (char.smarts < 50) {
+        alert("Your Smarts score is too low (<50) to pass the entrance exam. Study harder!");
+        return;
+      }
+      char.educationLevel = 2;
+      char.cash -= 12000;
+      char.smarts += 20;
+      char.occupation = "College Graduate";
+      char.occIcon = "🎓";
+      addEvent("🎓 I completed my Bachelor's Degree at University! High-tier jobs unlocked.");
+      closeSheet('assetsModal');
+      renderUI();
     }
 
-    function closeCareers() {
-      document.getElementById('careerModal').classList.remove('active');
-    }
-
-    function closeModalOnBg(e) {
-      if (e.target.id === 'careerModal') closeCareers();
-    }
-
-    function attendUniversity() {
-      if (state.age < 18) {
-        notify('Must be at least 18 to attend college.');
+    function applyJob(title, pay, reqEdu, reqSmarts, icon) {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        alert("You must be at least 18 to work full-time!");
         return;
       }
-      if (state.educationLevel >= 2) {
-        notify('You already have a University degree!');
+      if (char.educationLevel < reqEdu) {
+        alert(`This position requires higher education (Level ${reqEdu})!`);
         return;
       }
-      if (state.intelligence < 50) {
-        notify('Smarts must be ≥ 50 to qualify for University.');
-        return;
-      }
-      state.educationLevel = 2;
-      state.money -= 8000;
-      state.intelligence += 20;
-      state.job = 'College Graduate';
-      addLog('🎓 Graduated from University! High-tier jobs unlocked.');
-      closeCareers();
-      updateUI();
-    }
-
-    function applyJob(title, salary, reqEdu, reqInt) {
-      if (state.age < 18) {
-        notify('Must be at least 18 to work!');
-        return;
-      }
-      if (state.educationLevel < reqEdu) {
-        notify(`Requires higher education level (${reqEdu}).`);
-        return;
-      }
-      if (state.intelligence < reqInt) {
-        notify(`Requires Smarts ≥ ${reqInt}.`);
+      if (char.smarts < reqSmarts) {
+        alert(`You did not pass the interview. Requires Smarts ≥ ${reqSmarts}.`);
         return;
       }
 
-      state.job = title;
-      state.salary = salary;
-      state.happiness += 10;
-      addLog(`🎉 Landed job as ${title} earning $${salary.toLocaleString()}/yr!`);
-      closeCareers();
-      updateUI();
+      char.occupation = title;
+      char.occIcon = icon;
+      char.salary = pay;
+      char.happiness += 12;
+      addEvent(`🎉 I was hired as a ${title} making $${pay.toLocaleString()}/year!`);
+      closeSheet('assetsModal');
+      renderUI();
     }
 
-    function confirmRestart() {
-      if (confirm('Start a brand new life?')) {
-        initGame();
+    // MODAL HELPERS
+    function openActivitiesSheet() {
+      document.getElementById('activitiesModal').classList.add('active');
+    }
+
+    function openAssetsSheet() {
+      document.getElementById('assetsModal').classList.add('active');
+    }
+
+    function openRelationshipsSheet() {
+      const container = document.getElementById('familyList');
+      container.innerHTML = `
+        <div class="action-row">
+          <div class="action-left">
+            <span class="action-emoji">👨</span>
+            <div class="action-texts">
+              <h4>${char.father.name} (Father, Age ${char.father.age})</h4>
+              <p>Occupation: ${char.father.job} • Relationship: 100%</p>
+            </div>
+          </div>
+          <button class="action-btn" onclick="spendFamilyTime('Father')">Spend Time</button>
+        </div>
+        <div class="action-row">
+          <div class="action-left">
+            <span class="action-emoji">👩</span>
+            <div class="action-texts">
+              <h4>${char.mother.name} (Mother, Age ${char.mother.age})</h4>
+              <p>Occupation: ${char.mother.job} • Relationship: 100%</p>
+            </div>
+          </div>
+          <button class="action-btn" onclick="spendFamilyTime('Mother')">Spend Time</button>
+        </div>
+        <div class="action-row">
+          <div class="action-left">
+            <span class="action-emoji">👧</span>
+            <div class="action-texts">
+              <h4>${char.sister.name} (Sister, Age ${char.sister.age})</h4>
+              <p>Relationship: 95%</p>
+            </div>
+          </div>
+          <button class="action-btn" onclick="spendFamilyTime('Sister')">Spend Time</button>
+        </div>
+      `;
+      document.getElementById('relModal').classList.add('active');
+    }
+
+    function spendFamilyTime(who) {
+      char.happiness += 10;
+      addEvent(`I spent heartwarming quality time chatting with my ${who}. (+Happiness)`);
+      closeSheet('relModal');
+      renderUI();
+    }
+
+    function openProfileSheet() {
+      openAssetsSheet();
+    }
+
+    function closeSheet(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function onOverlayClick(e, id) {
+      if (e.target.id === id) closeSheet(id);
+    }
+
+    function startNewLifeDialog() {
+      if (confirm("Start a brand new random life?")) {
+        startNewLife();
       }
     }
 
-    // Initialize on load
-    initGame();
+    // INIT
+    startNewLife();
 
-    // Register PWA Service Worker for mobile installation
+    // Register Service Worker for OTA Cloud updates
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/flutter-life-sim/sw.js', { scope: '/flutter-life-sim/' })
-          .then((reg) => console.log('SW Registered', reg))
-          .catch((err) => console.error('SW Error', err));
+          .catch(() => {});
       });
     }
   </script>
 </body>
 </html>
-
