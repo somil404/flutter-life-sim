@@ -6,446 +6,506 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#d32f2f">
+  <meta name="theme-color" content="#d50000">
   <link rel="manifest" href="manifest.json">
-  <title>BitJourney Life Simulator</title>
+  <title>BitLife - Life Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
   <style>
     :root {
-      --header-red: #d32f2f;
-      --header-red-dark: #b71c1c;
-      --nav-blue: #1b4965;
-      --nav-blue-dark: #133549;
-      --stat-green: #2e7d32;
-      --stat-red: #c62828;
-      --stat-orange: #ef6c00;
-      --age-btn: #2e7d32;
-      --age-btn-hover: #1b5e20;
-      --bg: #f8f9fa;
-      --text: #212529;
-      --text-muted: #6c757d;
-      --border: #e9ecef;
-      --primary-accent: #0288d1;
+      --bit-red: #ea1d24;
+      --bit-red-dark: #c41218;
+      --bit-blue: #0288d1;
+      --bit-navy: #153e5c;
+      --bit-navy-dark: #0e2a3f;
+      --bit-green: #2ecc71;
+      --bit-green-dark: #27ae60;
+      --bit-yellow: #f1c40f;
+      --bit-card-border: #dfe6e9;
+      --bit-bg: #f8f9fa;
+      --text-dark: #2d3436;
+      --text-gray: #636e72;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
 
     body {
-      background-color: #212529;
-      color: var(--text);
+      background-color: #1a1a1a;
+      color: var(--text-dark);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       margin: 0;
+      overflow: hidden;
     }
 
-    .app-viewport {
+    /* Outer phone container */
+    .app-screen {
       width: 100%;
-      max-width: 480px;
+      max-width: 440px;
       height: 100vh;
-      max-height: 100vh;
+      height: 100dvh;
       background: #ffffff;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
 
-    /* TOP RED APP BAR */
-    .top-bar {
-      background: var(--header-red);
-      height: 54px;
+    /* 1. TOP BITLIFE HEADER */
+    .bit-header {
+      background: var(--bit-red);
+      height: 52px;
+      min-height: 52px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      z-index: 10;
+      padding: 0 14px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.18);
+      z-index: 100;
     }
 
-    .menu-btn {
-      background: transparent;
-      border: 2px solid #ffffff;
+    .btn-circle-menu {
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
+      background: transparent;
+      border: 2.5px solid #ffffff;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3.5px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .btn-circle-menu span {
+      display: block;
+      width: 16px;
+      height: 2.5px;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo-icon {
       width: 34px;
       height: 34px;
-      color: #fff;
+      background: #ffffff;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      cursor: pointer;
+      font-size: 20px;
     }
 
-    .app-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #ffffff;
-      font-weight: 900;
-      font-size: 24px;
-      letter-spacing: -0.5px;
-    }
-
-    .app-logo span {
+    .logo-text {
+      font-family: 'Lilita One', 'Nunito', sans-serif;
+      font-size: 28px;
       color: #ffeb3b;
+      letter-spacing: -0.5px;
+      text-shadow: 1px 2px 0px rgba(0,0,0,0.25);
     }
 
-    .badge-citizen {
-      background: #ffd54f;
-      color: #b78103;
+    .bitizen-badge {
+      background: linear-gradient(135deg, #ffd700, #ffae00);
+      color: #7a4600;
       font-weight: 900;
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      border: 1px dashed #b78103;
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 6px;
+      border: 1.5px dashed #a76600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
       letter-spacing: 0.5px;
     }
 
-    /* IDENTITY & BALANCE BAR */
-    .identity-bar {
+    /* 2. CHARACTER IDENTITY CARD */
+    .id-header {
       background: #ffffff;
-      border-bottom: 2px solid #eaeaea;
-      padding: 10px 16px;
+      border-bottom: 2px solid #ebedf0;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .id-left {
+    .id-left-group {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .avatar-circle {
-      width: 46px;
-      height: 46px;
-      background: #f1f5f9;
+    .char-avatar-box {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
+      background: #f1f3f6;
+      border: 2px solid #dfe4ea;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
-      border: 1px solid #cbd5e1;
+      font-size: 28px;
       position: relative;
     }
 
-    .country-flag {
+    .flag-badge {
       position: absolute;
-      bottom: -2px;
-      right: -2px;
+      bottom: -3px;
+      right: -3px;
       font-size: 14px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
     }
 
-    .id-details {
+    .id-text-group {
       display: flex;
       flex-direction: column;
     }
 
-    .char-name {
-      font-size: 17px;
-      font-weight: 800;
-      color: #0288d1;
+    .char-name-row {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .char-info-icon {
-      background: #0288d1;
-      color: #fff;
-      border-radius: 4px;
-      font-size: 11px;
+    .char-name-title {
+      font-size: 18px;
       font-weight: 900;
-      padding: 1px 5px;
+      color: var(--bit-blue);
+      letter-spacing: -0.3px;
     }
 
-    .char-occupation {
+    .info-btn {
+      width: 17px;
+      height: 17px;
+      background: var(--bit-blue);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 900;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      cursor: pointer;
+    }
+
+    .char-sub-row {
       font-size: 13px;
-      color: #546e7a;
+      font-weight: 700;
+      color: #7f8c8d;
       display: flex;
       align-items: center;
       gap: 4px;
+      margin-top: 1px;
     }
 
-    .id-right {
+    .id-right-group {
       text-align: right;
     }
 
-    .char-cash {
-      font-size: 20px;
+    .balance-amount {
+      font-size: 22px;
       font-weight: 900;
-      color: #2e7d32;
+      color: #27ae60;
+      letter-spacing: -0.5px;
     }
 
-    .char-cash.debt {
-      color: #c62828;
+    .balance-amount.negative {
+      color: #e74c3c;
     }
 
-    .cash-label {
+    .balance-label {
       font-size: 11px;
-      color: #78909c;
-      font-weight: 600;
+      font-weight: 700;
+      color: #95a5a6;
+      text-transform: capitalize;
     }
 
-    /* MAIN STORY / EVENT LOG FEED */
-    .story-scroll {
+    /* 3. EVENT LOG / STORY AREA */
+    .story-feed {
       flex: 1;
       overflow-y: auto;
-      padding: 16px;
+      padding: 14px 16px;
       background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
       -webkit-overflow-scrolling: touch;
     }
 
-    .year-block {
-      margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid #f1f3f5;
+    .age-year-card {
+      border-bottom: 1.5px solid #f1f2f6;
+      padding-bottom: 14px;
     }
 
-    .year-header {
-      font-size: 18px;
+    .age-year-card:last-child {
+      border-bottom: none;
+    }
+
+    .year-title {
+      font-size: 17px;
       font-weight: 900;
       color: #1b4965;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .year-event {
-      font-size: 14px;
-      line-height: 1.55;
-      color: #333333;
       margin-bottom: 6px;
+      letter-spacing: -0.2px;
     }
 
-    .year-event.highlight {
+    .narrative-p {
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: #2f3542;
+      margin-bottom: 7px;
       font-weight: 600;
-      color: #0d47a1;
     }
 
-    /* BOTTOM CONTROLS & NAV DOCK */
-    .bottom-dock {
+    .narrative-p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 4. BOTTOM FLOATING CONTROLS & NAV DOCK */
+    .bottom-section {
       background: #ffffff;
-      border-top: 2px solid #e0e0e0;
       display: flex;
       flex-direction: column;
       position: relative;
-      z-index: 20;
+      z-index: 50;
+      box-shadow: 0 -3px 12px rgba(0,0,0,0.06);
     }
 
-    /* 5-TAB BAR WITH FLOATING AGE BUTTON */
-    .tabs-bar {
-      height: 64px;
-      background: var(--nav-blue);
+    /* THE BLUE 5-TAB BAR */
+    .nav-dock-bar {
+      height: 60px;
+      background: var(--bit-navy);
       display: flex;
       align-items: center;
-      justify-content: space-around;
+      justify-content: space-between;
       position: relative;
+      padding: 0 4px;
     }
 
-    .tab-item {
+    .nav-btn {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #e0f2f1;
-      font-size: 11px;
-      font-weight: 600;
+      color: #ced6e0;
+      font-size: 11.5px;
+      font-weight: 800;
       cursor: pointer;
       gap: 3px;
-      padding-top: 4px;
-      transition: background 0.15s;
+      padding: 6px 0;
+      transition: all 0.15s;
     }
 
-    .tab-item:active {
-      background: rgba(255,255,255,0.1);
+    .nav-btn:active {
+      transform: scale(0.92);
+      color: #ffffff;
     }
 
-    .tab-circle {
-      width: 32px;
-      height: 32px;
+    .nav-icon-circle {
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.14);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 16px;
     }
 
-    /* CIRCULAR FLOATING AGE BUTTON */
-    .age-btn-wrapper {
+    /* THE HERO CIRCULAR GREEN + AGE BUTTON */
+    .age-center-anchor {
       position: relative;
-      width: 76px;
-      height: 76px;
+      width: 82px;
+      height: 82px;
       margin-top: -38px;
-      z-index: 30;
+      z-index: 60;
       flex-shrink: 0;
     }
 
-    .age-button {
-      width: 76px;
-      height: 76px;
+    .hero-age-btn {
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
-      background: radial-gradient(circle, #43a047 0%, #2e7d32 100%);
-      border: 4px solid #ffffff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      background: radial-gradient(circle at 35% 35%, #4cd137, #2ecc71 40%, #10ac84 100%);
+      border: 4.5px solid #ffffff;
+      box-shadow: 0 6px 16px rgba(16, 172, 132, 0.45), 0 2px 6px rgba(0,0,0,0.2);
       color: #ffffff;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .hero-age-btn:active {
+      transform: scale(0.90);
+      box-shadow: 0 2px 6px rgba(16, 172, 132, 0.4);
+    }
+
+    .hero-age-btn.dead-state {
+      background: radial-gradient(circle, #747d8c, #2f3542);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .plus-glyph {
+      font-size: 32px;
       font-weight: 900;
-      transition: transform 0.1s, box-shadow 0.1s;
+      line-height: 22px;
+      margin-top: -3px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.25);
     }
 
-    .age-button:active {
-      transform: scale(0.92);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    .label-glyph {
+      font-size: 13.5px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.25);
     }
 
-    .age-plus {
-      font-size: 26px;
-      line-height: 20px;
-      margin-top: -2px;
-    }
-
-    .age-text {
-      font-size: 13px;
-      letter-spacing: 0.5px;
-    }
-
-    .age-button.dead {
-      background: #616161;
-    }
-
-    /* BITLIFE 4 STAT BARS */
-    .stats-footer {
-      background: #f8f9fa;
-      padding: 10px 20px 14px;
-      border-top: 1px solid #eeeeee;
+    /* 5. 4 BITLIFE STAT BARS */
+    .stats-tray {
+      background: #f1f2f6;
+      padding: 10px 18px 14px;
+      border-top: 1px solid #dfe4ea;
       display: flex;
       flex-direction: column;
       gap: 7px;
     }
 
-    .stat-bar-item {
+    .stat-row-item {
       display: flex;
       align-items: center;
     }
 
-    .stat-title {
-      width: 95px;
+    .stat-name-label {
+      width: 102px;
       font-size: 13px;
-      font-weight: 700;
-      color: #424242;
+      font-weight: 800;
+      color: #2f3542;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
-    .stat-track {
+    .stat-rail {
       flex: 1;
-      height: 18px;
-      background: #e0e0e0;
-      border-radius: 3px;
+      height: 19px;
+      background: #dcdde1;
+      border-radius: 4px;
       overflow: hidden;
       position: relative;
       display: flex;
       align-items: center;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    .stat-fill {
+    .stat-meter-fill {
       height: 100%;
-      background: var(--stat-green);
-      transition: width 0.35s ease, background-color 0.35s ease;
+      background: #2ecc71;
+      transition: width 0.4s ease, background-color 0.4s ease;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      padding-right: 6px;
-      font-size: 11px;
-      font-weight: 800;
+      padding-right: 7px;
+      font-size: 11.5px;
+      font-weight: 900;
       color: #ffffff;
       box-sizing: border-box;
-      min-width: 32px;
+      min-width: 35px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
-    .stat-fill.danger {
-      background: var(--stat-red);
+    .stat-meter-fill.crit-danger {
+      background: #e74c3c;
     }
 
-    .stat-fill.warn {
-      background: var(--stat-orange);
+    .stat-meter-fill.warn-yellow {
+      background: #e67e22;
     }
 
-    /* MODAL POPUPS */
-    .sheet-overlay {
+    /* ACTION SLIDE-UP SHEETS */
+    .sheet-backdrop {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
       background: rgba(0,0,0,0.65);
-      z-index: 100;
+      z-index: 200;
       display: none;
       align-items: flex-end;
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(3px);
     }
 
-    .sheet-overlay.active {
+    .sheet-backdrop.open {
       display: flex;
     }
 
-    .sheet-modal {
+    .sheet-panel {
       width: 100%;
-      max-height: 80%;
+      max-height: 82%;
       background: #ffffff;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.25);
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      animation: slideUp 0.25s ease-out;
+      animation: popUp 0.22s cubic-bezier(0.165, 0.84, 0.44, 1);
+      box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
     }
 
-    @keyframes slideUp {
+    @keyframes popUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
 
-    .sheet-header {
-      background: var(--nav-blue);
+    .sheet-top {
+      background: var(--bit-navy);
       color: #ffffff;
-      padding: 14px 20px;
+      padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-weight: 800;
-      font-size: 17px;
+      font-weight: 900;
+      font-size: 18px;
     }
 
-    .sheet-close {
-      background: transparent;
+    .sheet-x-btn {
+      background: rgba(255,255,255,0.15);
       border: none;
       color: #fff;
-      font-size: 20px;
+      font-size: 16px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
     }
 
-    .sheet-body {
+    .sheet-content {
       padding: 16px;
       overflow-y: auto;
       display: flex;
@@ -453,405 +513,441 @@
       gap: 10px;
     }
 
-    .action-row {
+    .sheet-item-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 14px;
+      padding: 13px 15px;
       background: #f8f9fa;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
+      border: 1.5px solid #edf2f7;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: all 0.15s;
     }
 
-    .action-row:hover {
-      background: #f1f3f5;
+    .sheet-item-card:active {
+      transform: scale(0.98);
+      background: #edf2f7;
     }
 
-    .action-left {
+    .item-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
-    .action-emoji {
+    .item-emoji-circle {
+      width: 44px;
+      height: 44px;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 24px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
-    .action-texts h4 {
-      font-size: 14px;
-      font-weight: 700;
-      color: #212529;
+    .item-texts h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #2d3436;
     }
 
-    .action-texts p {
-      font-size: 11px;
-      color: #6c757d;
-      margin-top: 2px;
-    }
-
-    .action-btn {
-      background: var(--nav-blue);
-      color: #fff;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
+    .item-texts p {
       font-size: 12px;
-      font-weight: 700;
+      color: #718096;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .btn-act-callout {
+      background: var(--bit-blue);
+      color: #ffffff;
+      border: none;
+      padding: 7px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    /* CHOICE DIALOG */
-    .choice-dialog {
+    /* SCENARIO DIALOG */
+    .scenario-overlay {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 86%;
-      max-width: 360px;
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      z-index: 150;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 300;
       display: none;
-      flex-direction: column;
-      gap: 14px;
-      text-align: center;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
     }
 
-    .choice-dialog.active {
+    .scenario-overlay.open {
       display: flex;
     }
 
-    .dialog-icon {
-      font-size: 40px;
+    .scenario-card {
+      width: 100%;
+      max-width: 350px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      gap: 14px;
+      animation: popUp 0.2s ease-out;
     }
 
-    .dialog-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #1b4965;
+    .scen-badge {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: #f1f2f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
     }
 
-    .dialog-desc {
-      font-size: 13px;
+    .scen-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--bit-navy);
+    }
+
+    .scen-desc {
+      font-size: 14px;
       line-height: 1.5;
-      color: #495057;
+      color: #4a5568;
+      font-weight: 600;
     }
 
-    .dialog-choices {
+    .scen-options {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      margin-top: 6px;
     }
 
-    .choice-btn {
-      padding: 10px;
-      border: 1px solid #ced4da;
-      border-radius: 8px;
-      background: #f8f9fa;
-      font-weight: 700;
-      font-size: 13px;
-      color: #212529;
+    .opt-btn {
+      padding: 12px;
+      border: 1.5px solid #cbd5e0;
+      border-radius: 10px;
+      background: #f7fafc;
+      font-weight: 800;
+      font-size: 13.5px;
+      color: #2d3748;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: all 0.15s;
     }
 
-    .choice-btn:hover {
-      background: #e9ecef;
+    .opt-btn:active {
+      background: #edf2f7;
+      transform: scale(0.97);
     }
 
-    .choice-btn.primary {
-      background: var(--nav-blue);
+    .opt-btn.highlight {
+      background: var(--bit-blue);
       color: #ffffff;
-      border-color: var(--nav-blue);
+      border-color: var(--bit-blue);
     }
   </style>
 </head>
 <body>
 
-  <div class="app-viewport">
-    
-    <!-- 1. TOP RED BITLIFE BAR -->
-    <header class="top-bar">
-      <button class="menu-btn" onclick="startNewLifeDialog()" title="Menu">☰</button>
-      <div class="app-logo">
-        👶 <span>BitLife</span>
+  <div class="app-screen">
+
+    <!-- 1. RED BITLIFE APP HEADER -->
+    <header class="bit-header">
+      <button class="btn-circle-menu" onclick="promptRestart()" title="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="logo-container">
+        <div class="logo-icon">👶</div>
+        <div class="logo-text">BitLife</div>
       </div>
-      <div class="badge-citizen">BITIZEN</div>
+
+      <div class="bitizen-badge">BITIZEN</div>
     </header>
 
-    <!-- 2. CHARACTER IDENTITY & BANK BAR -->
-    <section class="identity-bar">
-      <div class="id-left">
-        <div class="avatar-circle" id="charAvatar">
+    <!-- 2. CHARACTER IDENTITY & BANK BALANCE BAR -->
+    <section class="id-header">
+      <div class="id-left-group">
+        <div class="char-avatar-box" id="avatarBox">
           👶
-          <span class="country-flag" id="charFlag">🇺🇸</span>
+          <span class="flag-badge" id="flagBadge">🇺🇸</span>
         </div>
-        <div class="id-details">
-          <div class="char-name">
-            <span id="charName">Alyssa Roosevelt</span>
-            <span class="char-info-icon" title="Details">i</span>
+        <div class="id-text-group">
+          <div class="char-name-row">
+            <span class="char-name-title" id="nameDisplay">Alyssa Roosevelt</span>
+            <div class="info-btn" onclick="openAssetsSheet()" title="Info">i</div>
           </div>
-          <div class="char-occupation">
-            <span id="charJobIcon">🍼</span>
-            <span id="charOccupation">Infant</span>
+          <div class="char-sub-row">
+            <span id="occIconDisplay">🍼</span>
+            <span id="occTitleDisplay">Infant</span>
           </div>
         </div>
       </div>
-      <div class="id-right">
-        <div class="char-cash" id="charCash">$0</div>
-        <div class="cash-label">Bank Balance</div>
+
+      <div class="id-right-group">
+        <div class="balance-amount" id="balanceDisplay">$0</div>
+        <div class="balance-label">Bank Balance</div>
       </div>
     </section>
 
-    <!-- 3. MAIN STORY / YEAR EVENT FEED -->
-    <main class="story-scroll" id="storyScroll">
-      <!-- Generated dynamically -->
+    <!-- 3. SCROLLING STORY / EVENTS FEED -->
+    <main class="story-feed" id="storyFeed">
+      <!-- Dynamic Story Nodes -->
     </main>
 
-    <!-- 4. BOTTOM DOCK (5 TABS + CENTER AGE BUTTON + 4 STATS) -->
-    <footer class="bottom-dock">
-
-      <!-- 5-Tab Bar with Center Green + Age Button -->
-      <div class="tabs-bar">
-        <div class="tab-item" onclick="openProfileSheet()">
-          <div class="tab-circle">👶</div>
-          <span id="navRoleLabel">Infant</span>
+    <!-- 4. BOTTOM BAR WITH 5 TABS + CENTER GREEN AGE BUTTON -->
+    <footer class="bottom-section">
+      <div class="nav-dock-bar">
+        <div class="nav-btn" onclick="openAssetsSheet()">
+          <div class="nav-icon-circle">👶</div>
+          <span id="navRoleTitle">Infant</span>
         </div>
 
-        <div class="tab-item" onclick="openAssetsSheet()">
-          <div class="tab-circle">🏠</div>
+        <div class="nav-btn" onclick="openAssetsSheet()">
+          <div class="nav-icon-circle">🏠</div>
           <span>Assets</span>
         </div>
 
-        <!-- Center Big Green Plus Age Button -->
-        <div class="age-btn-wrapper">
-          <button class="age-button" id="ageButton" onclick="onAgeClicked()">
-            <div class="age-plus">+</div>
-            <div class="age-text">Age</div>
+        <!-- HERO AGE CIRCLE BUTTON -->
+        <div class="age-center-anchor">
+          <button class="hero-age-btn" id="heroAgeBtn" onclick="onAgeTap()">
+            <div class="plus-glyph">+</div>
+            <div class="label-glyph">Age</div>
           </button>
         </div>
 
-        <div class="tab-item" onclick="openRelationshipsSheet()">
-          <div class="tab-circle">❤️</div>
+        <div class="nav-btn" onclick="openRelSheet()">
+          <div class="nav-icon-circle">❤️</div>
           <span>Relationships</span>
         </div>
 
-        <div class="tab-item" onclick="openActivitiesSheet()">
-          <div class="tab-circle">💬</div>
+        <div class="nav-btn" onclick="openActivitiesSheet()">
+          <div class="nav-icon-circle">💬</div>
           <span>Activities</span>
         </div>
       </div>
 
-      <!-- 4 BitLife Stats Progress Bars -->
-      <div class="stats-footer">
-        <div class="stat-bar-item">
-          <span class="stat-title">Happiness <span id="happyEmoji">😊</span></span>
-          <div class="stat-track">
-            <div class="stat-fill" id="happyBar" style="width: 100%;">100%</div>
+      <!-- 5. 4 BITLIFE HORIZONTAL STAT BARS -->
+      <div class="stats-tray">
+        <div class="stat-row-item">
+          <span class="stat-name-label">Happiness <span id="happyFace">😊</span></span>
+          <div class="stat-rail">
+            <div class="stat-meter-fill" id="meterHappy" style="width: 100%;">100%</div>
           </div>
         </div>
 
-        <div class="stat-bar-item">
-          <span class="stat-title">Health <span id="healthEmoji">❤️</span></span>
-          <div class="stat-track">
-            <div class="stat-fill" id="healthBar" style="width: 100%;">100%</div>
+        <div class="stat-row-item">
+          <span class="stat-name-label">Health <span>❤️</span></span>
+          <div class="stat-rail">
+            <div class="stat-meter-fill" id="meterHealth" style="width: 100%;">100%</div>
           </div>
         </div>
 
-        <div class="stat-bar-item">
-          <span class="stat-title">Smarts <span id="smartsEmoji">🤓</span></span>
-          <div class="stat-track">
-            <div class="stat-fill" id="smartsBar" style="width: 50%;">50%</div>
+        <div class="stat-row-item">
+          <span class="stat-name-label">Smarts <span>🤓</span></span>
+          <div class="stat-rail">
+            <div class="stat-meter-fill" id="meterSmarts" style="width: 50%;">50%</div>
           </div>
         </div>
 
-        <div class="stat-bar-item">
-          <span class="stat-title">Looks <span id="looksEmoji">✨</span></span>
-          <div class="stat-track">
-            <div class="stat-fill" id="looksBar" style="width: 50%;">50%</div>
+        <div class="stat-row-item">
+          <span class="stat-name-label">Looks <span>✨</span></span>
+          <div class="stat-rail">
+            <div class="stat-meter-fill" id="meterLooks" style="width: 50%;">50%</div>
           </div>
         </div>
       </div>
-
     </footer>
 
     <!-- ACTIVITIES MODAL -->
-    <div id="activitiesModal" class="sheet-overlay" onclick="onOverlayClick(event, 'activitiesModal')">
-      <div class="sheet-modal">
-        <div class="sheet-header">
+    <div id="modalActivities" class="sheet-backdrop" onclick="backdropClick(event, 'modalActivities')">
+      <div class="sheet-panel">
+        <div class="sheet-top">
           <span>Activities</span>
-          <button class="sheet-close" onclick="closeSheet('activitiesModal')">✕</button>
+          <button class="sheet-x-btn" onclick="closeSheet('modalActivities')">✕</button>
         </div>
-        <div class="sheet-body">
-          <div class="action-row" onclick="actionStudy()">
-            <div class="action-left">
-              <span class="action-emoji">📚</span>
-              <div class="action-texts">
-                <h4>Study Harder / Read Books</h4>
-                <p>Sharpen your mind and increase Smarts.</p>
+        <div class="sheet-content">
+          <div class="sheet-item-card" onclick="doStudy()">
+            <div class="item-left">
+              <div class="item-emoji-circle">📚</div>
+              <div class="item-texts">
+                <h4>Read Books & Study</h4>
+                <p>Spend hours studying to boost Smarts.</p>
               </div>
             </div>
-            <button class="action-btn">Study</button>
+            <button class="btn-act-callout">Study</button>
           </div>
 
-          <div class="action-row" onclick="actionGym()">
-            <div class="action-left">
-              <span class="action-emoji">🏋️</span>
-              <div class="action-texts">
-                <h4>Gym & Fitness</h4>
-                <p>Cardio and lifting weights. Increases Health & Looks.</p>
+          <div class="sheet-item-card" onclick="doGym()">
+            <div class="item-left">
+              <div class="item-emoji-circle">🏋️</div>
+              <div class="item-texts">
+                <h4>Gym & Workout</h4>
+                <p>Cardio and heavy lifting. Boosts Health & Looks.</p>
               </div>
             </div>
-            <button class="action-btn">Workout</button>
+            <button class="btn-act-callout">Workout</button>
           </div>
 
-          <div class="action-row" onclick="actionDoctor()">
-            <div class="action-left">
-              <span class="action-emoji">🩺</span>
-              <div class="action-texts">
-                <h4>Medical Doctor ($250)</h4>
-                <p>Visit medical clinic for diagnosis and curing disease.</p>
+          <div class="sheet-item-card" onclick="doDoctor()">
+            <div class="item-left">
+              <div class="item-emoji-circle">🩺</div>
+              <div class="item-texts">
+                <h4>Doctor Consultation ($250)</h4>
+                <p>Cures diseases, flu and restores Health.</p>
               </div>
             </div>
-            <button class="action-btn">Visit</button>
+            <button class="btn-act-callout">Visit</button>
           </div>
 
-          <div class="action-row" onclick="actionVacation()">
-            <div class="action-left">
-              <span class="action-emoji">🏖️</span>
-              <div class="action-texts">
-                <h4>First-Class Vacation ($1,200)</h4>
-                <p>Take a rejuvenating trip to boost Happiness.</p>
+          <div class="sheet-item-card" onclick="doVacation()">
+            <div class="item-left">
+              <div class="item-emoji-circle">🏖️</div>
+              <div class="item-texts">
+                <h4>Luxury Vacation ($1,200)</h4>
+                <p>Fly first-class to tropical beach resort. Max Happiness.</p>
               </div>
             </div>
-            <button class="action-btn">Fly</button>
+            <button class="btn-act-callout">Fly</button>
           </div>
 
-          <div class="action-row" onclick="actionLottery()">
-            <div class="action-left">
-              <span class="action-emoji">🎰</span>
-              <div class="action-texts">
+          <div class="sheet-item-card" onclick="doLottery()">
+            <div class="item-left">
+              <div class="item-emoji-circle">🎰</div>
+              <div class="item-texts">
                 <h4>Lottery Tickets ($50)</h4>
-                <p>Test your luck for a massive jackpot.</p>
+                <p>Chance to win up to $100,000 jackpot!</p>
               </div>
             </div>
-            <button class="action-btn">Play</button>
+            <button class="btn-act-callout">Play</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- CAREER & ASSETS MODAL -->
-    <div id="assetsModal" class="sheet-overlay" onclick="onOverlayClick(event, 'assetsModal')">
-      <div class="sheet-modal">
-        <div class="sheet-header">
-          <span>Assets & Career</span>
-          <button class="sheet-close" onclick="closeSheet('assetsModal')">✕</button>
+    <!-- ASSETS & CAREERS MODAL -->
+    <div id="modalAssets" class="sheet-backdrop" onclick="backdropClick(event, 'modalAssets')">
+      <div class="sheet-panel">
+        <div class="sheet-top">
+          <span>Assets & Careers</span>
+          <button class="sheet-x-btn" onclick="closeSheet('modalAssets')">✕</button>
         </div>
-        <div class="sheet-body">
-          <div class="action-row" onclick="actionUniversity()">
-            <div class="action-left">
-              <span class="action-emoji">🎓</span>
-              <div class="action-texts">
+        <div class="sheet-content">
+          <div class="sheet-item-card" onclick="doUniversity()">
+            <div class="item-left">
+              <div class="item-emoji-circle">🎓</div>
+              <div class="item-texts">
                 <h4>University ($12,000)</h4>
-                <p>Requires Smarts ≥ 50. Unlocks professional executive careers.</p>
+                <p>Requires Smarts ≥ 50. Unlocks high-income career ladder.</p>
               </div>
             </div>
-            <button class="action-btn">Enroll</button>
+            <button class="btn-act-callout">Enroll</button>
           </div>
 
-          <div class="action-row" onclick="applyJob('Fast Food Crew', 18000, 0, 10, '🍔')">
-            <div class="action-left">
-              <span class="action-emoji">🍔</span>
-              <div class="action-texts">
-                <h4>Fast Food Worker ($18,000/yr)</h4>
-                <p>No education prerequisites.</p>
+          <div class="sheet-item-card" onclick="takeJob('Fast Food Crew', 18000, 0, 10, '🍔')">
+            <div class="item-left">
+              <div class="item-emoji-circle">🍔</div>
+              <div class="item-texts">
+                <h4>Fast Food Crew ($18,000/yr)</h4>
+                <p>No education requirements. Entry level.</p>
               </div>
             </div>
-            <button class="action-btn">Apply</button>
+            <button class="btn-act-callout">Apply</button>
           </div>
 
-          <div class="action-row" onclick="applyJob('Graphic Designer', 38000, 1, 30, '🎨')">
-            <div class="action-left">
-              <span class="action-emoji">🎨</span>
-              <div class="action-texts">
-                <h4>Graphic Designer ($38,000/yr)</h4>
+          <div class="sheet-item-card" onclick="takeJob('Graphic Designer', 42000, 1, 30, '🎨')">
+            <div class="item-left">
+              <div class="item-emoji-circle">🎨</div>
+              <div class="item-texts">
+                <h4>Graphic Designer ($42,000/yr)</h4>
                 <p>Requires High School diploma & Smarts ≥ 30.</p>
               </div>
             </div>
-            <button class="action-btn">Apply</button>
+            <button class="btn-act-callout">Apply</button>
           </div>
 
-          <div class="action-row" onclick="applyJob('Software Engineer', 95000, 2, 60, '💻')">
-            <div class="action-left">
-              <span class="action-emoji">💻</span>
-              <div class="action-texts">
-                <h4>Software Engineer ($95,000/yr)</h4>
+          <div class="sheet-item-card" onclick="takeJob('Software Engineer', 98000, 2, 60, '💻')">
+            <div class="item-left">
+              <div class="item-emoji-circle">💻</div>
+              <div class="item-texts">
+                <h4>Software Engineer ($98,000/yr)</h4>
                 <p>Requires University degree & Smarts ≥ 60.</p>
               </div>
             </div>
-            <button class="action-btn">Apply</button>
+            <button class="btn-act-callout">Apply</button>
           </div>
 
-          <div class="action-row" onclick="applyJob('Medical Surgeon', 185000, 2, 80, '🩺')">
-            <div class="action-left">
-              <span class="action-emoji">🩺</span>
-              <div class="action-texts">
-                <h4>Medical Surgeon ($185,000/yr)</h4>
+          <div class="sheet-item-card" onclick="takeJob('Medical Surgeon', 190000, 2, 80, '🩺')">
+            <div class="item-left">
+              <div class="item-emoji-circle">🩺</div>
+              <div class="item-texts">
+                <h4>Medical Surgeon ($190,000/yr)</h4>
                 <p>Requires University degree & Smarts ≥ 80.</p>
               </div>
             </div>
-            <button class="action-btn">Apply</button>
+            <button class="btn-act-callout">Apply</button>
           </div>
 
-          <div class="action-row" onclick="applyJob('Chief Executive Officer', 380000, 2, 90, '👑')">
-            <div class="action-left">
-              <span class="action-emoji">👑</span>
-              <div class="action-texts">
-                <h4>CEO ($380,000/yr)</h4>
+          <div class="sheet-item-card" onclick="takeJob('Chief Executive Officer', 420000, 2, 90, '👑')">
+            <div class="item-left">
+              <div class="item-emoji-circle">👑</div>
+              <div class="item-texts">
+                <h4>Corporate CEO ($420,000/yr)</h4>
                 <p>Requires University degree & Smarts ≥ 90.</p>
               </div>
             </div>
-            <button class="action-btn">Apply</button>
+            <button class="btn-act-callout">Apply</button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- RELATIONSHIPS MODAL -->
-    <div id="relModal" class="sheet-overlay" onclick="onOverlayClick(event, 'relModal')">
-      <div class="sheet-modal">
-        <div class="sheet-header">
+    <div id="modalRel" class="sheet-backdrop" onclick="backdropClick(event, 'modalRel')">
+      <div class="sheet-panel">
+        <div class="sheet-top">
           <span>Relationships</span>
-          <button class="sheet-close" onclick="closeSheet('relModal')">✕</button>
+          <button class="sheet-x-btn" onclick="closeSheet('modalRel')">✕</button>
         </div>
-        <div class="sheet-body" id="familyList">
-          <!-- Populated from state -->
+        <div class="sheet-content" id="relSheetContent">
+          <!-- Dynamic relatives -->
         </div>
       </div>
     </div>
 
-    <!-- CHOICE / SCENARIO DIALOG -->
-    <div id="choiceOverlay" class="sheet-overlay">
-      <div class="choice-dialog active" id="choiceBox">
-        <div class="dialog-icon" id="dIcon">🤔</div>
-        <div class="dialog-title" id="dTitle">Life Decision</div>
-        <div class="dialog-desc" id="dDesc">A classmate offers you a cigarette in the bathroom behind school. What do you do?</div>
-        <div class="dialog-choices" id="dChoices">
-          <!-- buttons -->
-        </div>
+    <!-- DILEMMA / SCENARIO POPUP -->
+    <div id="dialogOverlay" class="scenario-overlay">
+      <div class="scenario-card">
+        <div class="scen-badge" id="scenBadge">🤔</div>
+        <div class="scen-title" id="scenTitle">Life Dilemma</div>
+        <div class="scen-desc" id="scenDesc">What will you decide?</div>
+        <div class="scen-options" id="scenOptions"></div>
       </div>
     </div>
 
   </div>
 
   <script>
-    // CHARACTER STATE
-    let char = {
+    // GAME CORE STATE
+    let p = {
       name: "Alyssa Roosevelt",
       gender: "Female",
       city: "San Diego",
@@ -864,505 +960,503 @@
       salary: 0,
       occupation: "Infant",
       occIcon: "🍼",
-      educationLevel: 0, // 0: None, 1: High School, 2: University
-      happiness: 85,
+      education: 0, // 0: None, 1: High School, 2: University
+      happy: 90,
       health: 95,
       smarts: 45,
-      looks: 60,
-      isAlive: true,
-      father: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
-      mother: { name: "Emma McCartney", job: "Grocer", age: 40 },
+      looks: 65,
+      alive: true,
+      dad: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
+      mom: { name: "Emma McCartney", job: "Grocer", age: 40 },
       sister: { name: "Madison McCartney", age: 8 },
-      history: []
+      story: []
     };
 
-    function startNewLife() {
-      const firstNames = ["Alyssa", "Jessica", "Sophia", "Lucas", "Noah", "Liam", "Emma", "Ethan", "Olivia", "Oliver"];
-      const lastNames = ["Roosevelt", "Kennedy", "Sterling", "Vance", "Mercer", "Sinclair", "Hayes", "Brooks"];
-      const cities = [
+    function startFreshLife() {
+      const fNames = ["Alyssa", "Sophia", "Chloe", "Emma", "Olivia", "Lucas", "Noah", "Liam", "Ethan", "Alexander"];
+      const lNames = ["Roosevelt", "Sterling", "Vance", "Mercer", "Sinclair", "Hayes", "Brooks", "Montgomery"];
+      const locations = [
         { city: "San Diego", country: "United States", flag: "🇺🇸" },
         { city: "London", country: "United Kingdom", flag: "🇬🇧" },
         { city: "Sydney", country: "Australia", flag: "🇦🇺" },
         { city: "Toronto", country: "Canada", flag: "🇨🇦" }
       ];
 
-      const c = cities[Math.floor(Math.random() * cities.length)];
-      char.name = firstNames[Math.floor(Math.random() * firstNames.length)] + " " + lastNames[Math.floor(Math.random() * lastNames.length)];
-      char.gender = Math.random() > 0.5 ? "Female" : "Male";
-      char.city = c.city;
-      char.country = c.country;
-      char.flag = c.flag;
-      char.age = 0;
-      char.cash = 0;
-      char.salary = 0;
-      char.occupation = "Infant";
-      char.occIcon = "🍼";
-      char.educationLevel = 0;
-      char.happiness = 75 + Math.floor(Math.random() * 25);
-      char.health = 80 + Math.floor(Math.random() * 20);
-      char.smarts = 30 + Math.floor(Math.random() * 60);
-      char.looks = 30 + Math.floor(Math.random() * 60);
-      char.isAlive = true;
+      const loc = locations[Math.floor(Math.random() * locations.length)];
+      p.name = fNames[Math.floor(Math.random() * fNames.length)] + " " + lNames[Math.floor(Math.random() * lNames.length)];
+      p.gender = Math.random() > 0.5 ? "Female" : "Male";
+      p.city = loc.city;
+      p.country = loc.country;
+      p.flag = loc.flag;
+      p.age = 0;
+      p.cash = 0;
+      p.salary = 0;
+      p.occupation = "Infant";
+      p.occIcon = "🍼";
+      p.education = 0;
+      p.happy = 80 + Math.floor(Math.random() * 20);
+      p.health = 85 + Math.floor(Math.random() * 15);
+      p.smarts = 35 + Math.floor(Math.random() * 55);
+      p.looks = 35 + Math.floor(Math.random() * 55);
+      p.alive = true;
 
-      char.father = { name: "David " + char.name.split(" ")[1], job: "Engineer", age: 28 };
-      char.mother = { name: "Sarah " + char.name.split(" ")[1], job: "Teacher", age: 26 };
-      char.sister = { name: "Chloe", age: 3 };
+      p.dad = { name: "Marcus " + p.name.split(" ")[1], job: "Architect", age: 29 };
+      p.mom = { name: "Hannah " + p.name.split(" ")[1], job: "Physician", age: 27 };
+      p.sister = { name: "Maya", age: 4 };
 
-      char.history = [];
-      char.history.push({
-        age: 0,
-        events: [
-          `I was born a ${char.gender.toLowerCase()} in ${char.city}, ${char.country}.`,
-          `My name is ${char.name}.`,
-          `My father is ${char.father.name}, a ${char.father.job} (age ${char.father.age}).`,
-          `My mother is ${char.mother.name}, a ${char.mother.job} (age ${char.mother.age}).`,
-          `I have an older sister named ${char.sister.name} (age ${char.sister.age}).`
-        ]
-      });
+      p.story = [
+        {
+          age: 0,
+          paragraphs: [
+            `I was born a ${p.gender.toLowerCase()} in ${p.city}, ${p.country}. I was conceived on the beach in Hawaii.`,
+            `My birthday is ${p.birthday}. I am a ${p.zodiac}.`,
+            `My name is ${p.name}.`,
+            `My father is ${p.dad.name}, a ${p.dad.job} (age ${p.dad.age}).`,
+            `My mother is ${p.mom.name}, a ${p.mom.job} (age ${p.mom.age}).`,
+            `I have an older sister named ${p.sister.name} (age ${p.sister.age}).`
+          ]
+        }
+      ];
 
-      renderUI();
+      render();
     }
 
-    function clamp(val, min, max) {
+    function clampVal(val, min, max) {
       return Math.max(min, Math.min(max, val));
     }
 
-    function renderUI() {
-      // Clamping
-      char.happiness = clamp(char.happiness, 0, 100);
-      char.health = clamp(char.health, 0, 100);
-      char.smarts = clamp(char.smarts, 0, 100);
-      char.looks = clamp(char.looks, 0, 100);
+    function render() {
+      // Clamps
+      p.happy = clampVal(p.happy, 0, 100);
+      p.health = clampVal(p.health, 0, 100);
+      p.smarts = clampVal(p.smarts, 0, 100);
+      p.looks = clampVal(p.looks, 0, 100);
 
-      // Identity bar
-      document.getElementById("charName").innerText = char.name;
-      document.getElementById("charFlag").innerText = char.flag;
-      document.getElementById("charJobIcon").innerText = char.occIcon;
-      document.getElementById("charOccupation").innerText = char.occupation;
-      
-      const cashEl = document.getElementById("charCash");
-      cashEl.innerText = (char.cash >= 0 ? "$" : "-$") + Math.abs(char.cash).toLocaleString();
-      cashEl.className = char.cash >= 0 ? "char-cash" : "char-cash debt";
+      // Top identity card
+      document.getElementById('nameDisplay').innerText = p.name;
+      document.getElementById('flagBadge').innerText = p.flag;
+      document.getElementById('occIconDisplay').innerText = p.occIcon;
+      document.getElementById('occTitleDisplay').innerText = p.occupation;
 
-      // Age Button & Nav label
-      const ageBtn = document.getElementById("ageButton");
-      const navRole = document.getElementById("navRoleLabel");
-      if (char.isAlive) {
-        ageBtn.className = "age-button";
-        ageBtn.innerHTML = '<div class="age-plus">+</div><div class="age-text">Age</div>';
-      } else {
-        ageBtn.className = "age-button dead";
-        ageBtn.innerHTML = '<div style="font-size:20px;">⚰️</div><div class="age-text">Rip</div>';
-      }
+      const bal = document.getElementById('balanceDisplay');
+      bal.innerText = (p.cash >= 0 ? '$' : '-$') + Math.abs(p.cash).toLocaleString();
+      bal.className = p.cash >= 0 ? 'balance-amount' : 'balance-amount negative';
 
-      if (char.age < 6) navRole.innerText = "Infant";
-      else if (char.age < 18) navRole.innerText = "Student";
+      // Avatar emoji by age
+      const av = document.getElementById('avatarBox');
+      let base = "👶";
+      if (p.age >= 60) base = p.gender === "Female" ? "👵" : "👴";
+      else if (p.age >= 18) base = p.gender === "Female" ? "👩" : "👨";
+      else if (p.age >= 6) base = p.gender === "Female" ? "👧" : "👦";
+      av.innerHTML = `${base}<span class="flag-badge" id="flagBadge">${p.flag}</span>`;
+
+      // Nav label
+      const navRole = document.getElementById('navRoleTitle');
+      if (p.age < 6) navRole.innerText = "Infant";
+      else if (p.age < 18) navRole.innerText = "Student";
       else navRole.innerText = "Career";
 
-      // Dynamic Avatar based on age
-      const av = document.getElementById("charAvatar");
-      let baseEmoji = "👶";
-      if (char.age >= 60) baseEmoji = char.gender === "Female" ? "👵" : "👴";
-      else if (char.age >= 18) baseEmoji = char.gender === "Female" ? "👩" : "👨";
-      else if (char.age >= 6) baseEmoji = char.gender === "Female" ? "👧" : "👦";
-      av.innerHTML = `${baseEmoji}<span class="country-flag" id="charFlag">${char.flag}</span>`;
+      // Hero button
+      const hero = document.getElementById('heroAgeBtn');
+      if (p.alive) {
+        hero.className = 'hero-age-btn';
+        hero.innerHTML = '<div class="plus-glyph">+</div><div class="label-glyph">Age</div>';
+      } else {
+        hero.className = 'hero-age-btn dead-state';
+        hero.innerHTML = '<div style="font-size:24px;">⚰️</div><div class="label-glyph">Rip</div>';
+      }
 
-      // Stats Bars
-      renderBar("happyBar", char.happiness);
-      renderBar("healthBar", char.health);
-      renderBar("smartsBar", char.smarts);
-      renderBar("looksBar", char.looks);
+      // Stats bars
+      fillBar('meterHappy', p.happy);
+      fillBar('meterHealth', p.health);
+      fillBar('meterSmarts', p.smarts);
+      fillBar('meterLooks', p.looks);
 
       // Render Story Feed
-      const feed = document.getElementById("storyScroll");
-      feed.innerHTML = "";
-      for (let i = char.history.length - 1; i >= 0; i--) {
-        const block = char.history[i];
-        const blockDiv = document.createElement("div");
-        blockDiv.className = "year-block";
+      const feed = document.getElementById('storyFeed');
+      feed.innerHTML = '';
+      for (let i = p.story.length - 1; i >= 0; i--) {
+        const item = p.story[i];
+        const card = document.createElement('div');
+        card.className = 'age-year-card';
 
-        const title = document.createElement("div");
-        title.className = "year-header";
-        title.innerText = `Age: ${block.age} years`;
-        blockDiv.appendChild(title);
+        const title = document.createElement('div');
+        title.className = 'year-title';
+        title.innerText = `Age: ${item.age} years`;
+        card.appendChild(title);
 
-        block.events.forEach(evt => {
-          const p = document.createElement("div");
-          p.className = "year-event";
-          p.innerText = evt;
-          blockDiv.appendChild(p);
+        item.paragraphs.forEach(pg => {
+          const pEl = document.createElement('p');
+          pEl.className = 'narrative-p';
+          pEl.innerText = pg;
+          card.appendChild(pEl);
         });
 
-        feed.appendChild(blockDiv);
+        feed.appendChild(card);
       }
     }
 
-    function renderBar(id, val) {
+    function fillBar(id, val) {
       const el = document.getElementById(id);
       el.style.width = `${Math.max(val, 6)}%`;
       el.innerText = `${val}%`;
 
       if (val < 20) {
-        el.className = "stat-fill danger";
+        el.className = 'stat-meter-fill crit-danger';
       } else if (val < 45) {
-        el.className = "stat-fill warn";
+        el.className = 'stat-meter-fill warn-yellow';
       } else {
-        el.className = "stat-fill";
+        el.className = 'stat-meter-fill';
       }
     }
 
-    // AGING
-    function onAgeClicked() {
-      if (!char.isAlive) {
-        startNewLifeDialog();
+    // AGE CLICK
+    function onAgeTap() {
+      if (!p.alive) {
+        promptRestart();
         return;
       }
 
-      char.age++;
-      char.father.age++;
-      char.mother.age++;
-      char.sister.age++;
+      p.age++;
+      p.dad.age++;
+      p.mom.age++;
+      p.sister.age++;
 
-      const yearEvents = [];
+      const yearNotes = [];
 
-      // Aging health decay
-      if (char.age > 45) char.health -= (1 + Math.floor(Math.random() * 3));
-      if (char.age > 75) char.health -= (2 + Math.floor(Math.random() * 5));
+      // Senior decay
+      if (p.age > 45) p.health -= (1 + Math.floor(Math.random() * 3));
+      if (p.age > 75) p.health -= (2 + Math.floor(Math.random() * 5));
 
-      // Financials
-      if (char.salary > 0) {
-        const taxAndLiving = Math.round(char.salary * 0.32) + 800;
-        const net = char.salary - taxAndLiving;
-        char.cash += net;
+      // Finances
+      if (p.salary > 0) {
+        const living = Math.round(p.salary * 0.30) + 700;
+        const net = p.salary - living;
+        p.cash += net;
       }
 
       // Milestones
-      if (char.age === 6) {
-        char.occupation = "Primary School Student";
-        char.occIcon = "🎒";
-        yearEvents.push("I started attending Elementary School!");
-      } else if (char.age === 14) {
-        char.occupation = "High School Student";
-        char.occIcon = "🎒";
-        yearEvents.push("I started High School.");
-      } else if (char.age === 18) {
-        char.educationLevel = Math.max(char.educationLevel, 1);
-        if (char.salary === 0) {
-          char.occupation = "Unemployed";
-          char.occIcon = "💼";
+      if (p.age === 6) {
+        p.occupation = "Elementary Student";
+        p.occIcon = "🎒";
+        yearNotes.push("I started attending Elementary School!");
+      } else if (p.age === 14) {
+        p.occupation = "High School Student";
+        p.occIcon = "🎒";
+        yearNotes.push("I entered High School.");
+      } else if (p.age === 18) {
+        p.education = Math.max(p.education, 1);
+        if (p.salary === 0) {
+          p.occupation = "High School Graduate";
+          p.occIcon = "🎓";
         }
-        yearEvents.push("I graduated from High School!");
+        yearNotes.push("🎓 I graduated from High School!");
       } else {
-        // Random events
-        triggerRandomYearEvent(yearEvents);
+        annualRandomEvents(yearNotes);
       }
 
-      // Death check
-      if (char.health <= 0) {
-        char.isAlive = false;
-        yearEvents.push(`⚰️ At age ${char.age}, I passed away due to poor health conditions. Rest in peace.`);
-      } else if (char.age > 72 && Math.random() < ((char.age - 68) / 80)) {
-        char.isAlive = false;
-        yearEvents.push(`🕊️ At age ${char.age}, I passed away peacefully in my sleep surrounded by loved ones.`);
+      // Death logic
+      if (p.health <= 0) {
+        p.alive = false;
+        yearNotes.push(`⚰️ At age ${p.age}, I passed away due to failing health. Rest in peace.`);
+      } else if (p.age > 72 && Math.random() < ((p.age - 68) / 80)) {
+        p.alive = false;
+        yearNotes.push(`🕊️ At age ${p.age}, I passed away peacefully in my sleep surrounded by my family.`);
       }
 
-      char.history.push({ age: char.age, events: yearEvents });
-      renderUI();
+      p.story.push({ age: p.age, paragraphs: yearNotes });
+      render();
 
-      // Occasional random pop-up dilemmas
-      if (char.isAlive && char.age >= 10 && Math.random() < 0.28) {
-        setTimeout(triggerScenarioDialog, 350);
+      // Dilemma popups
+      if (p.alive && p.age >= 11 && Math.random() < 0.32) {
+        setTimeout(showScenarioDialog, 350);
       }
     }
 
-    function triggerRandomYearEvent(list) {
+    function annualRandomEvents(list) {
       const roll = Math.random() * 100;
       if (roll < 14) {
-        char.health -= (10 + Math.floor(Math.random() * 15));
-        char.happiness -= 10;
-        list.push("I caught a bad illness and spent two weeks coughing in bed.");
+        p.health -= (10 + Math.floor(Math.random() * 15));
+        p.happy -= 10;
+        list.push("I caught a terrible case of pneumonia and was bedridden for two weeks.");
       } else if (roll < 28) {
-        const found = 50 + Math.floor(Math.random() * 350);
-        char.cash += found;
-        char.happiness += 8;
-        list.push(`I found $${found} cash on the ground while walking around town!`);
-      } else if (roll < 42 && char.age >= 16) {
-        char.happiness += 16;
-        list.push("I went on an unforgettable romantic date with a wonderful partner.");
-      } else if (roll < 55 && char.salary > 0) {
-        const bonus = Math.round(char.salary * 0.15);
-        char.cash += bonus;
-        char.happiness += 12;
-        list.push(`My boss gave me a glowing performance review and an annual bonus of $${bonus.toLocaleString()}!`);
+        const cashFound = 80 + Math.floor(Math.random() * 400);
+        p.cash += cashFound;
+        p.happy += 8;
+        list.push(`I found an envelope containing $${cashFound} cash in an abandoned coat!`);
+      } else if (roll < 42 && p.age >= 16) {
+        p.happy += 18;
+        list.push("I went on a magical date with someone special under the stars.");
+      } else if (roll < 55 && p.salary > 0) {
+        const bonus = Math.round(p.salary * 0.16);
+        p.cash += bonus;
+        p.happy += 14;
+        list.push(`Promoted for stellar performance! Received an annual bonus of $${bonus.toLocaleString()}!`);
       } else {
-        list.push("Another peaceful year has passed.");
+        list.push("Another peaceful year went by without incident.");
       }
     }
 
-    // DILEMMAS & CHOICES
-    function triggerScenarioDialog() {
+    // SCENARIO DILEMMAS
+    function showScenarioDialog() {
       const scenarios = [
         {
-          icon: "🐶",
-          title: "Stray Puppy",
-          desc: "You found an abandoned puppy shivering under a park bench.",
-          choices: [
-            { text: "Take it home and adopt it", fn: () => { char.happiness += 15; char.cash -= 100; addEvent("I adopted the cute stray puppy and named him Buster!"); } },
-            { text: "Take it to the animal shelter", fn: () => { char.happiness += 5; addEvent("I dropped the puppy off safely at a no-kill shelter."); } },
-            { text: "Ignore it and walk away", fn: () => { char.happiness -= 8; addEvent("I walked away from the shivering puppy feeling guilty."); } }
+          badge: "🐕",
+          title: "Abandoned Puppy",
+          desc: "You found a shivering, neglected puppy sitting alone by the trash cans.",
+          opts: [
+            { txt: "Adopt it and take it home", fn: () => { p.happy += 18; p.cash -= 120; recordAction("I rescued the abandoned puppy and welcomed him into my home!"); } },
+            { txt: "Take it to the local shelter", fn: () => { p.happy += 6; recordAction("I took the puppy to a certified no-kill animal shelter."); } },
+            { txt: "Ignore it and walk away", fn: () => { p.happy -= 10; recordAction("I walked away from the puppy feeling guilty."); } }
           ]
         },
         {
-          icon: "👊",
-          title: "School Bully",
-          desc: "A bully in the hallway shoves you and demands your lunch money.",
-          choices: [
-            { text: "Stand your ground and fight back", fn: () => { char.health -= 10; char.looks += 5; char.happiness += 10; addEvent("I fought the bully! I got a bruised cheek, but earned massive respect."); } },
-            { text: "Hand over the lunch money", fn: () => { char.cash -= 15; char.happiness -= 12; addEvent("I surrendered my money to the bully and felt humiliated."); } },
-            { text: "Report them to the principal", fn: () => { char.smarts += 4; addEvent("I reported the bully and they received two weeks detention."); } }
+          badge: "🥊",
+          title: "School Rival",
+          desc: "A hot-tempered classmate confronts you in the hallway and tries to start a fight.",
+          opts: [
+            { txt: "Stand your ground and fight back", fn: () => { p.health -= 12; p.looks += 4; p.happy += 12; recordAction("I fought back bravely! I took a punch but earned immense respect."); } },
+            { txt: "Walk away peacefully", fn: () => { p.smarts += 4; p.happy += 4; recordAction("I took the high road and walked away with my head held high."); } },
+            { txt: "Apologize and give in", fn: () => { p.happy -= 12; recordAction("I backed down and felt humiliated all week."); } }
           ]
         },
         {
-          icon: "📈",
-          title: "Crypto Investment Tip",
-          desc: "A friend tells you about an underground new cryptocurrency ready to rocket.",
-          choices: [
-            { text: "Invest $500", fn: () => {
+          badge: "🚀",
+          title: "Crypto Opportunity",
+          desc: "A tech friend tells you about an early-stage cryptocurrency with high upside.",
+          opts: [
+            { txt: "Invest $600", fn: () => {
               if (Math.random() > 0.45) {
-                char.cash += 2500; char.happiness += 20; addEvent("The coin went 5x! I made $2,500 profit in cryptocurrency.");
+                p.cash += 3200; p.happy += 25; recordAction("The token mooned! I made $3,200 pure profit.");
               } else {
-                char.cash -= 500; char.happiness -= 15; addEvent("The coin was a rug pull scam! I lost $500.");
+                p.cash -= 600; p.happy -= 15; recordAction("The crypto token plummeted to zero! I lost $600.");
               }
             }},
-            { text: "Politely pass on the offer", fn: () => { addEvent("I decided not to risk my savings on sketchy meme coins."); } }
+            { txt: "Decline and keep savings safe", fn: () => { recordAction("I wisely chose not to gamble my savings on volatile tokens."); } }
           ]
         }
       ];
 
       const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
-      document.getElementById("dIcon").innerText = sc.icon;
-      document.getElementById("dTitle").innerText = sc.title;
-      document.getElementById("dDesc").innerText = sc.desc;
+      document.getElementById('scenBadge').innerText = sc.badge;
+      document.getElementById('scenTitle').innerText = sc.title;
+      document.getElementById('scenDesc').innerText = sc.desc;
 
-      const container = document.getElementById("dChoices");
-      container.innerHTML = "";
-      sc.choices.forEach((ch, idx) => {
-        const btn = document.createElement("button");
-        btn.className = idx === 0 ? "choice-btn primary" : "choice-btn";
-        btn.innerText = ch.text;
-        btn.onclick = () => {
-          document.getElementById("choiceOverlay").style.display = "none";
-          ch.fn();
-          renderUI();
+      const optsBox = document.getElementById('scenOptions');
+      optsBox.innerHTML = '';
+      sc.opts.forEach((o, i) => {
+        const b = document.createElement('button');
+        b.className = i === 0 ? 'opt-btn highlight' : 'opt-btn';
+        b.innerText = o.txt;
+        b.onclick = () => {
+          document.getElementById('dialogOverlay').classList.remove('open');
+          o.fn();
+          render();
         };
-        container.appendChild(btn);
+        optsBox.appendChild(b);
       });
 
-      document.getElementById("choiceOverlay").style.display = "flex";
+      document.getElementById('dialogOverlay').classList.add('open');
     }
 
-    function addEvent(txt) {
-      if (char.history.length > 0) {
-        char.history[char.history.length - 1].events.push(txt);
+    function recordAction(msg) {
+      if (p.story.length > 0) {
+        p.story[p.story.length - 1].paragraphs.push(msg);
       }
     }
 
     // ACTIVITIES
-    function actionStudy() {
-      if (!char.isAlive) return;
-      char.smarts += 5 + Math.floor(Math.random() * 5);
-      char.happiness -= 2;
-      addEvent("I spent many nights studying in the library. (+Smarts)");
-      closeSheet('activitiesModal');
-      renderUI();
+    function doStudy() {
+      if (!p.alive) return;
+      p.smarts += 5 + Math.floor(Math.random() * 5);
+      p.happy -= 2;
+      recordAction("I spent late nights reading textbooks at the library. (+Smarts)");
+      closeSheet('modalActivities');
+      render();
     }
 
-    function actionGym() {
-      if (!char.isAlive) return;
-      char.health += 6 + Math.floor(Math.random() * 6);
-      char.looks += 4;
-      char.happiness += 4;
-      char.cash -= 30;
-      addEvent("I hit the gym and completed a grueling workout. (+Health, +Looks)");
-      closeSheet('activitiesModal');
-      renderUI();
+    function doGym() {
+      if (!p.alive) return;
+      p.health += 6 + Math.floor(Math.random() * 6);
+      p.looks += 5;
+      p.happy += 4;
+      p.cash -= 30;
+      recordAction("I completed an intense gym workout session. (+Health, +Looks)");
+      closeSheet('modalActivities');
+      render();
     }
 
-    function actionDoctor() {
-      if (!char.isAlive) return;
-      if (char.age >= 18 && char.cash < 250) {
-        alert("You need $250 to pay doctor consultation fees!");
+    function doDoctor() {
+      if (!p.alive) return;
+      if (p.age >= 18 && p.cash < 250) {
+        alert("Medical appointment fee is $250. Insufficient funds!");
         return;
       }
-      if (char.age >= 18) char.cash -= 250;
-      char.health += 25 + Math.floor(Math.random() * 15);
-      addEvent("The doctor examined me and treated all my ailments. (+Health)");
-      closeSheet('activitiesModal');
-      renderUI();
+      if (p.age >= 18) p.cash -= 250;
+      p.health += 25 + Math.floor(Math.random() * 15);
+      recordAction("The doctor thoroughly treated my health conditions. (+Health)");
+      closeSheet('modalActivities');
+      render();
     }
 
-    function actionVacation() {
-      if (!char.isAlive) return;
-      if (char.cash < 1200) {
-        alert("You need at least $1,200 for a luxury vacation!");
+    function doVacation() {
+      if (!p.alive) return;
+      if (p.cash < 1200) {
+        alert("Luxury vacation costs $1,200. Save more money first!");
         return;
       }
-      char.cash -= 1200;
-      char.happiness += 35;
-      char.health += 5;
-      addEvent("I flew first-class to Hawaii for an idyllic week at the beach. (+Happiness)");
-      closeSheet('activitiesModal');
-      renderUI();
+      p.cash -= 1200;
+      p.happy += 35;
+      p.health += 5;
+      recordAction("I took a luxury tropical vacation to Hawaii. (+Happiness)");
+      closeSheet('modalActivities');
+      render();
     }
 
-    function actionLottery() {
-      if (!char.isAlive) return;
-      if (char.cash < 50) {
-        alert("A lottery ticket costs $50!");
+    function doLottery() {
+      if (!p.alive) return;
+      if (p.cash < 50) {
+        alert("Lottery ticket costs $50!");
         return;
       }
-      char.cash -= 50;
+      p.cash -= 50;
       const roll = Math.random() * 100;
       if (roll > 95) {
-        const prize = 45000 + Math.floor(Math.random() * 75000);
-        char.cash += prize;
-        char.happiness += 45;
-        addEvent(`🎰 JACKPOT! I won the grand lottery prize of $${prize.toLocaleString()}!`);
+        const prize = 50000 + Math.floor(Math.random() * 80000);
+        p.cash += prize;
+        p.happy += 45;
+        recordAction(`🎰 GRAND JACKPOT! I won the state lottery for $${prize.toLocaleString()}!`);
       } else if (roll > 75) {
-        const prize = 200 + Math.floor(Math.random() * 300);
-        char.cash += prize;
-        char.happiness += 10;
-        addEvent(`🎫 I won $${prize} on a scratch-off card!`);
+        const prize = 250 + Math.floor(Math.random() * 300);
+        p.cash += prize;
+        p.happy += 12;
+        recordAction(`🎫 Won $${prize} on a scratch-off ticket!`);
       } else {
-        addEvent("My lottery ticket was a loser.");
+        recordAction("The lottery ticket was a dud.");
       }
-      closeSheet('activitiesModal');
-      renderUI();
+      closeSheet('modalActivities');
+      render();
     }
 
-    function actionUniversity() {
-      if (!char.isAlive) return;
-      if (char.age < 18) {
-        alert("You must be at least 18 to enroll in University!");
+    function doUniversity() {
+      if (!p.alive) return;
+      if (p.age < 18) {
+        alert("Must be 18 to attend college!");
         return;
       }
-      if (char.educationLevel >= 2) {
+      if (p.education >= 2) {
         alert("You already graduated from University!");
         return;
       }
-      if (char.smarts < 50) {
-        alert("Your Smarts score is too low (<50) to pass the entrance exam. Study harder!");
+      if (p.smarts < 50) {
+        alert("Your Smarts must be ≥ 50 to qualify for university admission.");
         return;
       }
-      char.educationLevel = 2;
-      char.cash -= 12000;
-      char.smarts += 20;
-      char.occupation = "College Graduate";
-      char.occIcon = "🎓";
-      addEvent("🎓 I completed my Bachelor's Degree at University! High-tier jobs unlocked.");
-      closeSheet('assetsModal');
-      renderUI();
+      p.education = 2;
+      p.cash -= 12000;
+      p.smarts += 20;
+      p.occupation = "College Graduate";
+      p.occIcon = "🎓";
+      recordAction("🎓 Graduated with honors from University! Executive careers unlocked.");
+      closeSheet('modalAssets');
+      render();
     }
 
-    function applyJob(title, pay, reqEdu, reqSmarts, icon) {
-      if (!char.isAlive) return;
-      if (char.age < 18) {
-        alert("You must be at least 18 to work full-time!");
+    function takeJob(title, pay, reqEdu, reqSmarts, icon) {
+      if (!p.alive) return;
+      if (p.age < 18) {
+        alert("Must be at least 18 to work full-time!");
         return;
       }
-      if (char.educationLevel < reqEdu) {
-        alert(`This position requires higher education (Level ${reqEdu})!`);
+      if (p.education < reqEdu) {
+        alert(`Requires higher education level (${reqEdu})!`);
         return;
       }
-      if (char.smarts < reqSmarts) {
-        alert(`You did not pass the interview. Requires Smarts ≥ ${reqSmarts}.`);
+      if (p.smarts < reqSmarts) {
+        alert(`Failed interview. Requires Smarts ≥ ${reqSmarts}.`);
         return;
       }
 
-      char.occupation = title;
-      char.occIcon = icon;
-      char.salary = pay;
-      char.happiness += 12;
-      addEvent(`🎉 I was hired as a ${title} making $${pay.toLocaleString()}/year!`);
-      closeSheet('assetsModal');
-      renderUI();
+      p.occupation = title;
+      p.occIcon = icon;
+      p.salary = pay;
+      p.happy += 12;
+      recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
+      closeSheet('modalAssets');
+      render();
     }
 
-    // MODAL HELPERS
+    // MODAL TRIGGERS
     function openActivitiesSheet() {
-      document.getElementById('activitiesModal').classList.add('active');
+      document.getElementById('modalActivities').classList.add('open');
     }
 
     function openAssetsSheet() {
-      document.getElementById('assetsModal').classList.add('active');
+      document.getElementById('modalAssets').classList.add('open');
     }
 
-    function openRelationshipsSheet() {
-      const container = document.getElementById('familyList');
-      container.innerHTML = `
-        <div class="action-row">
-          <div class="action-left">
-            <span class="action-emoji">👨</span>
-            <div class="action-texts">
-              <h4>${char.father.name} (Father, Age ${char.father.age})</h4>
-              <p>Occupation: ${char.father.job} • Relationship: 100%</p>
+    function openRelSheet() {
+      const box = document.getElementById('relSheetContent');
+      box.innerHTML = `
+        <div class="sheet-item-card">
+          <div class="item-left">
+            <div class="item-emoji-circle">👨</div>
+            <div class="item-texts">
+              <h4>${p.dad.name} (Father, Age ${p.dad.age})</h4>
+              <p>Career: ${p.dad.job} • Relationship: 100%</p>
             </div>
           </div>
-          <button class="action-btn" onclick="spendFamilyTime('Father')">Spend Time</button>
+          <button class="btn-act-callout" onclick="spendFamily('Father')">Spend Time</button>
         </div>
-        <div class="action-row">
-          <div class="action-left">
-            <span class="action-emoji">👩</span>
-            <div class="action-texts">
-              <h4>${char.mother.name} (Mother, Age ${char.mother.age})</h4>
-              <p>Occupation: ${char.mother.job} • Relationship: 100%</p>
+        <div class="sheet-item-card">
+          <div class="item-left">
+            <div class="item-emoji-circle">👩</div>
+            <div class="item-texts">
+              <h4>${p.mom.name} (Mother, Age ${p.mom.age})</h4>
+              <p>Career: ${p.mom.job} • Relationship: 100%</p>
             </div>
           </div>
-          <button class="action-btn" onclick="spendFamilyTime('Mother')">Spend Time</button>
+          <button class="btn-act-callout" onclick="spendFamily('Mother')">Spend Time</button>
         </div>
-        <div class="action-row">
-          <div class="action-left">
-            <span class="action-emoji">👧</span>
-            <div class="action-texts">
-              <h4>${char.sister.name} (Sister, Age ${char.sister.age})</h4>
+        <div class="sheet-item-card">
+          <div class="item-left">
+            <div class="item-emoji-circle">👧</div>
+            <div class="item-texts">
+              <h4>${p.sister.name} (Sister, Age ${p.sister.age})</h4>
               <p>Relationship: 95%</p>
             </div>
           </div>
-          <button class="action-btn" onclick="spendFamilyTime('Sister')">Spend Time</button>
+          <button class="btn-act-callout" onclick="spendFamily('Sister')">Spend Time</button>
         </div>
       `;
-      document.getElementById('relModal').classList.add('active');
+      document.getElementById('modalRel').classList.add('open');
     }
 
-    function spendFamilyTime(who) {
-      char.happiness += 10;
-      addEvent(`I spent heartwarming quality time chatting with my ${who}. (+Happiness)`);
-      closeSheet('relModal');
-      renderUI();
-    }
-
-    function openProfileSheet() {
-      openAssetsSheet();
+    function spendFamily(who) {
+      p.happy += 12;
+      recordAction(`I spent wonderful quality time bonding with my ${who}. (+Happiness)`);
+      closeSheet('modalRel');
+      render();
     }
 
     function closeSheet(id) {
-      document.getElementById(id).classList.remove('active');
+      document.getElementById(id).classList.remove('open');
     }
 
-    function onOverlayClick(e, id) {
+    function backdropClick(e, id) {
       if (e.target.id === id) closeSheet(id);
     }
 
-    function startNewLifeDialog() {
+    function promptRestart() {
       if (confirm("Start a brand new random life?")) {
-        startNewLife();
+        startFreshLife();
       }
     }
 
     // INIT
-    startNewLife();
+    startFreshLife();
 
-    // Register Service Worker for OTA Cloud updates
+    // Register OTA Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/flutter-life-sim/sw.js', { scope: '/flutter-life-sim/' })
