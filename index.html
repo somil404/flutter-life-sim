@@ -6,44 +6,45 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#FFF6ED">
+  <meta name="theme-color" content="#FFF8F0">
   <link rel="manifest" href="manifest.json">
-  <title>Sprout: Cozy Life Journey</title>
+  <title>Life Journey - Life Simulator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-cream: #FFF7ED;
+      --bg-warm: #FFF9F2;
       --card-white: #FFFFFF;
-      --peach-accent: #FF8A65;
-      --peach-light: #FFE0B2;
-      --mint-green: #66BB6A;
-      --mint-light: #E8F5E9;
-      --sky-blue: #4FC3F7;
-      --sky-light: #E1F5FE;
-      --butter-yellow: #FFD54F;
-      --butter-light: #FFF9C4;
-      --lavender: #BA68C8;
-      --lavender-light: #F3E5F5;
-      --text-main: #3E2723;
-      --text-soft: #795548;
-      --shadow-cozy: 0 8px 24px rgba(121, 85, 72, 0.08);
-      --border-cozy: 2px solid #FFE0B2;
+      --peach: #FF7A59;
+      --peach-light: #FFE8E0;
+      --green-soft: #2EB872;
+      --green-light: #E4F7EC;
+      --yellow-soft: #F9A825;
+      --yellow-light: #FFF4D9;
+      --blue-soft: #3880FF;
+      --blue-light: #E8F0FE;
+      --pink-soft: #F06292;
+      --pink-light: #FDE8EF;
+      --text-title: #2B2D42;
+      --text-body: #4A4E69;
+      --text-muted: #8D99AE;
+      --card-shadow: 0 8px 24px rgba(43, 45, 66, 0.06);
+      --card-border: 1.5px solid #F0E6DD;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
 
     body {
-      background-color: #EFEBE9;
-      color: var(--text-main);
+      background-color: #EDE6DE;
+      color: var(--text-title);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -51,112 +52,108 @@
       margin: 0;
     }
 
-    .cozy-viewport {
+    .app-viewport {
       width: 100%;
       max-width: 440px;
       height: 100vh;
       height: 100dvh;
-      background: var(--bg-cream);
+      background: var(--bg-warm);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 10px 40px rgba(93, 64, 55, 0.15);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
     }
 
-    /* 1. TOP HEADER */
-    .cozy-header {
+    /* TOP HEADER */
+    .app-header {
       padding: 14px 18px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--bg-cream);
+      background: var(--bg-warm);
       z-index: 10;
     }
 
-    .brand-title {
+    .header-brand {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .brand-logo-icon {
-      width: 38px;
-      height: 38px;
-      background: #FFE0B2;
-      border-radius: 14px;
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: #FFE8E0;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 4px 10px rgba(255, 138, 101, 0.2);
+      font-size: 20px;
     }
 
-    .brand-name {
-      font-family: 'Fredoka', cursive;
-      font-size: 24px;
-      font-weight: 700;
-      color: #D84315;
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--peach);
       letter-spacing: -0.3px;
     }
 
-    .brand-tag {
-      font-size: 11px;
-      font-weight: 700;
-      color: #8D6E63;
-      background: #FFE0B2;
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-
-    .menu-pill {
+    .btn-new-life {
       background: #FFFFFF;
-      border: 2px solid #FFE0B2;
+      border: var(--card-border);
       border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 12px;
+      padding: 6px 14px;
+      font-size: 12.5px;
       font-weight: 700;
-      color: #D84315;
+      color: var(--text-title);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
-      box-shadow: var(--shadow-cozy);
+      gap: 5px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.15s;
     }
 
-    /* 2. CHARACTER HERO PASSPORT CARD */
-    .char-card-wrap {
-      padding: 0 16px 10px;
+    .btn-new-life:active {
+      transform: scale(0.95);
+      background: #F7EFE8;
     }
 
-    .char-passport {
+    /* IDENTITY & BALANCE CARD */
+    .id-card-wrap {
+      padding: 0 16px 8px;
+    }
+
+    .id-card {
       background: var(--card-white);
-      border-radius: 24px;
+      border-radius: 22px;
       padding: 14px 16px;
-      border: var(--border-cozy);
-      box-shadow: var(--shadow-cozy);
+      border: var(--card-border);
+      box-shadow: var(--card-shadow);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .char-profile-left {
+    .id-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .avatar-bubble {
-      width: 54px;
-      height: 54px;
-      background: #FFF3E0;
-      border-radius: 18px;
+    .avatar-wrapper {
+      width: 52px;
+      height: 52px;
+      background: #FFF4EE;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 30px;
       position: relative;
-      border: 2px solid #FFE0B2;
+      border: 1.5px solid #F5DFD5;
     }
 
     .avatar-flag {
@@ -166,114 +163,109 @@
       font-size: 14px;
       background: #FFFFFF;
       border-radius: 50%;
-      padding: 2px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .char-info-block {
+    .id-text-group {
       display: flex;
       flex-direction: column;
     }
 
-    .char-name-text {
-      font-family: 'Fredoka', cursive;
+    .id-name {
+      font-family: 'Outfit', sans-serif;
       font-size: 18px;
       font-weight: 700;
-      color: var(--text-main);
+      color: var(--text-title);
+      letter-spacing: -0.2px;
     }
 
-    .char-status-badge {
-      font-size: 12.5px;
+    .id-sub {
+      font-size: 13px;
       font-weight: 600;
-      color: #8D6E63;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 5px;
-      margin-top: 2px;
+      gap: 4px;
+      margin-top: 1px;
     }
 
-    .char-acorns-right {
+    .id-right {
       text-align: right;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
     }
 
-    .acorn-pill {
-      background: #FFF8E1;
-      border: 2px solid #FFE082;
-      border-radius: 16px;
-      padding: 4px 10px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-family: 'Fredoka', cursive;
-      font-size: 16px;
-      font-weight: 700;
-      color: #E65100;
+    .balance-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--green-soft);
+      letter-spacing: -0.5px;
     }
 
-    .char-age-tag {
+    .balance-val.debt {
+      color: #E63946;
+    }
+
+    .balance-lbl {
       font-size: 11px;
-      font-weight: 700;
-      color: #A1887F;
-      margin-top: 4px;
+      font-weight: 600;
+      color: var(--text-muted);
     }
 
-    /* 3. COZY STORY FEED */
-    .story-feed {
+    /* STORY LOG FEED */
+    .story-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 6px 16px 14px;
+      padding: 6px 16px 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       -webkit-overflow-scrolling: touch;
     }
 
-    .year-chapter-card {
+    .year-entry-card {
       background: var(--card-white);
-      border-radius: 20px;
-      padding: 16px;
-      border: 2px solid #FFF3E0;
-      box-shadow: var(--shadow-cozy);
-      animation: fadeIn 0.25s ease-out;
+      border-radius: 18px;
+      padding: 14px 16px;
+      border: var(--card-border);
+      box-shadow: var(--card-shadow);
+      animation: fadeIn 0.22s ease-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(5px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .chapter-heading {
-      font-family: 'Fredoka', cursive;
-      font-size: 16px;
+    .year-entry-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15.5px;
       font-weight: 700;
-      color: #E65100;
+      color: var(--peach);
+      margin-bottom: 7px;
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #F0E6DD;
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 8px;
-      padding-bottom: 6px;
-      border-bottom: 1.5px dashed #FFE0B2;
     }
 
-    .story-line {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #4E342E;
+    .year-entry-text {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text-body);
       margin-bottom: 6px;
-      font-weight: 600;
+      font-weight: 500;
     }
 
-    .story-line:last-child {
+    .year-entry-text:last-child {
       margin-bottom: 0;
     }
 
-    /* 4. STAT PILLS GRID */
-    .stats-dock {
-      padding: 10px 16px 6px;
-      background: var(--bg-cream);
+    /* STATS ROW (Happiness, Health, Smarts, Looks) */
+    .stats-section {
+      padding: 8px 16px 4px;
+      background: var(--bg-warm);
     }
 
     .stats-grid {
@@ -282,56 +274,56 @@
       gap: 8px;
     }
 
-    .stat-capsule {
+    .stat-pill {
       background: var(--card-white);
-      border: var(--border-cozy);
+      border: var(--card-border);
       border-radius: 16px;
       padding: 8px 6px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      box-shadow: var(--shadow-cozy);
+      box-shadow: var(--card-shadow);
     }
 
-    .stat-emoji-title {
-      font-size: 13px;
+    .stat-head {
+      font-size: 12px;
       font-weight: 700;
+      color: var(--text-title);
       display: flex;
       align-items: center;
-      gap: 2px;
-      color: var(--text-soft);
+      gap: 3px;
     }
 
-    .stat-meter-mini {
+    .stat-track {
       width: 100%;
-      height: 8px;
-      background: #F5EFEB;
+      height: 7px;
+      background: #F0EAE4;
       border-radius: 10px;
       overflow: hidden;
     }
 
-    .stat-fill-mini {
+    .stat-fill {
       height: 100%;
       border-radius: 10px;
       transition: width 0.35s ease;
     }
 
-    .stat-percent-label {
-      font-family: 'Fredoka', cursive;
+    .stat-val-text {
+      font-family: 'Outfit', sans-serif;
       font-size: 12px;
-      font-weight: 600;
-      color: var(--text-main);
+      font-weight: 700;
+      color: var(--text-title);
     }
 
-    /* 5. BOTTOM NAVIGATION BAR & HERO AGE BUTTON */
-    .bottom-nav-wrap {
+    /* BOTTOM CONTROLS & DOCK */
+    .bottom-dock {
       background: var(--card-white);
-      padding: 10px 16px calc(14px + env(safe-area-inset-bottom));
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      border-top: var(--border-cozy);
-      box-shadow: 0 -6px 20px rgba(121, 85, 72, 0.08);
+      padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      border-top: var(--card-border);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -339,129 +331,130 @@
       z-index: 50;
     }
 
-    .nav-bubble-btn {
+    .nav-btn {
       flex: 1;
       height: 52px;
-      background: #FFF8E1;
-      border: 2px solid #FFE082;
-      border-radius: 18px;
+      background: #FFF7F2;
+      border: 1.5px solid #F5DFD5;
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       gap: 2px;
-      color: #E65100;
-      transition: all 0.15s ease;
+      color: var(--peach);
+      transition: all 0.15s;
     }
 
-    .nav-bubble-btn:active {
+    .nav-btn:active {
       transform: scale(0.93);
+      background: #FCEBE2;
     }
 
-    .nav-bubble-btn span {
+    .nav-btn span {
       font-size: 11px;
       font-weight: 700;
     }
 
-    .nav-bubble-btn .ico {
-      font-size: 18px;
+    .nav-btn .icon {
+      font-size: 17px;
     }
 
-    /* THE HERO SPROUT BUTTON */
-    .hero-sprout-btn {
-      flex: 1.5;
-      height: 56px;
-      background: linear-gradient(135deg, #81C784, #4CAF50);
-      border: 3px solid #FFFFFF;
-      border-radius: 22px;
-      box-shadow: 0 8px 18px rgba(76, 175, 80, 0.35);
+    /* CENTER HERO AGE BUTTON */
+    .hero-age-btn {
+      flex: 1.4;
+      height: 54px;
+      background: linear-gradient(135deg, #34D399, #10B981);
+      border: 2.5px solid #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 8px 18px rgba(16, 185, 129, 0.35);
       color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       cursor: pointer;
       transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .hero-sprout-btn:active {
+    .hero-age-btn:active {
       transform: scale(0.92);
-      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+      box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
     }
 
-    .hero-sprout-btn.dead {
-      background: #8D6E63;
+    .hero-age-btn.dead {
+      background: #6B7280;
       box-shadow: none;
     }
 
-    .sprout-text {
-      font-family: 'Fredoka', cursive;
+    .hero-age-text {
+      font-family: 'Outfit', sans-serif;
       font-size: 17px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.3px;
     }
 
-    /* 6. COZY MODAL POPUPS */
-    .cozy-modal-backdrop {
+    /* MODAL SHEETS */
+    .modal-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(62, 39, 35, 0.5);
+      background: rgba(43, 45, 66, 0.55);
       z-index: 100;
       display: none;
       align-items: flex-end;
       backdrop-filter: blur(4px);
     }
 
-    .cozy-modal-backdrop.active {
+    .modal-overlay.active {
       display: flex;
     }
 
-    .cozy-modal-sheet {
+    .modal-sheet {
       width: 100%;
       max-height: 80%;
-      background: var(--bg-cream);
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      border-top: 3px solid #FFE0B2;
+      background: var(--bg-warm);
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      border-top: 2px solid #F0E6DD;
       box-shadow: 0 -10px 30px rgba(0,0,0,0.15);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      animation: sheetUp 0.22s ease-out;
+      animation: slideUp 0.22s ease-out;
     }
 
-    @keyframes sheetUp {
+    @keyframes slideUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
 
-    .cozy-sheet-top {
+    .sheet-top {
       padding: 16px 20px;
       background: var(--card-white);
-      border-bottom: 2px solid #FFE0B2;
+      border-bottom: 1.5px solid #F0E6DD;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .sheet-title {
-      font-family: 'Fredoka', cursive;
-      font-size: 20px;
-      font-weight: 700;
-      color: #D84315;
+      font-family: 'Outfit', sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-title);
     }
 
-    .sheet-close-btn {
+    .sheet-close {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: #FFF3E0;
-      border: 2px solid #FFE0B2;
-      color: #D84315;
+      background: #F7EFE8;
+      border: 1px solid #EADBCE;
+      color: var(--text-title);
       font-size: 14px;
       font-weight: 700;
       display: flex;
@@ -470,7 +463,7 @@
       cursor: pointer;
     }
 
-    .cozy-sheet-body {
+    .sheet-content {
       padding: 14px 16px;
       overflow-y: auto;
       display: flex;
@@ -478,76 +471,76 @@
       gap: 10px;
     }
 
-    .cozy-action-card {
+    .action-card {
       background: var(--card-white);
-      border: 2px solid #FFE0B2;
-      border-radius: 18px;
+      border: var(--card-border);
+      border-radius: 16px;
       padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: var(--shadow-cozy);
+      box-shadow: var(--card-shadow);
       cursor: pointer;
       transition: all 0.15s;
     }
 
-    .cozy-action-card:active {
+    .action-card:active {
       transform: scale(0.97);
     }
 
-    .action-left-box {
+    .card-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .action-icon-pill {
+    .card-icon-bubble {
       width: 44px;
       height: 44px;
-      background: #FFF8E1;
+      background: #FFF4EE;
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      border: 1.5px solid #FFE082;
+      border: 1px solid #F5DFD5;
     }
 
-    .action-text-box h4 {
-      font-family: 'Fredoka', cursive;
+    .card-texts h4 {
+      font-family: 'Outfit', sans-serif;
       font-size: 15px;
-      font-weight: 600;
-      color: var(--text-main);
+      font-weight: 700;
+      color: var(--text-title);
     }
 
-    .action-text-box p {
+    .card-texts p {
       font-size: 12px;
-      font-weight: 600;
-      color: #8D6E63;
+      font-weight: 500;
+      color: var(--text-muted);
       margin-top: 2px;
     }
 
-    .cozy-btn-pill {
-      background: #FF7043;
+    .btn-pill {
+      background: var(--peach);
       color: #FFFFFF;
       border: none;
       padding: 8px 16px;
       border-radius: 20px;
-      font-family: 'Fredoka', cursive;
+      font-family: 'Outfit', sans-serif;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(255, 112, 67, 0.3);
+      box-shadow: 0 4px 10px rgba(255, 122, 89, 0.3);
     }
 
-    /* 7. DILEMMA CHOICE CARD */
+    /* DILEMMA / SCENARIO CARD */
     .dilemma-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(62, 39, 35, 0.6);
+      background: rgba(43, 45, 66, 0.65);
       z-index: 150;
       display: none;
       align-items: center;
@@ -560,12 +553,12 @@
       display: flex;
     }
 
-    .dilemma-bubble {
+    .dilemma-box {
       width: 100%;
       max-width: 360px;
-      background: var(--bg-cream);
-      border: 3px solid #FFCC80;
-      border-radius: 26px;
+      background: var(--bg-warm);
+      border: 2px solid #F0E6DD;
+      border-radius: 24px;
       padding: 22px;
       text-align: center;
       display: flex;
@@ -574,12 +567,12 @@
       box-shadow: 0 14px 35px rgba(0,0,0,0.25);
     }
 
-    .dilemma-icon-circle {
+    .dilemma-icon-bubble {
       width: 58px;
       height: 58px;
       background: #FFFFFF;
-      border-radius: 20px;
-      border: 2px solid #FFE0B2;
+      border-radius: 18px;
+      border: 1.5px solid #F0E6DD;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -588,572 +581,599 @@
     }
 
     .dilemma-title {
-      font-family: 'Fredoka', cursive;
+      font-family: 'Outfit', sans-serif;
       font-size: 20px;
-      font-weight: 700;
-      color: #D84315;
+      font-weight: 800;
+      color: var(--text-title);
     }
 
     .dilemma-desc {
       font-size: 13.5px;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.5;
-      color: #5D4037;
+      color: var(--text-body);
     }
 
-    .dilemma-options {
+    .dilemma-choices {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-top: 6px;
     }
 
-    .cozy-opt-btn {
+    .choice-btn {
       background: var(--card-white);
-      border: 2px solid #FFE0B2;
-      border-radius: 16px;
+      border: 1.5px solid #EADBCE;
+      border-radius: 14px;
       padding: 12px;
-      font-family: 'Fredoka', cursive;
+      font-family: 'Outfit', sans-serif;
       font-size: 14px;
-      font-weight: 600;
-      color: var(--text-main);
+      font-weight: 700;
+      color: var(--text-title);
       cursor: pointer;
       transition: all 0.15s;
     }
 
-    .cozy-opt-btn:active {
+    .choice-btn:active {
       transform: scale(0.96);
-      background: #FFF3E0;
+      background: #F7EFE8;
     }
 
-    .cozy-opt-btn.primary {
-      background: #FF7043;
+    .choice-btn.primary {
+      background: var(--peach);
       color: #FFFFFF;
-      border-color: #FF5722;
-      box-shadow: 0 4px 12px rgba(255, 112, 67, 0.35);
+      border-color: var(--peach);
+      box-shadow: 0 4px 12px rgba(255, 122, 89, 0.35);
     }
   </style>
 </head>
 <body>
 
-  <div class="cozy-viewport">
+  <div class="app-viewport">
 
     <!-- 1. HEADER -->
-    <header class="cozy-header">
-      <div class="brand-title">
-        <div class="brand-logo-icon">🌱</div>
-        <div>
-          <div class="brand-name">Sprout</div>
-        </div>
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon">🌟</div>
+        <div class="brand-title">Life Journey</div>
       </div>
-      <button class="menu-pill" onclick="confirmReset()">🔄 Reincarnate</button>
+      <button class="btn-new-life" onclick="confirmRestart()">🔄 New Life</button>
     </header>
 
-    <!-- 2. CHARACTER PASSPORT -->
-    <section class="char-card-wrap">
-      <div class="char-passport">
-        <div class="char-profile-left">
-          <div class="avatar-bubble" id="heroAvatar">
+    <!-- 2. IDENTITY & BANK BALANCE CARD -->
+    <section class="id-card-wrap">
+      <div class="id-card">
+        <div class="id-left">
+          <div class="avatar-wrapper" id="charAvatar">
             👶
-            <span class="avatar-flag" id="flagDisplay">🇯🇵</span>
+            <span class="avatar-flag" id="flagDisplay">🇺🇸</span>
           </div>
-          <div class="char-info-block">
-            <span class="char-name-text" id="nameText">Hana Tanaka</span>
-            <span class="char-status-badge">
-              <span id="roleIcon">🍼</span>
-              <span id="roleText">Infant</span>
+          <div class="id-text-group">
+            <span class="id-name" id="nameDisplay">Alyssa Roosevelt</span>
+            <span class="id-sub">
+              <span id="jobIconDisplay">🍼</span>
+              <span id="jobTitleDisplay">Infant</span>
             </span>
           </div>
         </div>
 
-        <div class="char-acorns-right">
-          <div class="acorn-pill">
-            <span>🌰</span>
-            <span id="acornCount">0</span>
-          </div>
-          <div class="char-age-tag" id="ageBadge">Age: 0 yrs</div>
+        <div class="id-right">
+          <div class="balance-val" id="balanceDisplay">$0</div>
+          <div class="balance-lbl">Bank Balance</div>
         </div>
       </div>
     </section>
 
-    <!-- 3. SCROLLING STORY JOURNAL -->
-    <main class="story-feed" id="journalFeed">
+    <!-- 3. MAIN STORY / YEAR EVENT FEED -->
+    <main class="story-scroll" id="storyScroll">
       <!-- Generated dynamically -->
     </main>
 
-    <!-- 4. STAT CAPSULES GRID -->
-    <section class="stats-dock">
+    <!-- 4. STATS SECTION (Happiness, Health, Smarts, Looks) -->
+    <section class="stats-section">
       <div class="stats-grid">
-        <!-- Joy -->
-        <div class="stat-capsule">
-          <span class="stat-emoji-title">✨ Joy</span>
-          <div class="stat-meter-mini">
-            <div class="stat-fill-mini" id="fillJoy" style="width: 100%; background: #FFB74D;"></div>
+        <!-- Happiness -->
+        <div class="stat-pill">
+          <span class="stat-head">😄 Happiness</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="fillHappy" style="width: 100%; background: var(--yellow-soft);"></div>
           </div>
-          <span class="stat-percent-label" id="lblJoy">100%</span>
+          <span class="stat-val-text" id="valHappy">100%</span>
         </div>
 
-        <!-- Vitality -->
-        <div class="stat-capsule">
-          <span class="stat-emoji-title">🌿 Vitality</span>
-          <div class="stat-meter-mini">
-            <div class="stat-fill-mini" id="fillVit" style="width: 100%; background: #81C784;"></div>
+        <!-- Health -->
+        <div class="stat-pill">
+          <span class="stat-head">❤️ Health</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="fillHealth" style="width: 100%; background: var(--green-soft);"></div>
           </div>
-          <span class="stat-percent-label" id="lblVit">100%</span>
+          <span class="stat-val-text" id="valHealth">100%</span>
         </div>
 
-        <!-- Wisdom -->
-        <div class="stat-capsule">
-          <span class="stat-emoji-title">💡 Wisdom</span>
-          <div class="stat-meter-mini">
-            <div class="stat-fill-mini" id="fillWis" style="width: 50%; background: #4FC3F7;"></div>
+        <!-- Smarts -->
+        <div class="stat-pill">
+          <span class="stat-head">🧠 Smarts</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="fillSmarts" style="width: 50%; background: var(--blue-soft);"></div>
           </div>
-          <span class="stat-percent-label" id="lblWis">50%</span>
+          <span class="stat-val-text" id="valSmarts">50%</span>
         </div>
 
-        <!-- Charm -->
-        <div class="stat-capsule">
-          <span class="stat-emoji-title">🌸 Charm</span>
-          <div class="stat-meter-mini">
-            <div class="stat-fill-mini" id="fillCha" style="width: 50%; background: #BA68C8;"></div>
+        <!-- Looks -->
+        <div class="stat-pill">
+          <span class="stat-head">✨ Looks</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="fillLooks" style="width: 50%; background: var(--pink-soft);"></div>
           </div>
-          <span class="stat-percent-label" id="lblCha">50%</span>
+          <span class="stat-val-text" id="valLooks">50%</span>
         </div>
       </div>
     </section>
 
-    <!-- 5. BOTTOM NAVIGATION BAR -->
-    <footer class="bottom-nav-wrap">
-      <button class="nav-bubble-btn" onclick="openActivities()">
-        <span class="ico">🍵</span>
-        <span>Living</span>
+    <!-- 5. BOTTOM NAVIGATION DOCK (Assets, Activities, Relationships, Hero Age +1) -->
+    <footer class="bottom-dock">
+      <button class="nav-btn" onclick="openAssetsModal()">
+        <span class="icon">💼</span>
+        <span>Assets</span>
       </button>
 
-      <!-- Center Big Sprout Button -->
-      <button class="hero-sprout-btn" id="sproutAgeBtn" onclick="growYear()">
-        <span style="font-size: 22px;">🌱</span>
-        <span class="sprout-text">Sprout +1</span>
+      <!-- Center Big Hero Age Button -->
+      <button class="hero-age-btn" id="heroAgeBtn" onclick="onAgeClicked()">
+        <span style="font-size: 20px;">➕</span>
+        <span class="hero-age-text">Age</span>
       </button>
 
-      <button class="nav-bubble-btn" onclick="openCareers()">
-        <span class="ico">🏡</span>
-        <span>Calling</span>
+      <button class="nav-btn" onclick="openActivitiesModal()">
+        <span class="icon">🎡</span>
+        <span>Activities</span>
       </button>
 
-      <button class="nav-bubble-btn" onclick="openKinship()">
-        <span class="ico">💛</span>
-        <span>Kinship</span>
+      <button class="nav-btn" onclick="openRelationshipsModal()">
+        <span class="icon">❤️</span>
+        <span>Relationships</span>
       </button>
     </footer>
 
-    <!-- LIVING / ACTIVITIES MODAL -->
-    <div id="modalLiving" class="cozy-modal-backdrop" onclick="onModalBg(event, 'modalLiving')">
-      <div class="cozy-modal-sheet">
-        <div class="cozy-sheet-top">
-          <span class="sheet-title">🍵 Daily Living</span>
-          <button class="sheet-close-btn" onclick="closeSheet('modalLiving')">✕</button>
+    <!-- ACTIVITIES MODAL -->
+    <div id="modalActivities" class="modal-overlay" onclick="onOverlayClick(event, 'modalActivities')">
+      <div class="modal-sheet">
+        <div class="sheet-top">
+          <span class="sheet-title">🎡 Activities</span>
+          <button class="sheet-close" onclick="closeModal('modalActivities')">✕</button>
         </div>
-        <div class="cozy-sheet-body">
-          <div class="cozy-action-card" onclick="doReadBooks()">
-            <div class="action-left-box">
-              <div class="action-icon-pill">📚</div>
-              <div class="action-text-box">
-                <h4>Read in the Garden</h4>
-                <p>Nourish your mind with cozy books. (+Wisdom)</p>
+        <div class="sheet-content">
+          <div class="action-card" onclick="doStudy()">
+            <div class="card-left">
+              <div class="card-icon-bubble">📚</div>
+              <div class="card-texts">
+                <h4>Study Hard / Read Books</h4>
+                <p>Spend hours studying to boost Smarts.</p>
               </div>
             </div>
-            <button class="cozy-btn-pill">Read</button>
+            <button class="btn-pill">Study</button>
           </div>
 
-          <div class="cozy-action-card" onclick="doNatureWalk()">
-            <div class="action-left-box">
-              <div class="action-icon-pill">🌲</div>
-              <div class="action-text-box">
-                <h4>Morning Forest Stroll</h4>
-                <p>Breathe cedar air and pick wildflowers. (+Vitality, +Charm)</p>
+          <div class="action-card" onclick="doGym()">
+            <div class="card-left">
+              <div class="card-icon-bubble">🏋️</div>
+              <div class="card-texts">
+                <h4>Gym & Workout</h4>
+                <p>Lift weights and run cardio. Boosts Health & Looks.</p>
               </div>
             </div>
-            <button class="cozy-btn-pill">Walk</button>
+            <button class="btn-pill">Workout</button>
           </div>
 
-          <div class="cozy-action-card" onclick="doApothecary()">
-            <div class="action-left-box">
-              <div class="action-icon-pill">🍯</div>
-              <div class="action-text-box">
-                <h4>Herbal Apothecary (150 🌰)</h4>
-                <p>Warm chamomile brews to cure seasonal colds.</p>
+          <div class="action-card" onclick="doDoctor()">
+            <div class="card-left">
+              <div class="card-icon-bubble">🩺</div>
+              <div class="card-texts">
+                <h4>Doctor Consultation ($250)</h4>
+                <p>Cure illnesses and recover Health.</p>
               </div>
             </div>
-            <button class="cozy-btn-pill">Visit</button>
+            <button class="btn-pill">Visit</button>
           </div>
 
-          <div class="cozy-action-card" onclick="doHotSprings()">
-            <div class="action-left-box">
-              <div class="action-icon-pill">♨️</div>
-              <div class="action-text-box">
-                <h4>Onsen Hot Springs Retreat (800 🌰)</h4>
-                <p>Unwind in steaming mineral baths. (+Joy)</p>
+          <div class="action-card" onclick="doVacation()">
+            <div class="card-left">
+              <div class="card-icon-bubble">🏖️</div>
+              <div class="card-texts">
+                <h4>Luxury Vacation ($1,200)</h4>
+                <p>Take a scenic tropical trip to max Happiness.</p>
               </div>
             </div>
-            <button class="cozy-btn-pill">Soak</button>
+            <button class="btn-pill">Fly</button>
           </div>
 
-          <div class="cozy-action-card" onclick="doWishingWell()">
-            <div class="action-left-box">
-              <div class="action-icon-pill">⛲</div>
-              <div class="action-text-box">
-                <h4>Wishing Well (30 🌰)</h4>
-                <p>Toss a coin for fortune and unexpected gifts.</p>
+          <div class="action-card" onclick="doLottery()">
+            <div class="card-left">
+              <div class="card-icon-bubble">🎰</div>
+              <div class="card-texts">
+                <h4>Lottery Ticket ($50)</h4>
+                <p>Try your luck to win big jackpots!</p>
               </div>
             </div>
-            <button class="cozy-btn-pill">Wish</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CALLING & CRAFTS MODAL -->
-    <div id="modalCareers" class="cozy-modal-backdrop" onclick="onModalBg(event, 'modalCareers')">
-      <div class="cozy-modal-sheet">
-        <div class="cozy-sheet-top">
-          <span class="sheet-title">🏡 Calling & Craft</span>
-          <button class="sheet-close-btn" onclick="closeSheet('modalCareers')">✕</button>
-        </div>
-        <div class="cozy-sheet-body">
-          <div class="cozy-action-card" onclick="doAcademy()">
-            <div class="action-left-box">
-              <div class="action-icon-pill">📜</div>
-              <div class="action-text-box">
-                <h4>Botanical Academy (5,000 🌰)</h4>
-                <p>Requires Wisdom ≥ 50. Unlocks master artisan callings.</p>
-              </div>
-            </div>
-            <button class="cozy-btn-pill">Enroll</button>
-          </div>
-
-          <div class="cozy-action-card" onclick="takeRole('Village Bakery Apprentice', 16000, 0, 10, '🥖')">
-            <div class="action-left-box">
-              <div class="action-icon-pill">🥖</div>
-              <div class="action-text-box">
-                <h4>Bakery Apprentice (16k 🌰/yr)</h4>
-                <p>Knead sourdough and cinnamon rolls.</p>
-              </div>
-            </div>
-            <button class="cozy-btn-pill">Apply</button>
-          </div>
-
-          <div class="cozy-action-card" onclick="takeRole('Pottery Artisan', 38000, 1, 30, '🏺')">
-            <div class="action-left-box">
-              <div class="action-icon-pill">🏺</div>
-              <div class="action-text-box">
-                <h4>Pottery Artisan (38k 🌰/yr)</h4>
-                <p>Requires Schooling & Wisdom ≥ 30.</p>
-              </div>
-            </div>
-            <button class="cozy-btn-pill">Apply</button>
-          </div>
-
-          <div class="cozy-action-card" onclick="takeRole('Landscape Architect', 88000, 2, 60, '🌿')">
-            <div class="action-left-box">
-              <div class="action-icon-pill">🌿</div>
-              <div class="action-text-box">
-                <h4>Landscape Architect (88k 🌰/yr)</h4>
-                <p>Requires Academy graduate & Wisdom ≥ 60.</p>
-              </div>
-            </div>
-            <button class="cozy-btn-pill">Apply</button>
-          </div>
-
-          <div class="cozy-action-card" onclick="takeRole('Master Botanical Doctor', 170000, 2, 80, '🌸')">
-            <div class="action-left-box">
-              <div class="action-icon-pill">🌸</div>
-              <div class="action-text-box">
-                <h4>Master Botanist (170k 🌰/yr)</h4>
-                <p>Requires Academy graduate & Wisdom ≥ 80.</p>
-              </div>
-            </div>
-            <button class="cozy-btn-pill">Apply</button>
+            <button class="btn-pill">Play</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- KINSHIP MODAL -->
-    <div id="modalKinship" class="cozy-modal-backdrop" onclick="onModalBg(event, 'modalKinship')">
-      <div class="cozy-modal-sheet">
-        <div class="cozy-sheet-top">
-          <span class="sheet-title">💛 Beloved Kinship</span>
-          <button class="sheet-close-btn" onclick="closeSheet('modalKinship')">✕</button>
+    <!-- ASSETS & CAREERS MODAL -->
+    <div id="modalAssets" class="modal-overlay" onclick="onOverlayClick(event, 'modalAssets')">
+      <div class="modal-sheet">
+        <div class="sheet-top">
+          <span class="sheet-title">💼 Assets & Careers</span>
+          <button class="sheet-close" onclick="closeModal('modalAssets')">✕</button>
         </div>
-        <div class="cozy-sheet-body" id="kinshipList">
+        <div class="sheet-content">
+          <div class="action-card" onclick="doUniversity()">
+            <div class="card-left">
+              <div class="card-icon-bubble">🎓</div>
+              <div class="card-texts">
+                <h4>University ($12,000)</h4>
+                <p>Requires Smarts ≥ 50. Unlocks executive positions.</p>
+              </div>
+            </div>
+            <button class="btn-pill">Enroll</button>
+          </div>
+
+          <div class="action-card" onclick="applyJob('Fast Food Worker', 18000, 0, 10, '🍔')">
+            <div class="card-left">
+              <div class="card-icon-bubble">🍔</div>
+              <div class="card-texts">
+                <h4>Fast Food Worker ($18,000/yr)</h4>
+                <p>No requirements. Age ≥ 18.</p>
+              </div>
+            </div>
+            <button class="btn-pill">Apply</button>
+          </div>
+
+          <div class="action-card" onclick="applyJob('Graphic Designer', 40000, 1, 30, '🎨')">
+            <div class="card-left">
+              <div class="card-icon-bubble">🎨</div>
+              <div class="card-texts">
+                <h4>Graphic Designer ($40,000/yr)</h4>
+                <p>Requires High School & Smarts ≥ 30.</p>
+              </div>
+            </div>
+            <button class="btn-pill">Apply</button>
+          </div>
+
+          <div class="action-card" onclick="applyJob('Software Engineer', 95000, 2, 60, '💻')">
+            <div class="card-left">
+              <div class="card-icon-bubble">💻</div>
+              <div class="card-texts">
+                <h4>Software Engineer ($95,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 60.</p>
+              </div>
+            </div>
+            <button class="btn-pill">Apply</button>
+          </div>
+
+          <div class="action-card" onclick="applyJob('Medical Surgeon', 180000, 2, 80, '🩺')">
+            <div class="card-left">
+              <div class="card-icon-bubble">🩺</div>
+              <div class="card-texts">
+                <h4>Medical Surgeon ($180,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 80.</p>
+              </div>
+            </div>
+            <button class="btn-pill">Apply</button>
+          </div>
+
+          <div class="action-card" onclick="applyJob('Corporate CEO', 400000, 2, 90, '👑')">
+            <div class="card-left">
+              <div class="card-icon-bubble">👑</div>
+              <div class="card-texts">
+                <h4>Corporate CEO ($400,000/yr)</h4>
+                <p>Requires University degree & Smarts ≥ 90.</p>
+              </div>
+            </div>
+            <button class="btn-pill">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATIONSHIPS MODAL -->
+    <div id="modalRel" class="modal-overlay" onclick="onOverlayClick(event, 'modalRel')">
+      <div class="modal-sheet">
+        <div class="sheet-top">
+          <span class="sheet-title">❤️ Relationships</span>
+          <button class="sheet-close" onclick="closeModal('modalRel')">✕</button>
+        </div>
+        <div class="sheet-content" id="relSheetContent">
           <!-- Populated from state -->
         </div>
       </div>
     </div>
 
-    <!-- DILEMMA CHOICE CARD -->
+    <!-- DILEMMA DIALOG -->
     <div id="modalDilemma" class="dilemma-overlay">
-      <div class="dilemma-bubble">
-        <div class="dilemma-icon-circle" id="dIcon">🐿️</div>
-        <div class="dilemma-title" id="dTitle">Forest Encounter</div>
-        <div class="dilemma-desc" id="dDesc">A little squirrel dropped an acorn at your feet. What do you do?</div>
-        <div class="dilemma-options" id="dOpts"></div>
+      <div class="dilemma-box">
+        <div class="dilemma-icon-bubble" id="dIcon">🤔</div>
+        <div class="dilemma-title" id="dTitle">Life Decision</div>
+        <div class="dilemma-desc" id="dDesc">What will you choose?</div>
+        <div class="dilemma-choices" id="dChoices"></div>
       </div>
     </div>
 
   </div>
 
   <script>
-    // CHARACTER STATE
-    let me = {
-      name: "Hana Tanaka",
+    // CHARACTER STATE (Standard authentic names and meanings)
+    let char = {
+      name: "Alyssa Roosevelt",
       gender: "Female",
-      hometown: "Kyoto",
-      region: "Japan",
-      flag: "🇯🇵",
+      city: "San Diego",
+      country: "United States",
+      flag: "🇺🇸",
+      birthday: "September 24",
+      zodiac: "Libra",
       age: 0,
-      acorns: 50,
+      money: 0,
       salary: 0,
-      role: "Infant",
-      roleIcon: "🍼",
-      education: 0,
-      joy: 92,
-      vitality: 95,
-      wisdom: 48,
-      charm: 62,
-      alive: true,
-      kin: [
-        { name: "Kenji", rel: "Father", age: 28, job: "Tea Master", emoji: "🍵" },
-        { name: "Aoi", rel: "Mother", age: 27, job: "Kimono Weaver", emoji: "🧵" },
-        { name: "Ren", rel: "Brother", age: 4, job: "Playful toddler", emoji: "🪁" }
-      ],
-      journal: []
+      occupation: "Infant",
+      occIcon: "🍼",
+      educationLevel: 0, // 0: None, 1: High School, 2: University
+      happiness: 90,
+      health: 95,
+      smarts: 45,
+      looks: 65,
+      isAlive: true,
+      father: { name: "Latrell Roosevelt", job: "Air Force Officer", age: 27 },
+      mother: { name: "Emma McCartney", job: "Grocer", age: 40 },
+      sister: { name: "Madison McCartney", age: 8 },
+      events: []
     };
 
-    function initSproutLife() {
-      const names = [
-        { name: "Hana Tanaka", gender: "Female", city: "Kyoto", region: "Japan", flag: "🇯🇵" },
-        { name: "Oliver Sterling", gender: "Male", city: "Cotswolds", region: "United Kingdom", flag: "🇬🇧" },
-        { name: "Amélie Dubois", gender: "Female", city: "Provence", region: "France", flag: "🇫🇷" },
-        { name: "Milo Evergreen", gender: "Male", city: "Maple Ridge", region: "Canada", flag: "🇨🇦" }
+    function startNewLife() {
+      const firstNames = ["Alyssa", "Sophia", "Chloe", "Emma", "Olivia", "Lucas", "Noah", "Liam", "Ethan", "Oliver"];
+      const lastNames = ["Roosevelt", "Kennedy", "Sterling", "Vance", "Mercer", "Sinclair", "Hayes", "Brooks"];
+      const cities = [
+        { city: "San Diego", country: "United States", flag: "🇺🇸" },
+        { city: "London", country: "United Kingdom", flag: "🇬🇧" },
+        { city: "Sydney", country: "Australia", flag: "🇦🇺" },
+        { city: "Toronto", country: "Canada", flag: "🇨🇦" }
       ];
 
-      const chosen = names[Math.floor(Math.random() * names.length)];
-      me.name = chosen.name;
-      me.gender = chosen.gender;
-      me.hometown = chosen.city;
-      me.region = chosen.region;
-      me.flag = chosen.flag;
-      me.age = 0;
-      me.acorns = 50;
-      me.salary = 0;
-      me.role = "Infant";
-      me.roleIcon = "🍼";
-      me.education = 0;
-      me.joy = 85 + Math.floor(Math.random() * 15);
-      me.vitality = 90 + Math.floor(Math.random() * 10);
-      me.wisdom = 35 + Math.floor(Math.random() * 45);
-      me.charm = 40 + Math.floor(Math.random() * 50);
-      me.alive = true;
+      const c = cities[Math.floor(Math.random() * cities.length)];
+      char.name = firstNames[Math.floor(Math.random() * firstNames.length)] + " " + lastNames[Math.floor(Math.random() * lastNames.length)];
+      char.gender = Math.random() > 0.5 ? "Female" : "Male";
+      char.city = c.city;
+      char.country = c.country;
+      char.flag = c.flag;
+      char.age = 0;
+      char.money = 0;
+      char.salary = 0;
+      char.occupation = "Infant";
+      char.occIcon = "🍼";
+      char.educationLevel = 0;
+      char.happiness = 75 + Math.floor(Math.random() * 25);
+      char.health = 80 + Math.floor(Math.random() * 20);
+      char.smarts = 30 + Math.floor(Math.random() * 60);
+      char.looks = 30 + Math.floor(Math.random() * 60);
+      char.isAlive = true;
 
-      me.journal = [
+      char.father = { name: "David " + char.name.split(" ")[1], job: "Engineer", age: 28 };
+      char.mother = { name: "Sarah " + char.name.split(" ")[1], job: "Teacher", age: 26 };
+      char.sister = { name: "Chloe", age: 3 };
+
+      char.events = [
         {
-          year: 0,
-          notes: [
-            `🌱 A tiny sprout in this big world! I was born in the peaceful town of ${me.hometown}, ${me.region}.`,
-            `My father is ${me.kin[0].name}, a gentle ${me.kin[0].job}.`,
-            `My mother is ${me.kin[1].name}, an artisan ${me.kin[1].job}.`,
-            `The sun warms the garden as my journey begins.`
+          age: 0,
+          paragraphs: [
+            `I was born a ${char.gender.toLowerCase()} in ${char.city}, ${char.country}.`,
+            `My name is ${char.name}.`,
+            `My father is ${char.father.name}, an ${char.father.job} (age ${char.father.age}).`,
+            `My mother is ${char.mother.name}, a ${char.mother.job} (age ${char.mother.age}).`,
+            `I have an older sister named ${char.sister.name} (age ${char.sister.age}).`
           ]
         }
       ];
 
-      updateDisplay();
+      render();
     }
 
     function clamp(val, min, max) {
       return Math.max(min, Math.min(max, val));
     }
 
-    function updateDisplay() {
-      me.joy = clamp(me.joy, 0, 100);
-      me.vitality = clamp(me.vitality, 0, 100);
-      me.wisdom = clamp(me.wisdom, 0, 100);
-      me.charm = clamp(me.charm, 0, 100);
+    function render() {
+      char.happiness = clamp(char.happiness, 0, 100);
+      char.health = clamp(char.health, 0, 100);
+      char.smarts = clamp(char.smarts, 0, 100);
+      char.looks = clamp(char.looks, 0, 100);
 
-      // Passport
-      document.getElementById('nameText').innerText = me.name;
-      document.getElementById('flagDisplay').innerText = me.flag;
-      document.getElementById('roleIcon').innerText = me.roleIcon;
-      document.getElementById('roleText').innerText = me.role;
-      document.getElementById('acornCount').innerText = me.acorns.toLocaleString();
-      document.getElementById('ageBadge').innerText = `Age: ${me.age} yrs`;
+      // Identity Header
+      document.getElementById('nameDisplay').innerText = char.name;
+      document.getElementById('flagDisplay').innerText = char.flag;
+      document.getElementById('jobIconDisplay').innerText = char.occIcon;
+      document.getElementById('jobTitleDisplay').innerText = char.occupation;
+
+      const bal = document.getElementById('balanceDisplay');
+      bal.innerText = (char.money >= 0 ? '$' : '-$') + Math.abs(char.money).toLocaleString();
+      bal.className = char.money >= 0 ? 'balance-val' : 'balance-val debt';
 
       // Avatar
-      const av = document.getElementById('heroAvatar');
+      const av = document.getElementById('charAvatar');
       let base = "👶";
-      if (me.age >= 60) base = me.gender === "Female" ? "👵" : "👴";
-      else if (me.age >= 18) base = me.gender === "Female" ? "👩" : "👨";
-      else if (me.age >= 6) base = me.gender === "Female" ? "👧" : "👦";
-      av.innerHTML = `${base}<span class="avatar-flag" id="flagDisplay">${me.flag}</span>`;
+      if (char.age >= 60) base = char.gender === "Female" ? "👵" : "👴";
+      else if (char.age >= 18) base = char.gender === "Female" ? "👩" : "👨";
+      else if (char.age >= 6) base = char.gender === "Female" ? "👧" : "👦";
+      av.innerHTML = `${base}<span class="avatar-flag" id="flagDisplay">${char.flag}</span>`;
 
-      // Button
-      const btn = document.getElementById('sproutAgeBtn');
-      if (me.alive) {
-        btn.className = "hero-sprout-btn";
-        btn.innerHTML = `<span style="font-size: 22px;">🌱</span><span class="sprout-text">Sprout +1</span>`;
+      // Hero Button
+      const hero = document.getElementById('heroAgeBtn');
+      if (char.isAlive) {
+        hero.className = 'hero-age-btn';
+        hero.innerHTML = `<span style="font-size: 20px;">➕</span><span class="hero-age-text">Age</span>`;
       } else {
-        btn.className = "hero-sprout-btn dead";
-        btn.innerHTML = `<span style="font-size: 22px;">🍂</span><span class="sprout-text">Reincarnate</span>`;
+        hero.className = 'hero-age-btn dead';
+        hero.innerHTML = `<span style="font-size: 20px;">⚰️</span><span class="hero-age-text">Restart</span>`;
       }
 
       // Stats
-      setMiniBar('fillJoy', 'lblJoy', me.joy);
-      setMiniBar('fillVit', 'lblVit', me.vitality);
-      setMiniBar('fillWis', 'lblWis', me.wisdom);
-      setMiniBar('fillCha', 'lblCha', me.charm);
+      updateStatBar('fillHappy', 'valHappy', char.happiness);
+      updateStatBar('fillHealth', 'valHealth', char.health);
+      updateStatBar('fillSmarts', 'valSmarts', char.smarts);
+      updateStatBar('fillLooks', 'valLooks', char.looks);
 
-      // Journal
-      const journalEl = document.getElementById('journalFeed');
-      journalEl.innerHTML = '';
-      for (let i = me.journal.length - 1; i >= 0; i--) {
-        const item = me.journal[i];
+      // Story Feed
+      const feed = document.getElementById('storyScroll');
+      feed.innerHTML = '';
+      for (let i = char.events.length - 1; i >= 0; i--) {
+        const item = char.events[i];
         const card = document.createElement('div');
-        card.className = 'year-chapter-card';
+        card.className = 'year-entry-card';
 
-        const head = document.createElement('div');
-        head.className = 'chapter-heading';
-        head.innerHTML = `<span>📖</span> Year ${item.year} Memories`;
-        card.appendChild(head);
+        const title = document.createElement('div');
+        title.className = 'year-entry-title';
+        title.innerHTML = `<span>📅</span> Age: ${item.age} years`;
+        card.appendChild(title);
 
-        item.notes.forEach(txt => {
-          const p = document.createElement('p');
-          p.className = 'story-line';
-          p.innerText = txt;
-          card.appendChild(p);
+        item.paragraphs.forEach(p => {
+          const pEl = document.createElement('p');
+          pEl.className = 'year-entry-text';
+          pEl.innerText = p;
+          card.appendChild(pEl);
         });
 
-        journalEl.appendChild(card);
+        feed.appendChild(card);
       }
     }
 
-    function setMiniBar(barId, lblId, val) {
+    function updateStatBar(barId, lblId, val) {
       document.getElementById(barId).style.width = `${Math.max(val, 6)}%`;
       document.getElementById(lblId).innerText = `${val}%`;
     }
 
-    // GROW YEAR
-    function growYear() {
-      if (!me.alive) {
-        confirmReset();
+    // AGING
+    function onAgeClicked() {
+      if (!char.isAlive) {
+        confirmRestart();
         return;
       }
 
-      me.age++;
-      me.kin.forEach(k => k.age++);
+      char.age++;
+      char.father.age++;
+      char.mother.age++;
+      char.sister.age++;
 
-      const memories = [];
+      const yearNotes = [];
 
-      // Senior gentle decline
-      if (me.age > 50) me.vitality -= (1 + Math.floor(Math.random() * 2));
-      if (me.age > 75) me.vitality -= (2 + Math.floor(Math.random() * 4));
+      // Senior decay
+      if (char.age > 45) char.health -= (1 + Math.floor(Math.random() * 3));
+      if (char.age > 75) char.health -= (2 + Math.floor(Math.random() * 5));
 
-      // Harvest income
-      if (me.salary > 0) {
-        const livingCost = Math.round(me.salary * 0.28) + 500;
-        const net = me.salary - livingCost;
-        me.acorns += net;
+      // Financials
+      if (char.salary > 0) {
+        const livingCost = Math.round(char.salary * 0.32) + 750;
+        const net = char.salary - livingCost;
+        char.money += net;
       }
 
       // Milestones
-      if (me.age === 6) {
-        me.role = "Village School Pupil";
-        me.roleIcon = "🎒";
-        memories.push("🎒 I started attending the village school under the weeping willow tree!");
-      } else if (me.age === 15) {
-        memories.push("🌸 Teenage years have arrived! I love spending afternoons baking and painting.");
-      } else if (me.age === 18) {
-        me.education = Math.max(me.education, 1);
-        if (me.salary === 0) {
-          me.role = "Village Free Spirit";
-          me.roleIcon = "🌾";
+      if (char.age === 6) {
+        char.occupation = "Elementary Student";
+        char.occIcon = "🎒";
+        yearNotes.push("I started attending Elementary School!");
+      } else if (char.age === 14) {
+        char.occupation = "High School Student";
+        char.occIcon = "🎒";
+        yearNotes.push("I entered High School.");
+      } else if (char.age === 18) {
+        char.educationLevel = Math.max(char.educationLevel, 1);
+        if (char.salary === 0) {
+          char.occupation = "High School Graduate";
+          char.occIcon = "🎓";
         }
-        memories.push("🎓 I finished basic village school. The wide world awaits my calling!");
+        yearNotes.push("🎓 I graduated from High School!");
       } else {
-        triggerGentleRandomEvents(memories);
+        triggerAnnualEvents(yearNotes);
       }
 
-      // Peaceful End of Life
-      if (me.vitality <= 0) {
-        me.alive = false;
-        memories.push(`🍂 At age ${me.age}, my earthly journey gently came to rest. A peaceful life well lived.`);
-      } else if (me.age > 78 && Math.random() < ((me.age - 72) / 60)) {
-        me.alive = false;
-        memories.push(`🕊️ At age ${me.age}, I fell asleep peacefully under the autumn leaves, surrounded by warm tea and loved ones.`);
+      // Death logic
+      if (char.health <= 0) {
+        char.isAlive = false;
+        yearNotes.push(`⚰️ At age ${char.age}, I passed away due to poor health conditions. Rest in peace.`);
+      } else if (char.age > 72 && Math.random() < ((char.age - 68) / 80)) {
+        char.isAlive = false;
+        yearNotes.push(`🕊️ At age ${char.age}, I passed away peacefully in my sleep surrounded by family.`);
       }
 
-      me.journal.push({ year: me.age, notes: memories });
-      updateDisplay();
+      char.events.push({ age: char.age, paragraphs: yearNotes });
+      render();
 
-      // Gentle interactive choices
-      if (me.alive && me.age >= 10 && Math.random() < 0.3) {
-        setTimeout(popupDilemma, 300);
+      // Occasional dilemmas
+      if (char.isAlive && char.age >= 11 && Math.random() < 0.30) {
+        setTimeout(popupDilemma, 320);
       }
     }
 
-    function triggerGentleRandomEvents(list) {
+    function triggerAnnualEvents(list) {
       const roll = Math.random() * 100;
-      if (roll < 15) {
-        me.vitality -= (8 + Math.floor(Math.random() * 12));
-        me.joy -= 8;
-        list.push("🌧️ Caught a seasonal winter chill and drank ginger tea by the fireplace for a week.");
-      } else if (roll < 30) {
-        const gift = 60 + Math.floor(Math.random() * 250);
-        me.acorns += gift;
-        me.joy += 8;
-        list.push(`🍄 While foraging in the mossy grove, I found ${gift} shiny acorns hidden under a toadstool!`);
-      } else if (roll < 45 && me.age >= 16) {
-        me.joy += 18;
-        me.charm += 4;
-        list.push("💌 Shared an unforgettable sunset picnic with someone truly beloved.");
-      } else if (roll < 60 && me.salary > 0) {
-        const bonus = Math.round(me.salary * 0.15);
-        me.acorns += bonus;
-        me.joy += 12;
-        list.push(`✨ The village guild rewarded my fine craft with a seasonal harvest bonus of ${bonus.toLocaleString()} 🌰!`);
+      if (roll < 14) {
+        char.health -= (10 + Math.floor(Math.random() * 15));
+        char.happiness -= 10;
+        list.push("🤒 I caught a severe flu and spent two weeks in bed.");
+      } else if (roll < 28) {
+        const found = 60 + Math.floor(Math.random() * 350);
+        char.money += found;
+        char.happiness += 8;
+        list.push(`🍀 I found $${found} cash on the sidewalk while walking through town!`);
+      } else if (roll < 42 && char.age >= 16) {
+        char.happiness += 18;
+        char.looks += 3;
+        list.push("❤️ I went on a wonderful romantic date with someone special.");
+      } else if (roll < 55 && char.salary > 0) {
+        const bonus = Math.round(char.salary * 0.15);
+        char.money += bonus;
+        char.happiness += 12;
+        list.push(`💼 My employer gave me a performance bonus of $${bonus.toLocaleString()}!`);
       } else {
-        list.push("🍃 A serene, gentle year passed listening to birdsong and creek water.");
+        list.push("📅 Another peaceful year passed smoothly.");
       }
     }
 
-    // DILEMMAS
+    // DILEMMAS & DECISIONS
     function popupDilemma() {
       const dilemmas = [
         {
-          icon: "🐿️",
-          title: "Injured Chipmunk",
-          desc: "You discover a little chipmunk with a hurt paw nestled in clover.",
-          opts: [
-            { text: "Nurse it back to health with berries", fn: () => { me.joy += 15; me.acorns -= 20; addNote("I bandaged the chipmunk's paw; it now visits my porch every morning!"); } },
-            { text: "Gently place it in a hollow cedar tree", fn: () => { me.joy += 6; addNote("I placed the chipmunk safely out of reach of foxes."); } }
+          icon: "🐶",
+          title: "Abandoned Puppy",
+          desc: "You found a shivering puppy abandoned under a park bench.",
+          choices: [
+            { text: "Adopt the puppy ($100)", fn: () => { char.happiness += 18; char.money -= 100; recordAction("I adopted the cute puppy and named him Buster!"); } },
+            { text: "Take it to the animal shelter", fn: () => { char.happiness += 6; recordAction("I safely dropped the puppy off at a no-kill animal shelter."); } },
+            { text: "Walk away", fn: () => { char.happiness -= 8; recordAction("I walked away from the puppy feeling guilty."); } }
           ]
         },
         {
-          icon: "🎨",
-          title: "Village Lantern Festival",
-          desc: "The annual lantern floating ceremony is tonight. What craft will you bring?",
-          opts: [
-            { text: "Hand-paint an intricate silk lantern (50 🌰)", fn: () => { me.acorns -= 50; me.charm += 8; me.joy += 16; addNote("My silk lantern won first praise across the entire village canal!"); } },
-            { text: "Enjoy the floating lanterns from the bridge", fn: () => { me.joy += 8; addNote("I watched glowing lanterns drift under the starry moonlight."); } }
+          icon: "👊",
+          title: "School Bully",
+          desc: "A confrontational classmate tries to intimidate you in the hallway.",
+          choices: [
+            { text: "Stand your ground and fight back", fn: () => { char.health -= 10; char.looks += 4; char.happiness += 12; recordAction("I stood up to the bully! Got a bruise but earned total respect."); } },
+            { text: "Report them to the principal", fn: () => { char.smarts += 4; recordAction("I reported the bully and they received detention."); } },
+            { text: "Give in and walk away", fn: () => { char.happiness -= 10; recordAction("I backed down and felt frustrated."); } }
           ]
         },
         {
-          icon: "☕",
-          title: "Cozy Tea Shop Idea",
-          desc: "An elderly neighbor offers to teach you their secret lavender honey blend.",
-          opts: [
-            { text: "Spend the afternoon learning the recipe", fn: () => { me.wisdom += 10; me.joy += 10; addNote("Learned how to brew divine lavender honey tea!"); } },
-            { text: "Politely decline and nap in the hammock", fn: () => { me.vitality += 6; addNote("Had a delightfully restful afternoon nap."); } }
+          icon: "📈",
+          title: "Crypto Opportunity",
+          desc: "A friend shares an early-stage cryptocurrency tip.",
+          choices: [
+            { text: "Invest $500", fn: () => {
+              if (Math.random() > 0.45) {
+                char.money += 2500; char.happiness += 20; recordAction("The crypto coin skyrocketed! I earned $2,500 profit.");
+              } else {
+                char.money -= 500; char.happiness -= 15; recordAction("The token plummeted to zero. I lost $500.");
+              }
+            }},
+            { text: "Keep savings safe", fn: () => { recordAction("I decided not to risk my savings on volatile tokens."); } }
           ]
         }
       ];
@@ -1163,201 +1183,219 @@
       document.getElementById('dTitle').innerText = item.title;
       document.getElementById('dDesc').innerText = item.desc;
 
-      const optsBox = document.getElementById('dOpts');
-      optsBox.innerHTML = '';
-      item.opts.forEach((opt, idx) => {
+      const choicesBox = document.getElementById('dChoices');
+      choicesBox.innerHTML = '';
+      item.choices.forEach((ch, idx) => {
         const b = document.createElement('button');
-        b.className = idx === 0 ? 'cozy-opt-btn primary' : 'cozy-opt-btn';
-        b.innerText = opt.text;
+        b.className = idx === 0 ? 'choice-btn primary' : 'choice-btn';
+        b.innerText = ch.text;
         b.onclick = () => {
           document.getElementById('modalDilemma').classList.remove('active');
-          opt.fn();
-          updateDisplay();
+          ch.fn();
+          render();
         };
-        optsBox.appendChild(b);
+        choicesBox.appendChild(b);
       });
 
       document.getElementById('modalDilemma').classList.add('active');
     }
 
-    function addNote(str) {
-      if (me.journal.length > 0) {
-        me.journal[me.journal.length - 1].notes.push(str);
+    function recordAction(str) {
+      if (char.events.length > 0) {
+        char.events[char.events.length - 1].paragraphs.push(str);
       }
     }
 
-    // LIVING ACTIONS
-    function doReadBooks() {
-      if (!me.alive) return;
-      me.wisdom += 5 + Math.floor(Math.random() * 5);
-      me.joy += 3;
-      addNote("📚 Spent a lovely afternoon reading poetry and herbology by the brook. (+Wisdom)");
-      closeSheet('modalLiving');
-      updateDisplay();
+    // ACTIVITIES
+    function doStudy() {
+      if (!char.isAlive) return;
+      char.smarts += 5 + Math.floor(Math.random() * 5);
+      char.happiness -= 2;
+      recordAction("📚 I spent hours studying diligently in the library. (+Smarts)");
+      closeModal('modalActivities');
+      render();
     }
 
-    function doNatureWalk() {
-      if (!me.alive) return;
-      me.vitality += 6 + Math.floor(Math.random() * 6);
-      me.charm += 4;
-      me.joy += 6;
-      addNote("🌲 Strolled along the pine ridge, collecting cedar cones. (+Vitality, +Charm)");
-      closeSheet('modalLiving');
-      updateDisplay();
+    function doGym() {
+      if (!char.isAlive) return;
+      char.health += 6 + Math.floor(Math.random() * 6);
+      char.looks += 5;
+      char.happiness += 4;
+      char.money -= 30;
+      recordAction("🏋️ Completed an intense workout session at the gym. (+Health, +Looks)");
+      closeModal('modalActivities');
+      render();
     }
 
-    function doApothecary() {
-      if (!me.alive) return;
-      if (me.acorns < 150) {
-        alert("The herbalist asks for 150 🌰 for fresh medicinal tinctures.");
+    function doDoctor() {
+      if (!char.isAlive) return;
+      if (char.age >= 18 && char.money < 250) {
+        alert("Doctor appointment fee is $250. Insufficient funds!");
         return;
       }
-      me.acorns -= 150;
-      me.vitality += 26;
-      addNote("🍯 Drank fragrant elderberry and honey tonics. Restored good health!");
-      closeSheet('modalLiving');
-      updateDisplay();
+      if (char.age >= 18) char.money -= 250;
+      char.health += 25 + Math.floor(Math.random() * 15);
+      recordAction("🩺 The doctor treated my ailments. (+Health)");
+      closeModal('modalActivities');
+      render();
     }
 
-    function doHotSprings() {
-      if (!me.alive) return;
-      if (me.acorns < 800) {
-        alert("The Onsen hot springs bath costs 800 🌰.");
+    function doVacation() {
+      if (!char.isAlive) return;
+      if (char.money < 1200) {
+        alert("Luxury vacation costs $1,200. Save up first!");
         return;
       }
-      me.acorns -= 800;
-      me.joy += 32;
-      me.vitality += 6;
-      addNote("♨️ Soaked in cedarwood thermal baths while snowflakes melted in the water. (+Joy)");
-      closeSheet('modalLiving');
-      updateDisplay();
+      char.money -= 1200;
+      char.happiness += 35;
+      char.health += 5;
+      recordAction("🏖️ Flew first-class on vacation to Hawaii. (+Happiness)");
+      closeModal('modalActivities');
+      render();
     }
 
-    function doWishingWell() {
-      if (!me.alive) return;
-      if (me.acorns < 30) {
-        alert("Tossing a coin costs 30 🌰.");
+    function doLottery() {
+      if (!char.isAlive) return;
+      if (char.money < 50) {
+        alert("Lottery ticket costs $50!");
         return;
       }
-      me.acorns -= 30;
+      char.money -= 50;
       const roll = Math.random() * 100;
-      if (roll > 92) {
-        const gift = 8000 + Math.floor(Math.random() * 15000);
-        me.acorns += gift;
-        me.joy += 40;
-        addNote(`✨ The Wishing Well sparkled! You received an ancient blessing of ${gift.toLocaleString()} 🌰!`);
-      } else if (roll > 70) {
-        me.acorns += 180;
-        me.joy += 10;
-        addNote("🍀 A friendly water sprite tossed back 180 🌰!");
+      if (roll > 95) {
+        const prize = 45000 + Math.floor(Math.random() * 75000);
+        char.money += prize;
+        char.happiness += 45;
+        recordAction(`🎰 JACKPOT! I won the state lottery for $${prize.toLocaleString()}!`);
+      } else if (roll > 75) {
+        const prize = 200 + Math.floor(Math.random() * 300);
+        char.money += prize;
+        char.happiness += 12;
+        recordAction(`🎫 Won $${prize} on a scratch-off ticket!`);
       } else {
-        addNote("Your coin rippled peacefully into the deep cool well water.");
+        recordAction("The lottery ticket was not a winner.");
       }
-      closeSheet('modalLiving');
-      updateDisplay();
+      closeModal('modalActivities');
+      render();
     }
 
-    function doAcademy() {
-      if (!me.alive) return;
-      if (me.age < 18) {
-        alert("You must be 18 to attend the Botanical Academy.");
+    function doUniversity() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        alert("Must be 18 to enroll in University!");
         return;
       }
-      if (me.education >= 2) {
-        alert("You already graduated from the Academy!");
+      if (char.educationLevel >= 2) {
+        alert("You already graduated from University!");
         return;
       }
-      if (me.wisdom < 50) {
-        alert("Your Wisdom must be ≥ 50 to pass entrance exams. Read more books!");
+      if (char.smarts < 50) {
+        alert("Smarts must be ≥ 50 to qualify for university admission.");
         return;
       }
-      me.education = 2;
-      me.acorns -= 5000;
-      me.wisdom += 22;
-      me.role = "Academy Scholar";
-      me.roleIcon = "📜";
-      addNote("🎓 Completed the Botanical Academy degree with honors!");
-      closeSheet('modalCareers');
-      updateDisplay();
+      char.educationLevel = 2;
+      char.money -= 12000;
+      char.smarts += 20;
+      char.occupation = "College Graduate";
+      char.occIcon = "🎓";
+      recordAction("🎓 Graduated with honors from University! Executive careers unlocked.");
+      closeModal('modalAssets');
+      render();
     }
 
-    function takeRole(title, pay, reqEdu, reqWis, icon) {
-      if (!me.alive) return;
-      if (me.age < 18) {
-        alert("Must be at least 18 for full-time master artisan callings.");
+    function applyJob(title, pay, reqEdu, reqSmarts, icon) {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        alert("Must be at least 18 to work full-time!");
         return;
       }
-      if (me.education < reqEdu) {
-        alert(`Requires higher academy training (Level ${reqEdu}).`);
+      if (char.educationLevel < reqEdu) {
+        alert(`Requires higher education level (${reqEdu})!`);
         return;
       }
-      if (me.wisdom < reqWis) {
-        alert(`Requires Wisdom ≥ ${reqWis}.`);
+      if (char.smarts < reqSmarts) {
+        alert(`Failed the job interview. Requires Smarts ≥ ${reqSmarts}.`);
         return;
       }
 
-      me.role = title;
-      me.roleIcon = icon;
-      me.salary = pay;
-      me.joy += 14;
-      addNote(`🎉 Began my calling as a ${title} earning ${pay.toLocaleString()} 🌰/year!`);
-      closeSheet('modalCareers');
-      updateDisplay();
+      char.occupation = title;
+      char.occIcon = icon;
+      char.salary = pay;
+      char.happiness += 12;
+      recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
+      closeModal('modalAssets');
+      render();
     }
 
-    // MODAL OPENERS
-    function openActivities() {
-      document.getElementById('modalLiving').classList.add('active');
+    // MODAL HELPERS
+    function openActivitiesModal() {
+      document.getElementById('modalActivities').classList.add('active');
     }
 
-    function openCareers() {
-      document.getElementById('modalCareers').classList.add('active');
+    function openAssetsModal() {
+      document.getElementById('modalAssets').classList.add('active');
     }
 
-    function openKinship() {
-      const box = document.getElementById('kinshipList');
-      box.innerHTML = '';
-      me.kin.forEach(k => {
-        const card = document.createElement('div');
-        card.className = 'cozy-action-card';
-        card.innerHTML = `
-          <div class="action-left-box">
-            <div class="action-icon-pill">${k.emoji}</div>
-            <div class="action-text-box">
-              <h4>${k.name} (${k.rel}, Age ${k.age})</h4>
-              <p>${k.job} • Loving Kinship</p>
+    function openRelationshipsModal() {
+      const box = document.getElementById('relSheetContent');
+      box.innerHTML = `
+        <div class="action-card">
+          <div class="card-left">
+            <div class="card-icon-bubble">👨</div>
+            <div class="card-texts">
+              <h4>${char.father.name} (Father, Age ${char.father.age})</h4>
+              <p>Career: ${char.father.job} • Relationship: 100%</p>
             </div>
           </div>
-          <button class="cozy-btn-pill" onclick="spendKinTime('${k.name}', '${k.rel}')">Tea Time</button>
-        `;
-        box.appendChild(card);
-      });
-      document.getElementById('modalKinship').classList.add('active');
+          <button class="btn-pill" onclick="spendFamily('Father')">Spend Time</button>
+        </div>
+        <div class="action-card">
+          <div class="card-left">
+            <div class="card-icon-bubble">👩</div>
+            <div class="card-texts">
+              <h4>${char.mother.name} (Mother, Age ${char.mother.age})</h4>
+              <p>Career: ${char.mother.job} • Relationship: 100%</p>
+            </div>
+          </div>
+          <button class="btn-pill" onclick="spendFamily('Mother')">Spend Time</button>
+        </div>
+        <div class="action-card">
+          <div class="card-left">
+            <div class="card-icon-bubble">👧</div>
+            <div class="card-texts">
+              <h4>${char.sister.name} (Sister, Age ${char.sister.age})</h4>
+              <p>Relationship: 95%</p>
+            </div>
+          </div>
+          <button class="btn-pill" onclick="spendFamily('Sister')">Spend Time</button>
+        </div>
+      `;
+      document.getElementById('modalRel').classList.add('active');
     }
 
-    function spendKinTime(name, rel) {
-      me.joy += 12;
-      addNote(`🍵 Shared sweet persimmons and brewed tea with my beloved ${rel} ${name}. (+Joy)`);
-      closeSheet('modalKinship');
-      updateDisplay();
+    function spendFamily(who) {
+      char.happiness += 12;
+      recordAction(`I spent quality time chatting and bonding with my ${who}. (+Happiness)`);
+      closeModal('modalRel');
+      render();
     }
 
-    function closeSheet(id) {
+    function closeModal(id) {
       document.getElementById(id).classList.remove('active');
     }
 
-    function onModalBg(e, id) {
-      if (e.target.id === id) closeSheet(id);
+    function onOverlayClick(e, id) {
+      if (e.target.id === id) closeModal(id);
     }
 
-    function confirmReset() {
-      if (confirm("Begin a fresh new cozy life journey?")) {
-        initSproutLife();
+    function confirmRestart() {
+      if (confirm("Start a brand new life?")) {
+        startNewLife();
       }
     }
 
-    // INITIALIZE
-    initSproutLife();
+    // INIT
+    startNewLife();
 
     // Register OTA Service Worker
     if ('serviceWorker' in navigator) {
