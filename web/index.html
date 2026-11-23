@@ -1706,7 +1706,343 @@
       };
     }
 
-    function generateSchoolName(stage) {
+        // =========================================================================
+    // CENTRALIZED SINGLE SOURCE OF TRUTH: LIFE STAGE, EDUCATION, CAREER & FINANCES
+    // =========================================================================
+
+    function getLifeStage(age) {
+      if (age <= 5) return "infant";  // Age 0–5: Infant / Early Childhood
+      if (age <= 17) return "school"; // Age 6–17: School
+      return "adult";                 // Age 18+: Adult
+    }
+
+    function getSchoolLevel(age) {
+      if (age < 6) return null;
+      if (age <= 10) return "elementary"; // Age 6–10: Elementary School
+      if (age <= 13) return "middle";     // Age 11–13: Middle School
+      if (age <= 17) return "high";       // Age 14–17: High School
+      return null;
+    }
+
+    function getEducationStatus(player) {
+      if (!player || !player.school) return "Not Enrolled";
+      if (player.school.stage === "Grad School") return "Graduate Student";
+      if (player.school.stage === "University") return "University Student";
+      if (player.school.hasMedDegree || player.school.hasLawDegree || player.school.hasMBADegree) {
+        return "Graduate Degree Holder";
+      }
+      if (player.school.hasDegree) return "Bachelor's Graduate";
+      if (player.school.isGED) return "GED Holder";
+      if (player.school.hasDiploma) return "High School Graduate";
+      if (player.school.isDropout) return "Dropout";
+      const lvl = getSchoolLevel(player.age);
+      if (lvl === "elementary") return "Elementary School";
+      if (lvl === "middle") return "Middle School";
+      if (lvl === "high") return "High School";
+      return "Not Enrolled";
+    }
+
+    function canApplyForJob(player, job) {
+      if (!player || !player.isAlive) {
+        return { eligible: false, reason: "Player is not alive." };
+      }
+
+      // Minimum age check (default 18 for full-time careers if unspecified)
+      const minAge = job.minAge != null ? job.minAge : 18;
+      if (player.age < minAge) {
+        return { eligible: false, reason: "Must be at least " + minAge + " years old (Current age: " + player.age + ")." };
+      }
+
+      // Already holds this exact position
+      if (player.salary > 0 && player.occupation === job.title) {
+        return { eligible: false, reason: "You already work as " + job.title + "." };
+      }
+
+      // Check Smarts Requirement
+      const reqSmarts = job.reqSmarts || 0;
+      if (player.smarts < reqSmarts) {
+        return { eligible: false, reason: "Requires Smarts ≥ " + reqSmarts + "%. (Your Smarts: " + player.smarts + "%)" };
+      }
+
+      // Check Education Requirement:
+      // 0: None, 1: HS Diploma / GED, 2: Bachelor's Degree, 3: Graduate Degree
+      const reqEdu = job.reqEdu || 0;
+      const hasDiplomaOrGED = player.school && (player.school.hasDiploma || player.school.isGED || player.school.educationStatus === "GED Holder" || player.school.educationStatus === "High School Graduate");
+      const hasDegree = player.school && (player.school.hasDegree || player.school.educationStatus === "Bachelor's Graduate" || player.school.educationStatus === "Graduate Degree Holder");
+
+      if (reqEdu >= 1 && !hasDiplomaOrGED && !hasDegree) {
+        return { eligible: false, reason: "Requires High School Diploma or GED equivalency!" };
+      }
+
+      if (reqEdu >= 2 && !hasDegree) {
+        return { eligible: false, reason: "Requires a Bachelor's Degree from University!" };
+      }
+
+      if (reqEdu >= 3) {
+        if (job.title.includes("Lawyer") && !(player.school && player.school.hasLawDegree)) {
+          return { eligible: false, reason: "Requires a Juris Doctor (J.D.) degree from Law School!" };
+        }
+        if (job.title.includes("Surgeon") && !(player.school && player.school.hasMedDegree)) {
+          return { eligible: false, reason: "Requires a Medical Doctor (M.D.) degree from Medical School!" };
+        }
+        if (job.title.includes("CEO")) {
+          const hasMBA = player.school && player.school.hasMBADegree;
+          const hasHonorsDegree = hasDegree && player.smarts >= 90;
+          if (!hasMBA && !hasHonorsDegree) {
+            return { eligible: false, reason: "Requires an MBA or exceptional Bachelor's with Smarts ≥ 90%!" };
+          }
+        }
+      }
+
+      return { eligible: true, reason: "" };
+    }
+
+    function canEnrollInUniversity(player, major) {
+      if (!player || !player.isAlive) {
+        return { eligible: false, reason: "Player is not alive." };
+      }
+      if (player.age < 18) {
+        return { eligible: false, reason: "Must be at least 18 years old to attend University." };
+      }
+      if (player.school && (player.school.stage === "University" || player.school.stage === "Grad School")) {
+        return { eligible: false, reason: "You are already enrolled in an academic degree program." };
+      }
+      if (player.school && player.school.hasDegree) {
+        return { eligible: false, reason: "You already hold a Bachelor's Degree. Consider Graduate School!" };
+      }
+      const hasDiplomaOrGED = player.school && (player.school.hasDiploma || player.school.isGED);
+      if (!hasDiplomaOrGED) {
+        return { eligible: false, reason: "University requires a High School Diploma or GED equivalency!" };
+      }
+      if (major && major.req != null && player.smarts < major.req) {
+        return { eligible: false, reason: "Requires Smarts ≥ " + major.req + "%. (Your Smarts: " + player.smarts + "%)" };
+      }
+      return { eligible: true, reason: "" };
+    }
+
+    function canEnrollInGraduateSchool(player, program) {
+      if (!player || !player.isAlive) {
+        return { eligible: false, reason: "Player is not alive." };
+      }
+      if (!player.school || !player.school.hasDegree) {
+        return { eligible: false, reason: "Graduate School requires a Bachelor's Degree from University!" };
+      }
+      if (player.school.stage === "University" || player.school.stage === "Grad School") {
+        return { eligible: false, reason: "You are already enrolled in an academic degree program." };
+      }
+      if (program) {
+        if (program.name.includes("Medical") && player.school.hasMedDegree) {
+          return { eligible: false, reason: "You already hold a Medical Doctor (M.D.) degree!" };
+        }
+        if (program.name.includes("Law") && player.school.hasLawDegree) {
+          return { eligible: false, reason: "You already hold a Juris Doctor (J.D.) degree!" };
+        }
+        if (program.name.includes("Business") && player.school.hasMBADegree) {
+          return { eligible: false, reason: "You already hold a Master of Business Administration (MBA)!" };
+        }
+        if (program.name.includes("Medical") && !(player.school.major && player.school.major.includes("Biology"))) {
+          return { eligible: false, reason: "Medical School requires a Bachelor's Degree majoring in Biology (Pre-Med)!" };
+        }
+        if (program.name.includes("Law") && !(player.school.major && (player.school.major.includes("Law") || player.school.major.includes("Business")))) {
+          return { eligible: false, reason: "Law School requires a Bachelor's Degree in Pre-Law or Business Administration!" };
+        }
+        if (program.reqSmarts != null && player.smarts < program.reqSmarts) {
+          return { eligible: false, reason: "Requires Smarts ≥ " + program.reqSmarts + "%. (Your Smarts: " + player.smarts + "%)" };
+        }
+      }
+      return { eligible: true, reason: "" };
+    }
+
+    function calculateAnnualIncome(player) {
+      if (!player || !player.isAlive) return 0;
+      let total = 0;
+      if (player.salary > 0) total += player.salary;
+      if (player.partTimeJob && player.partTimeJob.pay > 0) total += player.partTimeJob.pay;
+      if (player.assets && player.assets.length > 0) {
+        player.assets.forEach(a => {
+          if (a.type === "property" && a.isRented) total += (a.rentalIncome || 0);
+          else if (a.type === "business") total += (a.annualProfit || 0);
+          else if (a.dividendYield && a.dividendYield > 0) {
+            total += Math.round((a.currentPrice || a.price || 0) * a.dividendYield);
+          }
+        });
+      }
+      return total;
+    }
+
+    function processAnnualFinancials(player) {
+      if (!player || !player.isAlive) return null;
+
+      // Unique identifier & idempotent guard against duplicate processing in same simulated year
+      if (player._lastFinancialAge === player.age) {
+        return player._lastFinancialSummary || null;
+      }
+      player._lastFinancialAge = player.age;
+
+      const summary = {
+        year: player.age,
+        transactionId: "txn_" + player.age + "_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+        salary: 0,
+        livingCost: 0,
+        netSalary: 0,
+        sideGigIncome: 0,
+        studentDebtPayment: 0,
+        rentalIncome: 0,
+        businessProfit: 0,
+        dividends: 0,
+        totalMortgagePaid: 0,
+        totalBusinessLoanPaid: 0,
+        totalAutoLoanPaid: 0,
+        totalVehicleUpkeep: 0,
+        investmentGains: 0,
+        netChange: 0
+      };
+
+      // 1. Full-time salary (minus living costs) - ONLY if employed
+      if (player.salary > 0) {
+        summary.salary = player.salary;
+        summary.livingCost = Math.round(player.salary * 0.32) + 750;
+        summary.netSalary = summary.salary - summary.livingCost;
+        player.money += summary.netSalary;
+        summary.netChange += summary.netSalary;
+      }
+
+      // 2. Part-time side gig income
+      if (player.partTimeJob && player.partTimeJob.pay > 0) {
+        summary.sideGigIncome = player.partTimeJob.pay;
+        player.money += summary.sideGigIncome;
+        summary.netChange += summary.sideGigIncome;
+      }
+
+      // 3. Student loan annual repayment (only if adult and not currently in college/grad school)
+      if (player.age >= 18 && player.school && player.school.studentDebt > 0 && 
+          player.school.stage !== "University" && player.school.stage !== "Grad School") {
+        const debtPmt = Math.min(player.school.studentDebt, 1500);
+        player.school.studentDebt = Math.max(0, player.school.studentDebt - debtPmt);
+        player.money -= debtPmt;
+        summary.studentDebtPayment = debtPmt;
+        summary.netChange -= debtPmt;
+      }
+
+      // 4. Asset Economics
+      if (player.assets && player.assets.length > 0) {
+        const marketRoll = Math.random();
+        const isBullRun = marketRoll > 0.85;
+        const isCorrection = marketRoll < 0.20;
+
+        player.assets.forEach(asset => {
+          if (asset.type === "property") {
+            const appRate = (0.02 + Math.random() * 0.04) * ((asset.condition || 100) >= 80 ? 1.15 : (asset.condition || 100) < 40 ? 0.6 : 1.0);
+            asset.currentPrice += Math.round(asset.currentPrice * appRate);
+            const wear = asset.isAirbnb ? (2 + Math.floor(Math.random() * 3)) : (1 + Math.floor(Math.random() * 3));
+            asset.condition = Math.max(15, (asset.condition || 100) - wear);
+
+            if (asset.isRented) {
+              const rent = asset.rentalIncome || Math.round(asset.currentPrice * (asset.isAirbnb ? 0.115 : 0.075));
+              player.money += rent;
+              summary.rentalIncome += rent;
+              summary.netChange += rent;
+            }
+
+            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
+              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
+              player.money -= pmt;
+              asset.loanBalance = Math.max(0, asset.loanBalance - pmt);
+              summary.totalMortgagePaid += pmt;
+              summary.netChange -= pmt;
+              if (asset.loanBalance <= 0) {
+                asset.loanBalance = 0;
+                asset.loanAnnualPayment = 0;
+              }
+            }
+          } else if (asset.type === "business") {
+            const profit = asset.annualProfit || Math.round((asset.currentPrice || asset.price) * 0.25);
+            player.money += profit;
+            summary.businessProfit += profit;
+            summary.netChange += profit;
+
+            if (asset.hasGeneralManager) {
+              asset.condition = 100;
+              const gmFee = Math.round(profit * 0.10);
+              player.money = Math.max(0, player.money - gmFee);
+              summary.netChange -= gmFee;
+            } else {
+              asset.condition = Math.max(20, (asset.condition || 100) - (2 + Math.floor(Math.random() * 4)));
+            }
+
+            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
+              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
+              player.money -= pmt;
+              asset.loanBalance = Math.max(0, asset.loanBalance - pmt);
+              summary.totalBusinessLoanPaid += pmt;
+              summary.netChange -= pmt;
+              if (asset.loanBalance <= 0) {
+                asset.loanBalance = 0;
+                asset.loanAnnualPayment = 0;
+              }
+            }
+          } else if (asset.type === "vehicle") {
+            const depRate = 0.06 + Math.random() * 0.03;
+            asset.currentPrice = Math.max(500, Math.round(asset.currentPrice * (1 - depRate)));
+            asset.mileage = (asset.mileage || 0) + (7000 + Math.floor(Math.random() * 6000));
+            asset.condition = Math.max(10, (asset.condition || 100) - (2 + Math.floor(Math.random() * 4)));
+
+            const upkeep = asset.annualUpkeep || 500;
+            player.money -= upkeep;
+            summary.totalVehicleUpkeep += upkeep;
+            summary.netChange -= upkeep;
+
+            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
+              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
+              player.money -= pmt;
+              asset.loanBalance = Math.max(0, asset.loanBalance - pmt);
+              summary.totalAutoLoanPaid += pmt;
+              summary.netChange -= pmt;
+              if (asset.loanBalance <= 0) {
+                asset.loanBalance = 0;
+                asset.loanAnnualPayment = 0;
+              }
+            }
+          } else if (asset.type === "stock" || asset.type === "crypto" || asset.type === "investment") {
+            if (asset.dividendYield && asset.dividendYield > 0) {
+              const div = Math.round((asset.currentPrice || asset.price) * asset.dividendYield);
+              if (div > 0) {
+                player.money += div;
+                summary.dividends += div;
+                summary.netChange += div;
+              }
+            }
+
+            let returnRate = 0;
+            if (asset.assetClass === "bond") returnRate = 0.042;
+            else if (asset.assetClass === "gold") returnRate = isCorrection ? 0.08 : (0.03 + Math.random() * 0.05);
+            else if (asset.assetClass === "index") returnRate = isBullRun ? (0.16 + Math.random() * 0.14) : isCorrection ? (-0.08 + Math.random() * 0.05) : (0.05 + Math.random() * 0.09);
+            else if (asset.assetClass === "growth" || asset.type === "stock") returnRate = isBullRun ? (0.24 + Math.random() * 0.20) : isCorrection ? (-0.14 + Math.random() * 0.08) : (0.08 + Math.random() * 0.12);
+            else if (asset.assetClass === "crypto" || asset.type === "crypto") returnRate = isBullRun ? (0.75 + Math.random() * 0.90) : isCorrection ? (-0.35 + Math.random() * 0.15) : (0.15 + Math.random() * 0.45);
+            else if (asset.assetClass === "venture") returnRate = Math.random() > 0.4 ? (0.30 + Math.random() * 0.80) : (-0.20);
+
+            const gain = Math.round(asset.currentPrice * returnRate);
+            asset.currentPrice = Math.max(50, asset.currentPrice + gain);
+            summary.investmentGains += gain;
+          } else if (asset.type === "luxury") {
+            if (asset.name.includes("Painting") || asset.name.includes("Wine")) {
+              asset.currentPrice = Math.round(asset.currentPrice * 1.025);
+            }
+          }
+        });
+      }
+
+      // Guard against NaN or corrupt numerical state
+      if (isNaN(player.money)) player.money = 0;
+      if (player.school && (isNaN(player.school.studentDebt) || player.school.studentDebt < 0)) {
+        player.school.studentDebt = 0;
+      }
+
+      player._lastFinancialSummary = summary;
+      return summary;
+    }
+
+function generateSchoolName(stage) {
       const prefixes = ["Oakridge", "Lincoln", "Westwood", "St. Jude", "Horizon", "Maplewood", "Sunnyvale", "Roosevelt", "Beacon", "Crestview"];
       const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
       if (stage === "Elementary") return `${prefix} Elementary School`;
@@ -1796,6 +2132,8 @@
       char.occupation = "Infant";
       char.occIcon = "🍼";
       char.educationLevel = 0;
+      char.educationStatus = "Not Enrolled";
+      char.employmentStatus = "Unemployed";
       char.happiness = 80 + Math.floor(Math.random() * 20);
       char.health = 85 + Math.floor(Math.random() * 15);
       char.smarts = 35 + Math.floor(Math.random() * 55);
@@ -3781,192 +4119,43 @@
       if (char.age > 45) char.health -= (1 + Math.floor(Math.random() * 3));
       if (char.age > 75) char.health -= (2 + Math.floor(Math.random() * 5));
 
-      // Financials (Salary minus living expenses)
-      if (char.salary > 0) {
-        const livingCost = Math.round(char.salary * 0.32) + 750;
-        const net = char.salary - livingCost;
-        char.money += net;
-      }
-
-      // Part-time job income
-      if (char.partTimeJob) {
-        char.money += char.partTimeJob.pay;
-        yearNotes.push(`💵 Earned $${char.partTimeJob.pay.toLocaleString()} from my part-time job as a ${char.partTimeJob.title}.`);
-      }
-
-      // Annual Student Debt Repayments (if not currently in college/grad school)
-      if (char.age >= 18 && char.school && char.school.studentDebt > 0 && char.school.stage !== "University" && char.school.stage !== "Grad School") {
-        const debtPmt = Math.min(char.school.studentDebt, 1500);
-        char.school.studentDebt -= debtPmt;
-        char.money -= debtPmt;
-        yearNotes.push(`💳 Paid $${debtPmt.toLocaleString()} toward student loan repayment. ($${char.school.studentDebt.toLocaleString()} debt remaining).`);
-        if (char.school.studentDebt === 0) {
-          yearNotes.push("🎉 HOORAY! I have officially paid off all my student loans!");
+      // Centralized Financial Processing for the Year
+      const fin = processAnnualFinancials(char);
+      if (fin) {
+        if (fin.sideGigIncome > 0 && char.partTimeJob) {
+          yearNotes.push(`💵 Earned $${fin.sideGigIncome.toLocaleString()} from my part-time job as a ${char.partTimeJob.title}.`);
         }
-      }
-
-      // Annual Asset Economics (Appreciation, Depreciation, Rental Income, Mortgages, Auto Loans, Business Profits, Dividends, Investments)
-      if (char.assets && char.assets.length > 0) {
-        let annualRentalIncome = 0;
-        let annualBusinessProfit = 0;
-        let annualDividends = 0;
-        let totalMortgagePaid = 0;
-        let totalAutoLoanPaid = 0;
-        let totalBusinessLoanPaid = 0;
-        let totalVehicleUpkeep = 0;
-        let investmentGains = 0;
-
-        // Macro Market Climate for the year
-        const marketRoll = Math.random();
-        const isBullRun = marketRoll > 0.85; // 15% super bull run
-        const isCorrection = marketRoll < 0.20; // 20% correction/dip
-        // 65% normal healthy growth
-
-        char.assets.forEach(asset => {
-          if (asset.type === 'property') {
-            // 1. Natural Market Appreciation (normal cycle: +2% to +6%, bonus if high condition)
-            const appRate = (0.02 + Math.random() * 0.04) * ((asset.condition || 100) >= 80 ? 1.15 : (asset.condition || 100) < 40 ? 0.6 : 1.0);
-            const appAmount = Math.round(asset.currentPrice * appRate);
-            asset.currentPrice += appAmount;
-
-            // 2. Condition Wear (Airbnb has slightly more foot traffic)
-            const wear = asset.isAirbnb ? (2 + Math.floor(Math.random() * 3)) : (1 + Math.floor(Math.random() * 3));
-            asset.condition = Math.max(15, (asset.condition || 100) - wear);
-
-            // 3. Rental / Airbnb Income
-            if (asset.isRented) {
-              const baseRent = asset.rentalIncome || Math.round(asset.currentPrice * (asset.isAirbnb ? 0.115 : 0.075));
-              char.money += baseRent;
-              annualRentalIncome += baseRent;
-            }
-
-            // 4. Mortgage Payment (if active)
-            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
-              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
-              char.money -= pmt;
-              asset.loanBalance -= pmt;
-              totalMortgagePaid += pmt;
-              if (asset.loanBalance <= 0) {
-                asset.loanBalance = 0;
-                asset.loanAnnualPayment = 0;
-                yearNotes.push(`🎉 MORTGAGE PAID OFF! You now own ${asset.name} 100% free and clear!`);
-              }
-            }
-          } else if (asset.type === 'business') {
-            // 1. Business Operating Profit
-            const profit = asset.annualProfit || Math.round((asset.currentPrice || asset.price) * 0.25);
-            char.money += profit;
-            annualBusinessProfit += profit;
-
-            // 2. Business Health & General Manager
-            if (asset.hasGeneralManager) {
-              asset.condition = 100; // GM keeps business in 100% order
-              // Small GM salary deducted
-              const gmFee = Math.round(profit * 0.10);
-              char.money = Math.max(0, char.money - gmFee);
-            } else {
-              asset.condition = Math.max(20, (asset.condition || 100) - (2 + Math.floor(Math.random() * 4)));
-            }
-
-            // 3. Commercial Loan Payment (if active)
-            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
-              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
-              char.money -= pmt;
-              asset.loanBalance -= pmt;
-              totalBusinessLoanPaid += pmt;
-              if (asset.loanBalance <= 0) {
-                asset.loanBalance = 0;
-                asset.loanAnnualPayment = 0;
-                yearNotes.push(`🎉 COMMERCIAL LOAN PAID OFF! You fully own ${asset.name} with zero debt!`);
-              }
-            }
-          } else if (asset.type === 'vehicle') {
-            // 1. Depreciation (6% to 9% per year, min $500 salvage)
-            const depRate = 0.06 + Math.random() * 0.03;
-            asset.currentPrice = Math.max(500, Math.round(asset.currentPrice * (1 - depRate)));
-
-            // 2. Mileage & Wear
-            asset.mileage = (asset.mileage || 0) + (7000 + Math.floor(Math.random() * 6000));
-            asset.condition = Math.max(10, (asset.condition || 100) - (2 + Math.floor(Math.random() * 4)));
-
-            // 3. Upkeep (insurance/fuel/maintenance)
-            const upkeep = asset.annualUpkeep || 500;
-            char.money -= upkeep;
-            totalVehicleUpkeep += upkeep;
-
-            // 4. Auto Loan Payment (if active)
-            if (asset.loanBalance > 0 && asset.loanAnnualPayment > 0) {
-              const pmt = Math.min(asset.loanBalance, asset.loanAnnualPayment);
-              char.money -= pmt;
-              asset.loanBalance -= pmt;
-              totalAutoLoanPaid += pmt;
-              if (asset.loanBalance <= 0) {
-                asset.loanBalance = 0;
-                asset.loanAnnualPayment = 0;
-                yearNotes.push(`🎉 AUTO LOAN PAID OFF! You fully own your ${asset.name}!`);
-              }
-            }
-          } else if (asset.type === 'stock' || asset.type === 'crypto' || asset.type === 'investment') {
-            // 1. Cash Dividend Distributions
-            if (asset.dividendYield && asset.dividendYield > 0) {
-              const div = Math.round((asset.currentPrice || asset.price) * asset.dividendYield);
-              if (div > 0) {
-                char.money += div;
-                annualDividends += div;
-              }
-            }
-
-            // 2. Market Fluctuations
-            let returnRate = 0;
-            if (asset.assetClass === 'bond') {
-              returnRate = 0.042; // Guaranteed 4.2%
-            } else if (asset.assetClass === 'gold') {
-              returnRate = isCorrection ? 0.08 : (0.03 + Math.random() * 0.05); // Gold shines during corrections
-            } else if (asset.assetClass === 'index') {
-              returnRate = isBullRun ? (0.16 + Math.random() * 0.14) : isCorrection ? (-0.08 + Math.random() * 0.05) : (0.05 + Math.random() * 0.09);
-            } else if (asset.assetClass === 'growth' || asset.type === 'stock') {
-              returnRate = isBullRun ? (0.24 + Math.random() * 0.20) : isCorrection ? (-0.14 + Math.random() * 0.08) : (0.08 + Math.random() * 0.12);
-            } else if (asset.assetClass === 'crypto' || asset.type === 'crypto') {
-              returnRate = isBullRun ? (0.75 + Math.random() * 0.90) : isCorrection ? (-0.35 + Math.random() * 0.15) : (0.15 + Math.random() * 0.45);
-            } else if (asset.assetClass === 'venture') {
-              returnRate = Math.random() > 0.4 ? (0.30 + Math.random() * 0.80) : (-0.20);
-            }
-            const gain = Math.round(asset.currentPrice * returnRate);
-            asset.currentPrice = Math.max(50, asset.currentPrice + gain);
-            investmentGains += gain;
-          } else if (asset.type === 'luxury') {
-            // Art and Wine appreciate slightly with age
-            if (asset.name.includes('Painting') || asset.name.includes('Wine')) {
-              asset.currentPrice = Math.round(asset.currentPrice * 1.025);
-            }
+        if (fin.studentDebtPayment > 0 && char.school) {
+          yearNotes.push(`💳 Paid $${fin.studentDebtPayment.toLocaleString()} toward student loan repayment. ($${char.school.studentDebt.toLocaleString()} debt remaining).`);
+          if (char.school.studentDebt === 0) {
+            yearNotes.push("🎉 HOORAY! I have officially paid off all my student loans!");
           }
-        });
-
-        if (annualRentalIncome > 0) {
-          yearNotes.push(`🏢 Real Estate: Collected $${annualRentalIncome.toLocaleString()} in passive rental & Airbnb cashflow.`);
         }
-        if (annualBusinessProfit > 0) {
-          yearNotes.push(`🏪 Business Franchises: Earned $${annualBusinessProfit.toLocaleString()} in net owner operating profits.`);
+        if (fin.rentalIncome > 0) {
+          yearNotes.push(`🏢 Real Estate: Collected $${fin.rentalIncome.toLocaleString()} in passive rental & Airbnb cashflow.`);
         }
-        if (annualDividends > 0) {
-          yearNotes.push(`💵 Cash Dividends: Received $${annualDividends.toLocaleString()} in stock & ETF dividend payouts.`);
+        if (fin.businessProfit > 0) {
+          yearNotes.push(`🏪 Business Franchises: Earned $${fin.businessProfit.toLocaleString()} in net owner operating profits.`);
         }
-        if (totalMortgagePaid > 0) {
-          yearNotes.push(`🏠 Paid $${totalMortgagePaid.toLocaleString()} toward active property mortgages.`);
+        if (fin.dividends > 0) {
+          yearNotes.push(`💵 Cash Dividends: Received $${fin.dividends.toLocaleString()} in stock & ETF dividend payouts.`);
         }
-        if (totalBusinessLoanPaid > 0) {
-          yearNotes.push(`🏦 Paid $${totalBusinessLoanPaid.toLocaleString()} toward commercial business loans.`);
+        if (fin.totalMortgagePaid > 0) {
+          yearNotes.push(`🏠 Paid $${fin.totalMortgagePaid.toLocaleString()} toward active property mortgages.`);
         }
-        if (totalAutoLoanPaid > 0) {
-          yearNotes.push(`🚗 Paid $${totalAutoLoanPaid.toLocaleString()} toward active auto loans.`);
+        if (fin.totalBusinessLoanPaid > 0) {
+          yearNotes.push(`🏦 Paid $${fin.totalBusinessLoanPaid.toLocaleString()} toward commercial business loans.`);
         }
-        if (totalVehicleUpkeep > 0) {
-          yearNotes.push(`⛽ Paid $${totalVehicleUpkeep.toLocaleString()} for vehicle insurance and maintenance.`);
+        if (fin.totalAutoLoanPaid > 0) {
+          yearNotes.push(`🚗 Paid $${fin.totalAutoLoanPaid.toLocaleString()} toward active auto loans.`);
         }
-        if (investmentGains !== 0) {
-          const sign = investmentGains > 0 ? '+' : '-';
-          const verb = investmentGains > 0 ? 'surged' : 'contracted';
-          yearNotes.push(`📈 Financial Portfolios: Holdings ${verb} by ${sign}$${Math.abs(investmentGains).toLocaleString()} this year.`);
+        if (fin.totalVehicleUpkeep > 0) {
+          yearNotes.push(`⛽ Paid $${fin.totalVehicleUpkeep.toLocaleString()} for vehicle insurance and maintenance.`);
+        }
+        if (fin.investmentGains !== 0) {
+          const sign = fin.investmentGains > 0 ? "+" : "-";
+          const verb = fin.investmentGains > 0 ? "surged" : "contracted";
+          yearNotes.push(`📈 Financial Portfolios: Holdings ${verb} by ${sign}$${Math.abs(fin.investmentGains).toLocaleString()} this year.`);
         }
       }
 
@@ -4026,8 +4215,9 @@
         if (char.school && char.school.stage === "High School") {
           if (char.school.grades >= 50) {
             char.school.hasDiploma = true;
+            char.school.educationStatus = "High School Graduate";
             char.educationLevel = 1;
-            char.school.stage = "Career";
+            char.school.stage = char.salary > 0 ? "Career" : "Adult";
             if (char.salary === 0) {
               char.occupation = "High School Graduate";
               char.occIcon = "🎓";
@@ -4064,8 +4254,9 @@
         } else if (char.school.yearsInUni >= 4) {
           if (char.school.grades >= 50) {
             char.school.hasDegree = true;
+            char.school.educationStatus = "Bachelor's Graduate";
             char.educationLevel = 2;
-            char.school.stage = "Career";
+            char.school.stage = char.salary > 0 ? "Career" : "Adult";
             if (char.salary === 0) {
               char.occupation = "University Graduate (" + char.school.major + ")";
               char.occIcon = "🎓";
@@ -4087,7 +4278,8 @@
         const reqYears = char.school.gradProgram.includes("MBA") ? 2 : 3;
         if (char.school.yearsInGrad >= reqYears) {
           char.educationLevel = 3;
-          char.school.stage = "Career";
+          char.school.educationStatus = "Graduate Degree Holder";
+          char.school.stage = char.salary > 0 ? "Career" : "Adult";
           if (char.school.gradProgram === "Medical School") {
             char.school.hasMedDegree = true;
             if (char.salary === 0) { char.occupation = "Medical Doctor (M.D.)"; char.occIcon = "🩺"; }
@@ -4928,53 +5120,31 @@
     // CAREER & ASSETS ACTIONS
     function applyJob(title, pay, reqEdu, reqSmarts, icon) {
       if (!char.isAlive) return;
-      if (char.age < 18) {
-        showPopup("You must be at least 18 years old to work full-time!", "Job Market", "💼");
+
+      const jobObj = { title, pay, reqEdu, reqSmarts, icon };
+      const check = canApplyForJob(char, jobObj);
+      if (!check.eligible) {
+        showPopup(check.reason, "Job Application", "💼");
         return;
       }
 
-      // Check Education Requirements
-      if (reqEdu === 1 && !char.school.hasDiploma) {
-        showPopup("This career position requires a High School Diploma or GED equivalency!", "Education Required", "📜");
-        return;
-      }
-      if (reqEdu === 2 && !char.school.hasDegree) {
-        showPopup("This career position requires a University Bachelor's Degree!", "Education Required", "🎓");
-        return;
-      }
-      if (reqEdu === 3) {
-        if (title.includes("Surgeon") && !char.school.hasMedDegree) {
-          showPopup("Medical Surgeon requires a Medical Doctor (M.D.) degree from Medical School!", "Degree Required", "🩺");
-          return;
-        }
-        if (title.includes("Lawyer") && !char.school.hasLawDegree) {
-          showPopup("Corporate Lawyer requires a Juris Doctor (J.D.) degree from Law School!", "Degree Required", "⚖️");
-          return;
-        }
-        if (title.includes("CEO") && !char.school.hasMBADegree && !(char.school.hasDegree && char.smarts >= 90)) {
-          showPopup("Corporate CEO requires a Master of Business Administration (MBA) or exceptional honors with Smarts ≥ 90%!", "Executive Requirements", "👑");
-          return;
-        }
-      }
-
-      // Check Smarts
-      if (char.smarts < reqSmarts) {
-        showPopup(`Failed the job interview for ${title}. Requires Smarts ≥ ${reqSmarts}%. (Your Smarts: ${char.smarts}%)`, "Job Interview", "💼");
-        return;
-      }
-
-      const confirmPrompt = char.salary > 0 
-        ? `You currently work as ${char.occupation} ($${char.salary.toLocaleString()}/yr). Accept new position as ${title} ($${pay.toLocaleString()}/yr)?`
-        : `Congratulations! You received a job offer for ${title} ($${pay.toLocaleString()}/yr). Accept?`;
+      const confirmPrompt = char.salary > 0
+        ? "You currently work as " + char.occupation + " ($" + char.salary.toLocaleString() + "/yr). Accept new position as " + title + " ($" + pay.toLocaleString() + "/yr)?"
+        : "Congratulations! You received a job offer for " + title + " ($" + pay.toLocaleString() + "/yr). Accept?";
 
       showConfirm(confirmPrompt, () => {
         char.occupation = title;
         char.occIcon = icon;
         char.salary = pay;
-        if (char.school) char.school.jobPerformance = 70;
+        char.employmentStatus = "Employed";
+        if (char.school) {
+          char.school.jobPerformance = 70;
+          char.school.yearsInJob = 0;
+          char.school.stage = "Career";
+        }
         char.happiness = clamp(char.happiness + 15, 0, 100);
-        recordAction(`🎉 Hired as a ${title} making $${pay.toLocaleString()}/year!`);
-        showPopup(`🎉 Welcome aboard! You have officially started working as a ${title} making $${pay.toLocaleString()}/year!`, "Hired! 🎉", "💼");
+        recordAction("🎉 Hired as a " + title + " making $" + pay.toLocaleString() + "/year!");
+        showPopup("🎉 Welcome aboard! You have officially started working as a " + title + " making $" + pay.toLocaleString() + "/year!", "Hired! 🎉", "💼");
         render();
       }, "Job Offer", "💼", "Accept Offer");
     }
@@ -5097,6 +5267,11 @@
 
         fullTimeList.forEach(j => {
           const isCurrent = char.occupation === j.title && char.salary > 0;
+          const check = canApplyForJob(char, j);
+          const btnText = isCurrent ? "Current" : (check.eligible ? "Apply" : "Locked");
+          const btnClass = isCurrent ? "secondary" : (check.eligible ? "success" : "");
+          const lockBadge = (!isCurrent && !check.eligible) ? `<div style="font-size:11px; color:#DC2626; margin-top:2px;">🔒 ${check.reason}</div>` : "";
+
           html += `
             <div class="interactive-card" onclick="applyJob('${j.title}', ${j.pay}, ${j.reqEdu}, ${j.reqSmarts}, '${j.icon}')">
               <div class="card-left-group">
@@ -5104,9 +5279,10 @@
                 <div class="card-texts">
                   <h4>${j.title} ($${j.pay.toLocaleString()}/yr)</h4>
                   <p>${j.desc}</p>
+                  ${lockBadge}
                 </div>
               </div>
-              <button class="btn-card-action ${isCurrent ? 'secondary' : ''}">${isCurrent ? 'Current' : 'Apply'}</button>
+              <button class="btn-card-action ${btnClass}">${btnText}</button>
             </div>
           `;
         });
@@ -7576,41 +7752,45 @@
 
     function takeGEDExam() {
       if (!char.isAlive) return;
-      if (char.money < 200) {
-        showPopup("The GED exam registration fee is $200. Insufficient funds in bank balance!", "GED Registration", "📝");
+      if (!char.school.isDropout) {
+        showPopup("You already hold a high school diploma or GED!", "Already Qualified", "ℹ️");
         return;
       }
-      showConfirm("Registration for the official GED Equivalency Exam costs $200. Are you ready to take the test?", () => {
+      if (char.money < 200) {
+        showPopup("The GED equivalency exam costs $200. You need more funds.", "Insufficient Funds", "💰");
+        return;
+      }
+
+      showConfirm("Pay $200 to sit for the General Educational Development (GED) test? (Requires Smarts ≥ 45%)", () => {
         char.money -= 200;
-        if (char.smarts >= 50) {
-          char.school.hasDiploma = true;
+        if (char.smarts >= 45) {
           char.school.isDropout = false;
+          char.school.hasDiploma = true;
+          char.school.isGED = true;
+          char.school.educationStatus = "GED Holder";
           char.educationLevel = 1;
-          char.school.stage = "Career";
+          char.school.stage = char.age >= 18 ? (char.salary > 0 ? "Career" : "Adult") : "Career";
           if (char.salary === 0) {
-            char.occupation = "High School Graduate (GED)";
+            char.occupation = "GED Holder";
             char.occIcon = "📜";
           }
           char.happiness = clamp(char.happiness + 25, 0, 100);
-          recordAction("📜 I took the GED equivalency exam and passed with honors! Awarded high school diploma equivalent.");
-          showPopup("🎉 Congratulations! You scored high and passed the GED exam! You have earned your high school equivalency diploma and can now apply to University.", "GED Passed! 🎉", "🎓");
+          recordAction("📜 Passed the GED exam with flying colors! Awarded High School Equivalency Diploma.");
+          showPopup("🎉 Congratulations! You scored high on all GED exam modules and earned your official High School Equivalency Diploma. University and career paths requiring a high school education are now unlocked!", "GED Passed! 📜", "🎓");
         } else {
           char.happiness = clamp(char.happiness - 12, 0, 100);
-          recordAction("❌ I took the GED test but scored below the minimum passing threshold.");
-          showPopup("❌ You scored below the passing mark on the GED exam. You need a Smarts rating of at least 50% to pass. Read books or study at the library and try again!", "GED Exam Failed", "❌");
+          recordAction(`❌ Failed the GED exam with a score of ${char.smarts}%. Needed 45%.`);
+          showPopup(`❌ You did not achieve the passing threshold of 45% (Your Smarts: ${char.smarts}%). Hit the library to study books and boost your intelligence before trying again.`, "Exam Failed", "❌");
         }
         render();
-      }, "Take GED Exam ($200)", "📝", "Take Test ($200)");
+      }, "GED Equivalency Exam", "📝", "Take Exam ($200)");
     }
 
     function openUniversityApplicationModal() {
       if (!char.isAlive) return;
-      if (!char.school.hasDiploma) {
-        showPopup("University admission requires a High School Diploma or GED equivalency diploma!", "Admissions Requirement", "📜");
-        return;
-      }
-      if (char.school.hasDegree) {
-        showPopup("You have already earned your Bachelor's Degree! Consider applying to Graduate School (Medical, Law, or MBA).", "Degree Completed", "🎓");
+      const check = canEnrollInUniversity(char, null);
+      if (!check.eligible) {
+        showPopup(check.reason, "University Admissions", "🎓");
         return;
       }
 
@@ -7636,56 +7816,62 @@
         `;
       });
       html += '</div>';
-      showCustomModal("Choose College Major", "🎓", html, `<button class="modal-btn" onclick="closeModal()">Close</button>`);
+
+      showCustomModal("Choose College Major", "🎓", html, `<button class="modal-btn" onclick="closeModal()">Cancel</button>`);
     }
 
     function selectMajor(majorName, reqSmarts) {
-      if (char.smarts < reqSmarts) {
-        showPopup(`Your application for ${majorName} was rejected. The admissions committee requires a Smarts rating of at least ${reqSmarts}%. (Your Smarts: ${char.smarts}%)`, "Admissions Rejected", "❌");
+      if (!char.isAlive) return;
+      const check = canEnrollInUniversity(char, { name: majorName, req: reqSmarts });
+      if (!check.eligible) {
+        showPopup(check.reason, "University Admissions", "🎓");
         return;
       }
-      openTuitionFundingModal(majorName);
+      closeModal();
+      openUniversityFundingModal(majorName);
     }
 
-    function openTuitionFundingModal(majorName) {
-      const tuition = 24000;
-      const html = `
-        <div style="text-align: left; margin-bottom: 8px;">
-          <div style="font-size: 13.5px; font-weight: 700; color: #0F172A;">Major: ${majorName}</div>
-          <div style="font-size: 12px; color: #64748B;">4-Year Tuition & Campus Fees: $${tuition.toLocaleString()} ($6,000/yr)</div>
-        </div>
-        <div class="modal-sublist">
-          <div class="modal-subitem" onclick="chooseFunding('${majorName}', 'scholarship')">
-            <span class="modal-subitem-icon">🏆</span>
-            <div class="modal-subitem-info">
-              <div class="modal-subitem-title">Academic Scholarship (Free)</div>
-              <div class="modal-subitem-sub">Requires HS Grades ≥ 85% & Smarts ≥ 75%</div>
-            </div>
-          </div>
-          <div class="modal-subitem" onclick="chooseFunding('${majorName}', 'parents')">
-            <span class="modal-subitem-icon">👨‍👩‍👧</span>
-            <div class="modal-subitem-info">
-              <div class="modal-subitem-title">Ask Parents to Pay</div>
-              <div class="modal-subitem-sub">Depends on parent relationship & generosity</div>
-            </div>
-          </div>
-          <div class="modal-subitem" onclick="chooseFunding('${majorName}', 'loan')">
-            <span class="modal-subitem-icon">💳</span>
-            <div class="modal-subitem-info">
-              <div class="modal-subitem-title">Student Loans ($24,000)</div>
-              <div class="modal-subitem-sub">Guaranteed approval; repaid after graduation</div>
-            </div>
-          </div>
-          <div class="modal-subitem" onclick="chooseFunding('${majorName}', 'cash')">
-            <span class="modal-subitem-icon">💵</span>
-            <div class="modal-subitem-info">
-              <div class="modal-subitem-title">Pay Cash ($24,000)</div>
-              <div class="modal-subitem-sub">Current balance: $${char.money.toLocaleString()}</div>
-            </div>
-          </div>
-        </div>
-      `;
-      showCustomModal("Tuition & Funding", "💰", html, `<button class="modal-btn" onclick="openUniversityApplicationModal()">← Back to Majors</button>`);
+    function openUniversityFundingModal(majorName) {
+      if (!char.isAlive) return;
+      let h = "";
+      h += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">';
+      h += 'Tuition is $24,000 for the 4-year degree in <strong>' + majorName + '</strong> ($6,000/yr). Select how you wish to finance your college education:';
+      h += '</div>';
+      h += '<div class="modal-sublist">';
+      h += '  <div class="modal-subitem" onclick="closeModal(); chooseFunding(\'' + majorName + '\', \'scholarship\')">';
+      h += '    <span class="modal-subitem-icon">🏆</span>';
+      h += '    <div class="modal-subitem-info">';
+      h += '      <div class="modal-subitem-title">Apply for Academic Scholarship</div>';
+      h += '      <div class="modal-subitem-sub">Free tuition ($0 debt). Requires High School Grades ≥ 85% & Smarts ≥ 75%</div>';
+      h += '    </div>';
+      h += '    <button class="modal-subitem-action">Apply</button>';
+      h += '  </div>';
+      h += '  <div class="modal-subitem" onclick="closeModal(); chooseFunding(\'' + majorName + '\', \'parents\')">';
+      h += '    <span class="modal-subitem-icon">👨‍👩‍👧</span>';
+      h += '    <div class="modal-subitem-info">';
+      h += '      <div class="modal-subitem-title">Ask Parents to Pay Tuition</div>';
+      h += '      <div class="modal-subitem-sub">Request parents fund the $24,000 college expenses ($0 debt)</div>';
+      h += '    </div>';
+      h += '    <button class="modal-subitem-action">Ask</button>';
+      h += '  </div>';
+      h += '  <div class="modal-subitem" onclick="closeModal(); chooseFunding(\'' + majorName + '\', \'loan\')">';
+      h += '    <span class="modal-subitem-icon">📜</span>';
+      h += '    <div class="modal-subitem-info">';
+      h += '      <div class="modal-subitem-title">Take Out Student Loans</div>';
+      h += '      <div class="modal-subitem-sub">Borrow $24,000 to be repaid in annual installments</div>';
+      h += '    </div>';
+      h += '    <button class="modal-subitem-action">Borrow</button>';
+      h += '  </div>';
+      h += '  <div class="modal-subitem" onclick="closeModal(); chooseFunding(\'' + majorName + '\', \'cash\')">';
+      h += '    <span class="modal-subitem-icon">💵</span>';
+      h += '    <div class="modal-subitem-info">';
+      h += '      <div class="modal-subitem-title">Pay Out of Pocket (Cash)</div>';
+      h += '      <div class="modal-subitem-sub">Pay $24,000 directly from your bank balance (Balance: $' + char.money.toLocaleString() + ')</div>';
+      h += '    </div>';
+      h += '    <button class="modal-subitem-action">Pay</button>';
+      h += '  </div>';
+      h += '</div>';
+      showCustomModal("University Tuition & Funding", "🎓", h, '<button class="modal-btn" onclick="closeModal()">Cancel</button>');
     }
 
     function chooseFunding(majorName, method) {
@@ -8390,25 +8576,26 @@
           </div>
         `;
       } else {
-        // 💼 ADULT CAREER & HIGHER EDUCATION
-        if (emojiEl) emojiEl.innerText = char.occIcon || "💼";
-        if (titleEl) titleEl.innerText = char.salary > 0 ? char.occupation : "Career & Higher Education";
-        if (navIcon) navIcon.innerText = char.occIcon || "💼";
-        if (navText) navText.innerText = "Career";
-
-        const perf = char.school ? (char.school.jobPerformance || 65) : 65;
-        const perfFill = perf >= 80 ? 'fill-green' : perf >= 60 ? 'fill-blue' : 'fill-yellow';
-
-        let html = '';
+        // 💼 ADULT (Career, Higher Education, or Unemployed Choice Hub)
+        const currentEdu = getEducationStatus(char);
 
         if (char.salary > 0) {
-          html += `
+          // ================= EMPLOYED ADULT CAREER DASHBOARD =================
+          if (emojiEl) emojiEl.innerText = char.occIcon || "💼";
+          if (titleEl) titleEl.innerText = char.occupation;
+          if (navIcon) navIcon.innerText = char.occIcon || "💼";
+          if (navText) navText.innerText = "Career";
+
+          const perf = char.school ? (char.school.jobPerformance || 65) : 65;
+          const perfFill = perf >= 80 ? 'fill-green' : perf >= 60 ? 'fill-blue' : 'fill-yellow';
+
+          let html = `
             <div class="school-overview-card">
               <div class="school-overview-header">
                 <div class="school-overview-badge">${char.occIcon || '💼'}</div>
                 <div class="school-overview-info">
                   <div class="school-overview-name">${char.occupation}</div>
-                  <div class="school-overview-desc">Salary: $${char.salary.toLocaleString()}/yr • Full-Time Position</div>
+                  <div class="school-overview-desc">Salary: $${char.salary.toLocaleString()}/yr • ${currentEdu}</div>
                 </div>
               </div>
               <div class="school-metrics-grid">
@@ -8423,117 +8610,225 @@
               </div>
             </div>
 
-            <div class="section-title"><span>🏢</span> My Active Career</div>
-
+            <div class="section-title"><span>🏢</span> Active Career Management</div>
             <div class="interactive-card" onclick="openMyJobPage()">
               <div class="card-left-group">
                 <div class="card-emoji-box">${char.occIcon || '💼'}</div>
                 <div class="card-texts">
-                  <h4>${char.occupation}</h4>
-                  <p>Work overtime, ask for raise, seek promotion & coworkers</p>
+                  <h4>${char.occupation} Workplace</h4>
+                  <p>Work overtime, ask for raise, seek promotion & bond with coworkers</p>
                 </div>
               </div>
               <button class="btn-card-action">Manage</button>
             </div>
           `;
-        } else {
+
+          if (char.partTimeJob) {
+            html += `
+              <div class="section-title"><span>🕒</span> Active Side Gig</div>
+              <div class="interactive-card">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${char.partTimeJob.icon}</div>
+                  <div class="card-texts">
+                    <h4>${char.partTimeJob.title} ($${char.partTimeJob.pay.toLocaleString()}/yr)</h4>
+                    <p>Active supplemental earnings</p>
+                  </div>
+                </div>
+                <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
+              </div>
+            `;
+          }
+
           html += `
+            <div class="section-title"><span>💼</span> Job Center</div>
+            <div class="interactive-card" onclick="openJobsPage()">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💼</div>
+                <div class="card-texts">
+                  <h4>Browse Other Careers</h4>
+                  <p>Explore opportunities in corporate, tech, medical, and legal markets</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Browse Jobs</button>
+            </div>
+          `;
+
+          if (char.school && char.school.hasDiploma && !char.school.hasDegree) {
+            html += `
+              <div class="section-title"><span>🎓</span> Higher Education</div>
+              <div class="interactive-card" onclick="openUniversityApplicationModal()">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">🎓</div>
+                  <div class="card-texts">
+                    <h4>Apply to University</h4>
+                    <p>Earn a Bachelor's Degree while working</p>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Apply</button>
+              </div>
+            `;
+          }
+
+          if (char.school && char.school.hasDegree && !char.school.hasMedDegree && !char.school.hasLawDegree && !char.school.hasMBADegree) {
+            html += `
+              <div class="section-title"><span>🎓</span> Graduate School</div>
+              <div class="interactive-card" onclick="openGradSchoolModal()">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">🎓</div>
+                  <div class="card-texts">
+                    <h4>Apply to Graduate School</h4>
+                    <p>Advance to Medical School (M.D.), Law School (J.D.), or MBA</p>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Apply</button>
+              </div>
+            `;
+          }
+
+          if (char.school && char.school.studentDebt > 0) {
+            html += `
+              <div class="section-title"><span>💳</span> Student Loans</div>
+              <div class="interactive-card" onclick="payStudentDebt()">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">💳</div>
+                  <div class="card-texts">
+                    <h4>Pay Student Debt ($${char.school.studentDebt.toLocaleString()})</h4>
+                    <p>$1,500/yr auto-repayment • Voluntary early payoff</p>
+                  </div>
+                </div>
+                <button class="btn-card-action">Pay Debt</button>
+              </div>
+            `;
+          }
+
+          container.innerHTML = html;
+
+        } else {
+          // ================= UNEMPLOYED ADULT DASHBOARD (MEANINGFUL CHOICES) =================
+          if (emojiEl) emojiEl.innerText = "💼";
+          if (titleEl) titleEl.innerText = "Adult & Career Hub";
+          if (navIcon) navIcon.innerText = "💼";
+          if (navText) navText.innerText = "Adult";
+
+          let html = `
             <div class="school-overview-card">
               <div class="school-overview-header">
                 <div class="school-overview-badge">🛋️</div>
                 <div class="school-overview-info">
                   <div class="school-overview-name">Currently Unemployed</div>
-                  <div class="school-overview-desc">Browse open positions in the Job Market or pursue education</div>
+                  <div class="school-overview-desc">Education: ${currentEdu} • Choose your path below</div>
                 </div>
               </div>
             </div>
           `;
-        }
 
-        // Active Part-Time Gig Status
-        if (char.partTimeJob) {
+          if (char.partTimeJob) {
+            html += `
+              <div class="section-title"><span>🕒</span> Active Side Gig</div>
+              <div class="interactive-card">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${char.partTimeJob.icon}</div>
+                  <div class="card-texts">
+                    <h4>${char.partTimeJob.title} ($${char.partTimeJob.pay.toLocaleString()}/yr)</h4>
+                    <p>Active supplemental earnings</p>
+                  </div>
+                </div>
+                <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
+              </div>
+            `;
+          }
+
           html += `
-            <div class="section-title"><span>🕒</span> Active Side Gig</div>
-            <div class="interactive-card">
+            <div class="section-title"><span>💼</span> Career & Employment</div>
+            <div class="interactive-card" onclick="openJobsPage()">
               <div class="card-left-group">
-                <div class="card-emoji-box">${char.partTimeJob.icon}</div>
+                <div class="card-emoji-box">💼</div>
                 <div class="card-texts">
-                  <h4>${char.partTimeJob.title} ($${char.partTimeJob.pay.toLocaleString()}/yr)</h4>
-                  <p>Active part-time job • Supplemental annual earnings</p>
+                  <h4>Full-Time Career Openings</h4>
+                  <p>Browse corporate, tech, medical, legal, and entry-level jobs</p>
                 </div>
               </div>
-              <button class="btn-card-action secondary" onclick="quitPartTimeJob()">Quit</button>
+              <button class="btn-card-action success">Browse Jobs</button>
             </div>
-          `;
-        }
 
-        // Dedicated Job Market Tab / Card in Careers!
-        html += `
-          <div class="section-title"><span>💼</span> Job Center</div>
-
-          <div class="interactive-card" onclick="openJobsPage()">
-            <div class="card-left-group">
-              <div class="card-emoji-box">💼</div>
-              <div class="card-texts">
-                <h4>Job Market & Openings</h4>
-                <p>Browse full-time careers & part-time side gigs</p>
-              </div>
-            </div>
-            <button class="btn-card-action success">Browse Jobs</button>
-          </div>
-        `;
-
-        // Higher education section for adults
-        if (char.school && char.school.hasDiploma && !char.school.hasDegree) {
-          html += `
-            <div class="section-title"><span>🎓</span> Higher Education</div>
-            <div class="interactive-card" onclick="openUniversityApplicationModal()">
+            <div class="interactive-card" onclick="openJobsPage('parttime')">
               <div class="card-left-group">
-                <div class="card-emoji-box">🎓</div>
+                <div class="card-emoji-box">🕒</div>
                 <div class="card-texts">
-                  <h4>Apply to University</h4>
-                  <p>Choose major and apply for scholarships, loans, or cash</p>
+                  <h4>Part-Time Jobs & Side Gigs</h4>
+                  <p>Flexible hourly positions (barista, cashier, freelance)</p>
                 </div>
               </div>
-              <button class="btn-card-action success">Apply</button>
+              <button class="btn-card-action">Browse Gigs</button>
             </div>
           `;
-        }
 
-        if (char.school && char.school.hasDegree && !char.school.hasMedDegree && !char.school.hasLawDegree && !char.school.hasMBADegree) {
-          html += `
-            <div class="section-title"><span>🎓</span> Graduate School</div>
-            <div class="interactive-card" onclick="openGradSchoolModal()">
-              <div class="card-left-group">
-                <div class="card-emoji-box">🎓</div>
-                <div class="card-texts">
-                  <h4>Apply to Graduate School</h4>
-                  <p>Medical School (M.D.), Law School (J.D.), or Business School (MBA)</p>
+          if (char.school && char.school.hasDiploma && !char.school.hasDegree) {
+            html += `
+              <div class="section-title"><span>🎓</span> Higher Education</div>
+              <div class="interactive-card" onclick="openUniversityApplicationModal()">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">🎓</div>
+                  <div class="card-texts">
+                    <h4>Apply to University</h4>
+                    <p>Select a 4-year Bachelor's degree major (CS, Pre-Med, Business, Pre-Law)</p>
+                  </div>
                 </div>
+                <button class="btn-card-action success">Apply</button>
               </div>
-              <button class="btn-card-action success">Apply</button>
-            </div>
-          `;
-        }
+            `;
+          }
 
-        // Student debt section
-        if (char.school && char.school.studentDebt > 0) {
-          html += `
-            <div class="section-title"><span>💳</span> Student Loans</div>
-            <div class="interactive-card" onclick="payStudentDebt()">
-              <div class="card-left-group">
-                <div class="card-emoji-box">💳</div>
-                <div class="card-texts">
-                  <h4>Pay Student Debt ($${char.school.studentDebt.toLocaleString()})</h4>
-                  <p>$1,500/yr auto-repayment • Tap to make voluntary early payment</p>
+          if (char.school && char.school.hasDegree && !char.school.hasMedDegree && !char.school.hasLawDegree && !char.school.hasMBADegree) {
+            html += `
+              <div class="section-title"><span>🎓</span> Graduate School</div>
+              <div class="interactive-card" onclick="openGradSchoolModal()">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">🎓</div>
+                  <div class="card-texts">
+                    <h4>Apply to Graduate School</h4>
+                    <p>Pursue Medical School (M.D.), Law School (J.D.), or Business School (MBA)</p>
+                  </div>
                 </div>
+                <button class="btn-card-action success">Apply</button>
               </div>
-              <button class="btn-card-action">Pay Debt</button>
-            </div>
-          `;
-        }
+            `;
+          }
 
-        container.innerHTML = html;
+          if (char.school && char.school.isDropout) {
+            html += `
+              <div class="section-title"><span>📜</span> Alternative Education</div>
+              <div class="interactive-card" onclick="takeGEDExam()">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">📝</div>
+                  <div class="card-texts">
+                    <h4>Take GED Equivalency Exam ($200)</h4>
+                    <p>Earn official High School Equivalency Diploma (Req Smarts ≥ 45%)</p>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Take Exam</button>
+              </div>
+            `;
+          }
+
+          if (char.school && char.school.studentDebt > 0) {
+            html += `
+              <div class="section-title"><span>💳</span> Student Loans</div>
+              <div class="interactive-card" onclick="payStudentDebt()">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">💳</div>
+                  <div class="card-texts">
+                    <h4>Pay Student Debt ($${char.school.studentDebt.toLocaleString()})</h4>
+                    <p>$1,500/yr auto-repayment • Voluntary early payoff</p>
+                  </div>
+                </div>
+                <button class="btn-card-action">Pay Debt</button>
+              </div>
+            `;
+          }
+
+          container.innerHTML = html;
+        }
       }
     }
 
