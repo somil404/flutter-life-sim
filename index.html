@@ -367,6 +367,39 @@
       box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
     }
 
+    .rel-hub-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 480px) {
+      .rel-hub-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .rel-hub-btn {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: all 0.15s ease;
+    }
+    .rel-hub-btn:hover {
+      border-color: #CBD5E1;
+      background: #F8FAFC;
+    }
+    .rel-hub-btn:active {
+      transform: scale(0.97);
+    }
+
     .asset-badge {
       display: inline-flex;
       align-items: center;
@@ -1269,26 +1302,84 @@
       <!-- ================= PAGE 4: RELATIONSHIPS ================= -->
       <div class="tab-page" id="pageRelationships">
         <div class="page-top-bar">
-          <div class="page-top-title"><span>❤️</span> Relationships</div>
+          <div class="page-top-title"><span>❤️</span> Relationships & Social</div>
           <button class="btn-close-page" onclick="closeToFeed()">✕ Close</button>
         </div>
 
-        <div class="section-title"><span>👨‍👩‍👧</span> Immediate Family</div>
-        <div id="familyCardsContainer" style="display: flex; flex-direction: column; gap: 10px;">
-          <!-- Injected dynamically -->
-        </div>
-
-        <div class="section-title"><span>💌</span> Dating & Love</div>
-
-        <div class="interactive-card" onclick="findDate()">
-          <div class="card-left-group">
-            <div class="card-emoji-box">💘</div>
-            <div class="card-texts">
-              <h4 id="partnerTitle">Find a Date</h4>
-              <p id="partnerSub">Meet someone special and go out on a romantic date.</p>
+        <!-- Social Overview Header Card -->
+        <div class="school-overview-card" style="margin-bottom: 12px;">
+          <div class="school-overview-header">
+            <div class="school-overview-badge" id="relHeaderBadge">❤️</div>
+            <div class="school-overview-info">
+              <div class="school-overview-name" id="relHeaderStatus">Single</div>
+              <div class="school-overview-desc" id="relHeaderSubtitle">Social & Family Network</div>
             </div>
           </div>
-          <button class="btn-card-action success" id="btnPartnerAction">Date</button>
+          <div class="school-metrics-grid">
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Avg Family Bond</span> <span id="relFamilyBondText">95%</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-green" id="relFamilyBondBar" style="width: 95%;"></div></div>
+            </div>
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Loved Ones</span> <span id="relTotalCountText">3</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill fill-blue" id="relTotalCountBar" style="width: 60%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Filter Pills Bar -->
+        <div class="asset-filter-bar" id="relFilterBar">
+          <button class="asset-filter-btn active" id="relFilterAll" onclick="setRelFilter('all')">All (<span id="relCountAll">0</span>)</button>
+          <button class="asset-filter-btn" id="relFilterFamily" onclick="setRelFilter('family')">Family (<span id="relCountFamily">0</span>)</button>
+          <button class="asset-filter-btn" id="relFilterLove" onclick="setRelFilter('love')">Love (<span id="relCountLove">0</span>)</button>
+          <button class="asset-filter-btn" id="relFilterChildren" onclick="setRelFilter('child')">Children (<span id="relCountChildren">0</span>)</button>
+          <button class="asset-filter-btn" id="relFilterFriends" onclick="setRelFilter('friend')">Friends (<span id="relCountFriends">0</span>)</button>
+          <button class="asset-filter-btn" id="relFilterPets" onclick="setRelFilter('pet')">Pets (<span id="relCountPets">0</span>)</button>
+          <button class="asset-filter-btn" id="relFilterDeceased" onclick="setRelFilter('deceased')">Deceased (<span id="relCountDeceased">0</span>)</button>
+        </div>
+
+        <!-- Social Activity & Expansion Hubs (Dating, Pet Adoption, Child Adoption, Social) -->
+        <div class="section-title"><span>✨</span> Life & Social Hubs</div>
+        <div class="rel-hub-grid">
+          <div class="rel-hub-btn" onclick="openDatingHub()">
+            <div style="font-size: 20px; margin-bottom: 2px;">💘</div>
+            <div style="font-weight: 600; font-size: 11.5px; color: #1E293B;">Find a Date</div>
+            <div style="font-size: 10px; color: #64748B;">Dating App & Mixer</div>
+          </div>
+          <div class="rel-hub-btn" onclick="openPetAdoptionModal()">
+            <div style="font-size: 20px; margin-bottom: 2px;">🐾</div>
+            <div style="font-weight: 600; font-size: 11.5px; color: #1E293B;">Adopt a Pet</div>
+            <div style="font-size: 10px; color: #64748B;">Shelters & Puppies</div>
+          </div>
+          <div class="rel-hub-btn" onclick="openAdoptionModal()">
+            <div style="font-size: 20px; margin-bottom: 2px;">👶</div>
+            <div style="font-weight: 600; font-size: 11.5px; color: #1E293B;">Adopt a Child</div>
+            <div style="font-size: 10px; color: #64748B;">Adoption Agency</div>
+          </div>
+          <div class="rel-hub-btn" onclick="openMakeFriendsModal()">
+            <div style="font-size: 20px; margin-bottom: 2px;">🤝</div>
+            <div style="font-weight: 600; font-size: 11.5px; color: #1E293B;">Make Friends</div>
+            <div style="font-size: 10px; color: #64748B;">Socialize & Connect</div>
+          </div>
+        </div>
+
+        <!-- Relationship Cards Section -->
+        <div class="section-title"><span>👥</span> Loved Ones & Companions (<span id="relFilteredCount">0</span>)</div>
+        <div id="relationshipsListContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+          <!-- Injected dynamically by renderRelationships() -->
+        </div>
+      </div>
+
+      <!-- ================= PAGE 4B: DEDICATED PERSON / PET DETAIL PAGE ================= -->
+      <div class="tab-page" id="pagePersonDetail">
+        <div class="page-top-bar">
+          <button class="btn-close-page" onclick="switchTab('pageRelationships', 'tabBtnRelationships')">← Relationships</button>
+          <div class="page-top-title"><span id="personDetailTopIcon">👤</span> <span id="personDetailTopTitle">Profile</span></div>
+          <button class="btn-close-page" onclick="closeToFeed()">✕ Feed</button>
+        </div>
+
+        <div id="personDetailContentContainer" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Dynamically populated by renderPersonDetailPage() -->
         </div>
       </div>
 
@@ -1532,6 +1623,8 @@
       { id: "wealth100k", title: "Six-Figure Wealth", desc: "Accumulate $100,000 in your bank balance or net worth.", done: false, reward: 10000 },
       { id: "millionaire", title: "Self-Made Millionaire", desc: "Reach a Total Net Worth of $1,000,000.", done: false, reward: 50000 },
       { id: "tycoon", title: "Business Tycoon", desc: "Acquire a commercial franchise business or surpass $10,000,000 Net Worth.", done: false, reward: 100000 },
+      { id: "married", title: "Tie the Knot", desc: "Get married to your romantic partner.", done: false, reward: 3000 },
+      { id: "parent", title: "Family Legacy", desc: "Have or adopt your first child.", done: false, reward: 5000 },
       { id: "age70", title: "Golden Years", desc: "Live a long healthy life and reach age 70.", done: false, reward: 8000 }
     ];
 
@@ -1569,9 +1662,70 @@
 
       initSchoolState();
 
-      char.father = { name: "David " + char.name.split(" ")[1], job: "Engineer", age: 28 };
-      char.mother = { name: "Sarah " + char.name.split(" ")[1], job: "Teacher", age: 26 };
-      char.sister = { name: "Chloe", age: 3 };
+      const familyLastName = char.name.split(" ")[1] || "Roosevelt";
+      const fAge = 25 + Math.floor(Math.random() * 10);
+      const mAge = 24 + Math.floor(Math.random() * 8);
+      const sAge = 2 + Math.floor(Math.random() * 4);
+
+      const fRel = {
+        id: "rel_father_" + Date.now(),
+        name: "David " + familyLastName,
+        relation: "Father",
+        category: "family",
+        gender: "Male",
+        age: fAge,
+        relationship: 95,
+        job: "Engineer",
+        salary: 75000,
+        icon: "👨",
+        isAlive: true,
+        generosity: 75 + Math.floor(Math.random() * 20),
+        craziness: 15 + Math.floor(Math.random() * 25),
+        passedAge: null,
+        passedReason: null
+      };
+
+      const mRel = {
+        id: "rel_mother_" + Date.now(),
+        name: "Sarah " + familyLastName,
+        relation: "Mother",
+        category: "family",
+        gender: "Female",
+        age: mAge,
+        relationship: 98,
+        job: "Teacher",
+        salary: 58000,
+        icon: "👩",
+        isAlive: true,
+        generosity: 80 + Math.floor(Math.random() * 20),
+        craziness: 10 + Math.floor(Math.random() * 25),
+        passedAge: null,
+        passedReason: null
+      };
+
+      const sRel = {
+        id: "rel_sister_" + Date.now(),
+        name: "Chloe " + familyLastName,
+        relation: "Sister",
+        category: "family",
+        gender: "Female",
+        age: sAge,
+        relationship: 90,
+        job: "Toddler",
+        salary: 0,
+        icon: "👧",
+        isAlive: true,
+        generosity: 65 + Math.floor(Math.random() * 30),
+        craziness: 20 + Math.floor(Math.random() * 35),
+        passedAge: null,
+        passedReason: null
+      };
+
+      char.relationships = [fRel, mRel, sRel];
+      char.father = fRel;
+      char.mother = mRel;
+      char.sister = sRel;
+      char.partner = null;
 
       tasks.forEach(t => t.done = false);
 
@@ -1657,6 +1811,8 @@
           if (t.id === "wealth100k" && (char.money >= 100000 || netWorth >= 100000)) completeTask(t);
           if (t.id === "millionaire" && netWorth >= 1000000) completeTask(t);
           if (t.id === "tycoon" && (netWorth >= 10000000 || (char.assets && char.assets.some(a => a.type === 'business')))) completeTask(t);
+          if (t.id === "married" && char.partner && char.partner.maritalStatus === "Married") completeTask(t);
+          if (t.id === "parent" && char.relationships && char.relationships.some(r => r.category === "child")) completeTask(t);
           if (t.id === "age70" && char.age >= 70) completeTask(t);
         }
       });
@@ -1757,51 +1913,1601 @@
       document.getElementById(lblId).innerText = `${val}%`;
     }
 
+    let currentRelFilter = 'all';
+    let selectedRelId = null;
+
+    function ensureRelationshipsState() {
+      if (!char.relationships) char.relationships = [];
+
+      const lastName = (char.name && char.name.split(" ")[1]) || "Roosevelt";
+
+      if (char.father && !char.relationships.some(r => r.relation === "Father")) {
+        const f = {
+          id: char.father.id || ("rel_father_" + Date.now()),
+          name: char.father.name || ("David " + lastName),
+          relation: "Father",
+          category: "family",
+          gender: "Male",
+          age: char.father.age || 28,
+          relationship: char.father.relationship != null ? char.father.relationship : 95,
+          job: char.father.job || "Engineer",
+          salary: char.father.salary || 75000,
+          icon: "👨",
+          isAlive: char.father.isAlive !== false,
+          generosity: char.father.generosity || 80,
+          craziness: char.father.craziness || 15,
+          passedAge: char.father.passedAge || null,
+          passedReason: char.father.passedReason || null
+        };
+        char.relationships.push(f);
+        char.father = f;
+      }
+
+      if (char.mother && !char.relationships.some(r => r.relation === "Mother")) {
+        const m = {
+          id: char.mother.id || ("rel_mother_" + Date.now()),
+          name: char.mother.name || ("Sarah " + lastName),
+          relation: "Mother",
+          category: "family",
+          gender: "Female",
+          age: char.mother.age || 26,
+          relationship: char.mother.relationship != null ? char.mother.relationship : 98,
+          job: char.mother.job || "Teacher",
+          salary: char.mother.salary || 58000,
+          icon: "👩",
+          isAlive: char.mother.isAlive !== false,
+          generosity: char.mother.generosity || 85,
+          craziness: char.mother.craziness || 10,
+          passedAge: char.mother.passedAge || null,
+          passedReason: char.mother.passedReason || null
+        };
+        char.relationships.push(m);
+        char.mother = m;
+      }
+
+      if (char.sister && !char.relationships.some(r => r.relation === "Sister" || r.relation === "Brother")) {
+        const s = {
+          id: char.sister.id || ("rel_sister_" + Date.now()),
+          name: char.sister.name || ("Chloe " + lastName),
+          relation: "Sister",
+          category: "family",
+          gender: "Female",
+          age: char.sister.age || 3,
+          relationship: char.sister.relationship != null ? char.sister.relationship : 92,
+          job: char.sister.job || "Toddler",
+          salary: 0,
+          icon: "👧",
+          isAlive: char.sister.isAlive !== false,
+          generosity: char.sister.generosity || 65,
+          craziness: char.sister.craziness || 25,
+          passedAge: char.sister.passedAge || null,
+          passedReason: char.sister.passedReason || null
+        };
+        char.relationships.push(s);
+        char.sister = s;
+      }
+
+      if (char.partner && !char.relationships.some(r => r.id === char.partner.id || (r.category === 'love' && r.isAlive))) {
+        const p = {
+          id: char.partner.id || ("rel_partner_" + Date.now()),
+          name: char.partner.name || "Partner",
+          relation: char.partner.relation || (char.gender === "Female" ? "Boyfriend" : "Girlfriend"),
+          category: "love",
+          gender: char.partner.gender || (char.gender === "Female" ? "Male" : "Female"),
+          age: char.partner.age || char.age,
+          relationship: char.partner.relationship != null ? char.partner.relationship : 95,
+          job: char.partner.job || "Student",
+          salary: char.partner.salary || 0,
+          icon: "❤️",
+          isAlive: true,
+          maritalStatus: char.partner.maritalStatus || "Dating",
+          generosity: char.partner.generosity || 75,
+          craziness: char.partner.craziness || 20,
+          passedAge: null,
+          passedReason: null
+        };
+        char.relationships.push(p);
+        char.partner = p;
+      }
+
+      syncRelationshipsPointers();
+    }
+
+    function syncRelationshipsPointers() {
+      if (!char.relationships) return;
+      const f = char.relationships.find(r => r.relation === "Father");
+      if (f) char.father = f;
+      const m = char.relationships.find(r => r.relation === "Mother");
+      if (m) char.mother = m;
+      const s = char.relationships.find(r => r.relation === "Sister" || r.relation === "Brother");
+      if (s) char.sister = s;
+      const p = char.relationships.find(r => r.category === "love" && r.isAlive);
+      char.partner = p || null;
+    }
+
+    function setRelFilter(filter) {
+      currentRelFilter = filter;
+      const buttons = [
+        { id: 'relFilterAll', f: 'all' },
+        { id: 'relFilterFamily', f: 'family' },
+        { id: 'relFilterLove', f: 'love' },
+        { id: 'relFilterChildren', f: 'child' },
+        { id: 'relFilterFriends', f: 'friend' },
+        { id: 'relFilterPets', f: 'pet' },
+        { id: 'relFilterDeceased', f: 'deceased' }
+      ];
+      buttons.forEach(b => {
+        const el = document.getElementById(b.id);
+        if (el) {
+          if (b.f === filter) el.classList.add('active');
+          else el.classList.remove('active');
+        }
+      });
+      renderRelationships();
+    }
+
     function renderRelationships() {
-      const box = document.getElementById('familyCardsContainer');
-      box.innerHTML = `
-        <div class="interactive-card">
-          <div class="card-left-group">
-            <div class="card-emoji-box">👨</div>
-            <div class="card-texts">
-              <h4>${char.father.name} (Father, Age ${char.father.age})</h4>
-              <p>Career: ${char.father.job} • Relationship: 100%</p>
+      ensureRelationshipsState();
+
+      const rels = char.relationships || [];
+      const living = rels.filter(r => r.isAlive);
+      const deceased = rels.filter(r => !r.isAlive);
+
+      const countAll = living.length;
+      const countFamily = rels.filter(r => r.category === 'family' && r.isAlive).length;
+      const countLove = rels.filter(r => r.category === 'love' && r.isAlive).length;
+      const countChildren = rels.filter(r => r.category === 'child' && r.isAlive).length;
+      const countFriends = rels.filter(r => r.category === 'friend' && r.isAlive).length;
+      const countPets = rels.filter(r => r.category === 'pet' && r.isAlive).length;
+      const countDeceased = deceased.length;
+
+      // Update counters on filter pills
+      const elAll = document.getElementById('relCountAll'); if (elAll) elAll.innerText = countAll;
+      const elFam = document.getElementById('relCountFamily'); if (elFam) elFam.innerText = countFamily;
+      const elLove = document.getElementById('relCountLove'); if (elLove) elLove.innerText = countLove;
+      const elChild = document.getElementById('relCountChildren'); if (elChild) elChild.innerText = countChildren;
+      const elFriend = document.getElementById('relCountFriends'); if (elFriend) elFriend.innerText = countFriends;
+      const elPet = document.getElementById('relCountPets'); if (elPet) elPet.innerText = countPets;
+      const elDec = document.getElementById('relCountDeceased'); if (elDec) elDec.innerText = countDeceased;
+
+      // Calculate Average Family Bond
+      const familyLiving = rels.filter(r => r.category === 'family' && r.isAlive);
+      const avgBond = familyLiving.length > 0 
+        ? Math.round(familyLiving.reduce((sum, r) => sum + (r.relationship || 0), 0) / familyLiving.length)
+        : 100;
+
+      const bondText = document.getElementById('relFamilyBondText');
+      if (bondText) bondText.innerText = `${avgBond}%`;
+      const bondBar = document.getElementById('relFamilyBondBar');
+      if (bondBar) {
+        bondBar.style.width = `${avgBond}%`;
+        bondBar.className = 'school-progress-fill ' + (avgBond >= 65 ? 'fill-green' : avgBond >= 35 ? 'fill-yellow' : 'fill-red');
+      }
+
+      const totalCountText = document.getElementById('relTotalCountText');
+      if (totalCountText) totalCountText.innerText = countAll;
+      const totalCountBar = document.getElementById('relTotalCountBar');
+      if (totalCountBar) totalCountBar.style.width = `${Math.min(100, Math.max(15, countAll * 15))}%`;
+
+      // Header Status
+      const headerStatus = document.getElementById('relHeaderStatus');
+      const headerSubtitle = document.getElementById('relHeaderSubtitle');
+      const headerBadge = document.getElementById('relHeaderBadge');
+      if (char.partner && char.partner.isAlive) {
+        const ms = char.partner.maritalStatus || "Dating";
+        if (ms === "Married") {
+          if (headerStatus) headerStatus.innerText = `Married to ${char.partner.name} 💍`;
+          if (headerSubtitle) headerSubtitle.innerText = `Spouse: ${char.partner.job} • Happily Married`;
+          if (headerBadge) headerBadge.innerText = "💍";
+        } else if (ms === "Engaged") {
+          if (headerStatus) headerStatus.innerText = `Engaged to ${char.partner.name} 💍`;
+          if (headerSubtitle) headerSubtitle.innerText = `Fiancé(e): ${char.partner.job} • Planning Wedding`;
+          if (headerBadge) headerBadge.innerText = "💍";
+        } else {
+          if (headerStatus) headerStatus.innerText = `Dating ${char.partner.name} ❤️`;
+          if (headerSubtitle) headerSubtitle.innerText = `Romantic Partner • Relationship: ${char.partner.relationship}%`;
+          if (headerBadge) headerBadge.innerText = "❤️";
+        }
+      } else {
+        if (headerStatus) headerStatus.innerText = "Single 💫";
+        if (headerSubtitle) headerSubtitle.innerText = "Social, Family & Companions Network";
+        if (headerBadge) headerBadge.innerText = "❤️";
+      }
+
+      // Filter display list
+      let filtered = [];
+      if (currentRelFilter === 'all') {
+        filtered = living.length > 0 ? living : deceased;
+      } else if (currentRelFilter === 'deceased') {
+        filtered = deceased;
+      } else {
+        filtered = rels.filter(r => r.category === currentRelFilter && r.isAlive);
+      }
+
+      const filteredCountEl = document.getElementById('relFilteredCount');
+      if (filteredCountEl) filteredCountEl.innerText = filtered.length;
+
+      const container = document.getElementById('relationshipsListContainer');
+      if (!container) return;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:18px 12px; font-size:12px; color:#64748B; background:#F8FAFC; border:1px dashed #CBD5E1; border-radius:10px;">
+            ${currentRelFilter === 'deceased' ? 'None of your loved ones have passed away. Everyone is alive and well!' : 'No relationships in this category yet. Use the Life & Social Hubs above to meet people or adopt pets!'}
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(r => {
+        const relVal = r.relationship != null ? r.relationship : 90;
+        const relColor = relVal >= 65 ? '#16A34A' : relVal >= 35 ? '#CA8A04' : '#DC2626';
+
+        let badgeHtml = '';
+        if (!r.isAlive) {
+          badgeHtml = '<span class="asset-badge danger">🕊️ Deceased</span>';
+        } else if (r.category === 'love') {
+          const ms = r.maritalStatus || "Dating";
+          badgeHtml = ms === 'Married' 
+            ? '<span class="asset-badge success">💍 Married</span>'
+            : ms === 'Engaged'
+            ? '<span class="asset-badge info">💍 Engaged</span>'
+            : '<span class="asset-badge info">💘 Dating</span>';
+        } else if (r.category === 'pet') {
+          badgeHtml = `<span class="asset-badge info">🐾 ${r.breed || 'Companion'}</span>`;
+        } else if (r.category === 'child') {
+          badgeHtml = '<span class="asset-badge success">👶 Child</span>';
+        } else if (r.category === 'friend') {
+          badgeHtml = '<span class="asset-badge info">⭐ Friend</span>';
+        } else {
+          badgeHtml = `<span class="asset-badge">${r.relation}</span>`;
+        }
+
+        const subDesc = !r.isAlive
+          ? `Passed away at age ${r.passedAge || r.age} 🕊️`
+          : r.category === 'pet'
+          ? `Health: ${r.health || 100}% • Age: ${r.age} yr${r.age === 1 ? '' : 's'}`
+          : `Career: ${r.job || 'None'} • Generosity: ${r.generosity || 75}%`;
+
+        html += `
+          <div class="interactive-card" onclick="openPersonDetail('${r.id}')">
+            <div class="card-left-group" style="flex: 1;">
+              <div class="card-emoji-box" style="font-size: 20px;">${r.icon || (r.category === 'pet' ? '🐾' : r.gender === 'Female' ? '👩' : '👨')}</div>
+              <div class="card-texts" style="flex: 1;">
+                <h4>${r.name} (${r.relation}, Age ${r.age})</h4>
+                <p>${subDesc}</p>
+                <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                  ${badgeHtml}
+                  ${r.isAlive ? `
+                    <div style="flex: 1; max-width: 110px; height: 5px; background: #E2E8F0; border-radius: 3px; overflow: hidden;">
+                      <div style="height: 100%; width: ${relVal}%; background: ${relColor}; border-radius: 3px;"></div>
+                    </div>
+                    <span style="font-size: 10.5px; font-weight: 600; color: ${relColor};">${relVal}%</span>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+            <button class="btn-card-action">${r.isAlive ? 'Interact →' : 'Memorial →'}</button>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // DEDICATED PERSON / PET DETAIL PAGE
+    function openPersonDetail(relId) {
+      selectedRelId = relId;
+      renderPersonDetailPage();
+      switchTab('pagePersonDetail', 'tabBtnRelationships');
+    }
+
+    function renderPersonDetailPage() {
+      ensureRelationshipsState();
+      const container = document.getElementById('personDetailContentContainer');
+      if (!container) return;
+
+      const rels = char.relationships || [];
+      const p = rels.find(r => r.id === selectedRelId);
+
+      if (!p) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:20px; color:#64748B;">
+            Profile not found or no longer available.
+          </div>
+        `;
+        return;
+      }
+
+      const topIcon = document.getElementById('personDetailTopIcon');
+      const topTitle = document.getElementById('personDetailTopTitle');
+      if (topIcon) topIcon.innerText = p.icon || (p.category === 'pet' ? '🐾' : '👤');
+      if (topTitle) topTitle.innerText = p.name;
+
+      const relVal = p.relationship != null ? p.relationship : 90;
+      const relFill = relVal >= 65 ? 'fill-green' : relVal >= 35 ? 'fill-yellow' : 'fill-red';
+
+      let badgesHtml = '';
+      if (!p.isAlive) {
+        badgesHtml += '<span class="asset-badge danger">🕊️ Passed Away</span>';
+      } else if (p.category === 'love') {
+        const ms = p.maritalStatus || "Dating";
+        badgesHtml += `<span class="asset-badge ${ms === 'Married' ? 'success' : 'info'}">${ms === 'Married' ? '💍 Married' : ms === 'Engaged' ? '💍 Engaged' : '💘 Dating'}</span> `;
+      } else if (p.category === 'pet') {
+        badgesHtml += `<span class="asset-badge info">🐾 ${p.breed || 'Pet'}</span> `;
+      } else {
+        badgesHtml += `<span class="asset-badge">${p.relation}</span> `;
+      }
+
+      let html = `
+        <!-- Person Overview Card -->
+        <div class="school-overview-card">
+          <div class="school-overview-header">
+            <div class="school-overview-badge" style="font-size: 26px;">${p.icon || '👤'}</div>
+            <div class="school-overview-info">
+              <div class="school-overview-name">${p.name}</div>
+              <div class="school-overview-desc">${p.relation.toUpperCase()} • ${p.isAlive ? `Age ${p.age} • ${p.job || (p.category === 'pet' ? p.breed : 'Companion')}` : `Passed away at age ${p.passedAge || p.age} 🕊️`}</div>
+              <div style="margin-top: 4px;">${badgesHtml}</div>
             </div>
           </div>
-          <button class="btn-card-action" onclick="spendFamily('Father')">Spend Time</button>
-        </div>
-        <div class="interactive-card">
-          <div class="card-left-group">
-            <div class="card-emoji-box">👩</div>
-            <div class="card-texts">
-              <h4>${char.mother.name} (Mother, Age ${char.mother.age})</h4>
-              <p>Career: ${char.mother.job} • Relationship: 100%</p>
+          <div class="school-metrics-grid">
+            <div class="school-metric-box">
+              <div class="school-metric-label"><span>Relationship Bond</span> <span>${relVal}%</span></div>
+              <div class="school-progress-bar"><div class="school-progress-fill ${relFill}" style="width: ${relVal}%;"></div></div>
             </div>
+            ${p.category === 'pet' ? `
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>Pet Health</span> <span>${p.health || 100}%</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill fill-green" style="width: ${p.health || 100}%;"></div></div>
+              </div>
+            ` : `
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>Generosity</span> <span>${p.generosity || 75}%</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill fill-blue" style="width: ${p.generosity || 75}%;"></div></div>
+              </div>
+            `}
           </div>
-          <button class="btn-card-action" onclick="spendFamily('Mother')">Spend Time</button>
-        </div>
-        <div class="interactive-card">
-          <div class="card-left-group">
-            <div class="card-emoji-box">👧</div>
-            <div class="card-texts">
-              <h4>${char.sister.name} (Sister, Age ${char.sister.age})</h4>
-              <p>Relationship: 95%</p>
-            </div>
-          </div>
-          <button class="btn-card-action" onclick="spendFamily('Sister')">Spend Time</button>
         </div>
       `;
 
-      // Partner Status
-      if (char.partner) {
-        document.getElementById('partnerTitle').innerText = `${char.partner.name} (Partner, Age ${char.partner.age})`;
-        document.getElementById('partnerSub').innerText = `Career: ${char.partner.job} • In Love ❤️`;
-        document.getElementById('btnPartnerAction').innerText = "Spend Time";
+      // ACTIONS
+      if (!p.isAlive) {
+        html += `
+          <div class="section-title"><span>🕊️</span> In Loving Memory</div>
+          <div class="interactive-card" onclick="interactVisitMemorial('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💐</div>
+              <div class="card-texts">
+                <h4>Visit Memorial & Leave Flowers ($50)</h4>
+                <p>Pay respects at their resting place and honor their cherished legacy.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Visit</button>
+          </div>
+        `;
+      } else if (p.category === 'pet') {
+        html += `
+          <div class="section-title"><span>🐾</span> Pet Care & Activities</div>
+
+          <div class="interactive-card" onclick="interactPetPlay('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🎾</div>
+              <div class="card-texts">
+                <h4>Play Fetch & Toys</h4>
+                <p>Play with squeaky toys in the backyard. (+Happiness, +Bond)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Play</button>
+          </div>
+
+          <div class="interactive-card" onclick="interactPetTreat('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🥓</div>
+              <div class="card-texts">
+                <h4>Feed Gourmet Treats ($15)</h4>
+                <p>Spoil your pet with organic premium bacon bites and dental chews.</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Treat</button>
+          </div>
+
+          <div class="interactive-card" onclick="interactPetWalk('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🐕</div>
+              <div class="card-texts">
+                <h4>Outdoor Park Walk</h4>
+                <p>Take an invigorating 30-minute walk through the park. (+Health)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Walk</button>
+          </div>
+
+          <div class="interactive-card" onclick="interactPetVet('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🩺</div>
+              <div class="card-texts">
+                <h4>Veterinary Examination ($150)</h4>
+                <p>Full health checkup, booster vaccinations, and wellness exam.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Visit Vet</button>
+          </div>
+        `;
       } else {
-        document.getElementById('partnerTitle').innerText = "Find a Date";
-        document.getElementById('partnerSub').innerText = "Meet someone special and go out on a romantic date.";
-        document.getElementById('btnPartnerAction').innerText = "Date";
+        // Living Human Relationships (Family, Partner, Child, Friend)
+        html += `<div class="section-title"><span>💬</span> Social Interactions</div>`;
+
+        // 1. Have Conversation
+        html += `
+          <div class="interactive-card" onclick="interactConversation('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💬</div>
+              <div class="card-texts">
+                <h4>Have a Heartfelt Conversation</h4>
+                <p>Discuss life, share funny gossip, and deepen your emotional connection.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Talk</button>
+          </div>
+        `;
+
+        // 2. Spend Quality Time
+        html += `
+          <div class="interactive-card" onclick="interactSpendQualityTime('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">☕</div>
+              <div class="card-texts">
+                <h4>Spend Quality Time</h4>
+                <p>Go to the park, catch a movie, or enjoy lunch together. (+Relationship)</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Hang Out</button>
+          </div>
+        `;
+
+        // 3. Compliment
+        html += `
+          <div class="interactive-card" onclick="interactCompliment('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🌸</div>
+              <div class="card-texts">
+                <h4>Give a Sincere Compliment</h4>
+                <p>Praise their style, kindness, or intelligence to brighten their day.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Compliment</button>
+          </div>
+        `;
+
+        // 4. Give Gift
+        html += `
+          <div class="interactive-card" onclick="interactGiveGiftModal('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🎁</div>
+              <div class="card-texts">
+                <h4>Give a Gift</h4>
+                <p>Present flowers, chocolates, smart gadgets, jewelry, or cash.</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Gift</button>
+          </div>
+        `;
+
+        // 5. Ask for Money / Allowance / Loan
+        html += `
+          <div class="interactive-card" onclick="interactAskMoney('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💵</div>
+              <div class="card-texts">
+                <h4>${char.age < 18 ? 'Ask for Pocket Money / Allowance' : 'Ask for a Financial Loan'}</h4>
+                <p>Request financial assistance based on their generosity and bond with you.</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Ask $</button>
+          </div>
+        `;
+
+        // ROMANCE SPECIFIC ACTIONS (if category === 'love')
+        if (p.category === 'love') {
+          const ms = p.maritalStatus || "Dating";
+          html += `
+            <div class="section-title"><span>💌</span> Romance & Marriage</div>
+
+            <div class="interactive-card" onclick="interactDateNight('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🍷</div>
+                <div class="card-texts">
+                  <h4>Romantic Date Night ($120)</h4>
+                  <p>Candlelight dining at a fine restaurant with champagne and dessert.</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Date</button>
+            </div>
+
+            <div class="interactive-card" onclick="interactMakeLove('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🛌</div>
+                <div class="card-texts">
+                  <h4>Passionate Night Together</h4>
+                  <p>Spend an intimate romantic evening in bed. (+Happiness, +Affection)</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Intimacy</button>
+            </div>
+          `;
+
+          if (ms === 'Dating') {
+            html += `
+              <div class="interactive-card" onclick="interactProposeMarriage('${p.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">💍</div>
+                  <div class="card-texts">
+                    <h4>Propose Marriage</h4>
+                    <p>Present an engagement ring, get down on one knee, and ask them to marry you!</p>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Propose</button>
+              </div>
+            `;
+          } else if (ms === 'Engaged') {
+            html += `
+              <div class="interactive-card" onclick="interactPlanWedding('${p.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">💒</div>
+                  <div class="card-texts">
+                    <h4>Plan Wedding Ceremony</h4>
+                    <p>Choose a wedding venue, invite guests, and exchange eternal vows!</p>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Marry</button>
+              </div>
+            `;
+          }
+
+          if (char.age >= 18 && char.age <= 50) {
+            html += `
+              <div class="interactive-card" onclick="interactTryForBaby('${p.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">👶</div>
+                  <div class="card-texts">
+                    <h4>Try for a Baby</h4>
+                    <p>Plan together to start or expand your family with a new child.</p>
+                  </div>
+                </div>
+                <button class="btn-card-action">Try Baby</button>
+              </div>
+            `;
+          }
+
+          html += `
+            <div class="interactive-card" onclick="interactCouplesCounseling('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🛋️</div>
+                <div class="card-texts">
+                  <h4>Couples Therapy ($350)</h4>
+                  <p>Meet with a licensed relationship psychologist to resolve tension.</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Therapy</button>
+            </div>
+
+            <div class="interactive-card" onclick="interactBreakUpOrDivorce('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💔</div>
+                <div class="card-texts">
+                  <h4>${ms === 'Married' ? 'File for Divorce' : 'Break Up'}</h4>
+                  <p>${ms === 'Married' ? 'Retain divorce attorneys to dissolve marriage and split marital assets.' : 'End the romantic relationship and part ways.'}</p>
+                </div>
+              </div>
+              <button class="btn-card-action danger">${ms === 'Married' ? 'Divorce' : 'Break Up'}</button>
+            </div>
+          `;
+        }
+
+        // CHILD SPECIFIC ACTIONS (if category === 'child')
+        if (p.category === 'child') {
+          html += `
+            <div class="section-title"><span>👶</span> Parenting & Child Care</div>
+
+            <div class="interactive-card" onclick="interactTutorChild('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">📚</div>
+                <div class="card-texts">
+                  <h4>Tutor & Help with Homework</h4>
+                  <p>Sit down together and help them master their school lessons. (+Smarts)</p>
+                </div>
+              </div>
+              <button class="btn-card-action">Tutor</button>
+            </div>
+
+            <div class="interactive-card" onclick="interactGiftChild('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🎮</div>
+                <div class="card-texts">
+                  <h4>Buy Video Games & Toys ($120)</h4>
+                  <p>Surprise them with the latest gaming console or fun toy set.</p>
+                </div>
+              </div>
+              <button class="btn-card-action success">Buy Toys</button>
+            </div>
+          `;
+
+          if (p.age >= 18) {
+            html += `
+              <div class="interactive-card" onclick="interactPayTuition('${p.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">🎓</div>
+                  <div class="card-texts">
+                    <h4>Pay College Tuition ($20,000)</h4>
+                    <p>Pay off your child's university education so they graduate debt-free!</p>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Pay Tuition</button>
+              </div>
+            `;
+          }
+        }
+
+        // 6. Argue / Confront
+        html += `
+          <div class="section-title"><span>⚠️</span> Confrontation</div>
+          <div class="interactive-card" onclick="interactArgue('${p.id}')">
+            <div class="card-left-group">
+              <div class="card-emoji-box">😤</div>
+              <div class="card-texts">
+                <h4>Confront & Argue</h4>
+                <p>Pick a fight or bring up grievances. (-Relationship)</p>
+              </div>
+            </div>
+            <button class="btn-card-action danger">Argue</button>
+          </div>
+        `;
       }
+
+      container.innerHTML = html;
+    }
+
+    // INTERACTION IMPLEMENTATIONS
+    function interactConversation(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const boost = 5 + Math.floor(Math.random() * 5);
+      p.relationship = clamp((p.relationship || 80) + boost, 0, 100);
+      p.interactedThisYear = true;
+      char.happiness = clamp(char.happiness + 5, 0, 100);
+
+      let msg = "";
+      if (p.relation === "Father" || p.relation === "Mother") {
+        msg = `You had a heartwarming chat with your ${p.relation.toLowerCase()} ${p.name}. They shared touching stories from your childhood and offered wise advice.`;
+      } else if (p.relation === "Sister" || p.relation === "Brother") {
+        msg = `You reminisced with your ${p.relation.toLowerCase()} ${p.name} about old pranks and shared inside jokes that had you both laughing.`;
+      } else if (p.category === "love") {
+        msg = `You and ${p.name} talked for hours about your shared aspirations, favorite memories, and hopes for the future.`;
+      } else if (p.category === "child") {
+        msg = `You listened closely to ${p.name}'s enthusiastic stories about school and their friends. They gave you a big hug!`;
+      } else {
+        msg = `You had an engaging conversation with ${p.name} about current events and common interests.`;
+      }
+
+      recordAction(`💬 ${msg} (+Bond, +Happiness)`);
+      showPopup(msg, `Chat with ${p.name}`, "💬");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactSpendQualityTime(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const boost = 8 + Math.floor(Math.random() * 6);
+      p.relationship = clamp((p.relationship || 80) + boost, 0, 100);
+      p.interactedThisYear = true;
+      char.happiness = clamp(char.happiness + 8, 0, 100);
+
+      const activities = [
+        `enjoyed an afternoon walk together in the botanical gardens`,
+        `grabbed coffee and pastries at a cozy local café`,
+        `went to the cinema to watch the latest blockbuster movie`,
+        `cooked a delicious homemade dinner together`
+      ];
+      const act = activities[Math.floor(Math.random() * activities.length)];
+
+      recordAction(`☕ ${p.name} and I ${act}! (+Bond: +${boost}%)`);
+      showPopup(`You and ${p.name} ${act}! Your relationship strengthened to ${p.relationship}%!`, `Quality Time: ${p.name}`, "☕");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactCompliment(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const boost = 5 + Math.floor(Math.random() * 4);
+      p.relationship = clamp((p.relationship || 80) + boost, 0, 100);
+      p.interactedThisYear = true;
+
+      const compliments = [
+        "told them they have an inspiring work ethic and admirable kindness",
+        "complimented their sharp sense of style and great taste",
+        "told them they always bring uplifting energy wherever they go"
+      ];
+      const c = compliments[Math.floor(Math.random() * compliments.length)];
+
+      recordAction(`🌸 Complimented ${p.name}: ${c}.`);
+      showPopup(`You ${c}. ${p.name} smiled warmly and thanked you! (+Relationship: +${boost}%)`, "Warm Compliment", "🌸");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactGiveGiftModal(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const gifts = [
+        { name: "Box of Artisan Chocolates", cost: 35, boost: 8, icon: "🍫" },
+        { name: "Bouquet of Fresh Roses", cost: 60, boost: 12, icon: "💐" },
+        { name: "Designer Perfume / Cologne", cost: 150, boost: 18, icon: "🧴" },
+        { name: "Smart Tablet / Tech Gadget", cost: 500, boost: 25, icon: "📱" },
+        { name: "Luxury Gold Watch / Jewelry", cost: 3500, boost: 35, icon: "💎" }
+      ];
+
+      let subHtml = '<div class="modal-sublist">';
+      gifts.forEach(g => {
+        subHtml += `
+          <div class="interactive-card" onclick="executeGiveGift('${p.id}', '${g.name}', ${g.cost}, ${g.boost})">
+            <div class="card-left-group">
+              <div class="card-emoji-box">${g.icon}</div>
+              <div class="card-texts">
+                <h4>${g.name}</h4>
+                <p>Cost: ${g.cost.toLocaleString()} • Boost: +${g.boost}% Bond</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Give ${g.cost}</button>
+          </div>
+        `;
+      });
+      subHtml += '</div>';
+
+      showCustomModal(`Give Gift to ${p.name}`, "🎁", subHtml);
+    }
+
+    function executeGiveGift(relId, giftName, cost, boost) {
+      closeModal();
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      if (char.money < cost) {
+        showPopup(`You need ${cost.toLocaleString()} to purchase ${giftName}, but you only have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      p.relationship = clamp((p.relationship || 80) + boost, 0, 100);
+      p.interactedThisYear = true;
+      char.happiness = clamp(char.happiness + 10, 0, 100);
+
+      recordAction(`🎁 Gave ${p.name} a ${giftName} (${cost.toLocaleString()})! (+Bond: +${boost}%)`);
+      showPopup(`🎁 ${p.name} was overjoyed to receive the ${giftName}! Their bond rose to ${p.relationship}%!`, "Gift Accepted! 🎁", "🎁");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactAskMoney(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const isMinor = char.age < 18;
+      const requestedAmt = isMinor ? (25 + Math.floor(Math.random() * 50)) : (500 + Math.floor(Math.random() * 1500));
+      const generosity = p.generosity || 70;
+      const relVal = p.relationship || 80;
+
+      // Approval logic
+      const approvalChance = (generosity * 0.5 + relVal * 0.5) / 100;
+      if (Math.random() < approvalChance) {
+        char.money += requestedAmt;
+        char.happiness = clamp(char.happiness + 10, 0, 100);
+        recordAction(`💵 Asked ${p.name} for financial assistance and they gave me ${requestedAmt.toLocaleString()}!`);
+        showPopup(`💵 Generous response! ${p.name} smiled and handed you ${requestedAmt.toLocaleString()} in cash!`, "Money Received! 💵", "💵");
+      } else {
+        p.relationship = clamp(p.relationship - 5, 0, 100);
+        char.happiness = clamp(char.happiness - 5, 0, 100);
+        recordAction(`💸 Asked ${p.name} for ${requestedAmt.toLocaleString()}, but they declined.`);
+        showPopup(`${p.name} shook their head: "Money doesn't grow on trees! You need to budget and earn your own way."`, "Request Declined 💸", "💸");
+      }
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactArgue(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const drop = 12 + Math.floor(Math.random() * 10);
+      p.relationship = clamp((p.relationship || 80) - drop, 0, 100);
+      char.happiness = clamp(char.happiness - 10, 0, 100);
+
+      recordAction(`😤 Got into a heated argument with ${p.name}! (-Bond: -${drop}%)`);
+      showPopup(`Words were exchanged and voices were raised! You and ${p.name} had a bitter argument. Bond dropped to ${p.relationship}%.`, "Heated Argument 😤", "😤");
+      render();
+      renderPersonDetailPage();
+    }
+
+    // ROMANCE HANDLERS
+    function interactDateNight(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const cost = 120;
+      if (char.money < cost) {
+        showPopup(`A romantic date night costs ${cost}, but you only have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      p.relationship = clamp((p.relationship || 80) + 15, 0, 100);
+      char.happiness = clamp(char.happiness + 16, 0, 100);
+      p.interactedThisYear = true;
+
+      recordAction(`🍷 Enjoyed a romantic candlelight dinner date with ${p.name}! (+Bond, +Happiness)`);
+      showPopup(`🍷 You took ${p.name} out for a wonderful candlelight dinner with wine and dessert. Romance is flourishing! (Bond: ${p.relationship}%)`, "Romantic Date Night 🍷", "🍷");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactMakeLove(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      char.happiness = clamp(char.happiness + 15, 0, 100);
+      p.relationship = clamp((p.relationship || 80) + 8, 0, 100);
+      p.interactedThisYear = true;
+
+      // Check chance of pregnancy if female/male couple aged 18-45
+      const canConceive = (char.age >= 18 && char.age <= 45 && p.age >= 18 && p.age <= 45 && char.gender !== p.gender);
+      if (canConceive && Math.random() < 0.22) {
+        recordAction(`🛌 Spent an intimate night with ${p.name}. Surprise news followed!`);
+        showConfirm(`🎉 Wonderful news! Following your passionate night together, ${char.gender === 'Female' ? 'you are pregnant with' : p.name + ' is expecting'} a new baby! Celebrate the arrival?`, () => {
+          interactTryForBaby(p.id, true);
+        }, "Welcome Baby 👶", "👶", "Baby on the Way!");
+      } else {
+        recordAction(`🛌 Spent a passionate, loving night together with ${p.name}.`);
+        showPopup(`You and ${p.name} shared an intimate and passionate evening together. (+Happiness, +Bond)`, "Passionate Night ❤️", "🛌");
+      }
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactProposeMarriage(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const rings = [
+        { name: "Sterling Silver Band", cost: 350, icon: "💍" },
+        { name: "Gold Diamond Solitaire (1-Carat)", cost: 3500, icon: "💎" },
+        { name: "Platinum Royal Marquise (3-Carat)", cost: 12500, icon: "👑" }
+      ];
+
+      let subHtml = '<div class="modal-sublist"><p style="font-size:12px; color:#475569; margin-bottom:8px;">Select an engagement ring to pop the question:</p>';
+      rings.forEach(r => {
+        subHtml += `
+          <div class="interactive-card" onclick="executePropose('${p.id}', '${r.name}', ${r.cost})">
+            <div class="card-left-group">
+              <div class="card-emoji-box">${r.icon}</div>
+              <div class="card-texts">
+                <h4>${r.name}</h4>
+                <p>Price: ${r.cost.toLocaleString()} Free & Clear</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Propose ${r.cost.toLocaleString()}</button>
+          </div>
+        `;
+      });
+      subHtml += '</div>';
+
+      showCustomModal(`Propose to ${p.name}`, "💍", subHtml);
+    }
+
+    function executePropose(relId, ringName, cost) {
+      closeModal();
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      if (char.money < cost) {
+        showPopup(`You need ${cost.toLocaleString()} to purchase the ${ringName}, but you only have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+
+      if ((p.relationship || 80) >= 65) {
+        p.maritalStatus = "Engaged";
+        p.relation = p.gender === "Female" ? "Fiancée" : "Fiancé";
+        p.relationship = clamp((p.relationship || 80) + 20, 0, 100);
+        char.happiness = clamp(char.happiness + 30, 0, 100);
+
+        recordAction(`💍 PROPOSAL ACCEPTED: I proposed to ${p.name} with a ${ringName}! Through happy tears, they said YES!`);
+        showPopup(`💍 "YES! A thousand times yes!" Through happy tears, ${p.name} accepted your proposal and slipped on the ${ringName}! You are officially ENGAGED!`, "Proposal Accepted! 💍", "💍");
+      } else {
+        p.relationship = clamp((p.relationship || 80) - 15, 0, 100);
+        char.happiness = clamp(char.happiness - 15, 0, 100);
+
+        recordAction(`💔 Proposed to ${p.name}, but they felt things were moving too quickly.`);
+        showPopup(`${p.name} hesitated and replied: "I care about you, but I don't think we're ready for marriage yet." (-Bond: -15%)`, "Proposal Declined 💔", "💔");
+      }
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactPlanWedding(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const venues = [
+        { name: "City Hall Courthouse", cost: 150, icon: "🏛️" },
+        { name: "Oceanfront Beach Wedding", cost: 2500, icon: "🏖️" },
+        { name: "Traditional Cathedral Ceremony", cost: 7500, icon: "⛪" },
+        { name: "Luxury Destination Palace", cost: 25000, icon: "🏰" }
+      ];
+
+      let subHtml = `
+        <div class="modal-sublist">
+          <p style="font-size:12px; color:#475569; margin-bottom:6px;">Choose a wedding venue for you and ${p.name}:</p>
+          <div style="margin-bottom:10px; background:#F8FAFC; padding:8px 10px; border-radius:8px; border:1px solid #E2E8F0;">
+            <label style="font-size:12px; font-weight:600; color:#1E293B; display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="checkbox" id="prenupCheckbox" style="cursor:pointer;" checked>
+              <span>Require Prenuptial Agreement (protect assets if divorced)</span>
+            </label>
+          </div>
+      `;
+
+      venues.forEach(v => {
+        subHtml += `
+          <div class="interactive-card" onclick="executeWedding('${p.id}', '${v.name}', ${v.cost})">
+            <div class="card-left-group">
+              <div class="card-emoji-box">${v.icon}</div>
+              <div class="card-texts">
+                <h4>${v.name}</h4>
+                <p>Ceremony & Reception: ${v.cost.toLocaleString()}</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Book ${v.cost.toLocaleString()}</button>
+          </div>
+        `;
+      });
+      subHtml += '</div>';
+
+      showCustomModal(`Marry ${p.name}`, "💒", subHtml);
+    }
+
+    function executeWedding(relId, venueName, cost) {
+      const prenupEl = document.getElementById('prenupCheckbox');
+      const hasPrenup = prenupEl ? prenupEl.checked : true;
+      closeModal();
+
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      if (char.money < cost) {
+        showPopup(`A wedding at ${venueName} costs ${cost.toLocaleString()}, but you only have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      p.maritalStatus = "Married";
+      p.relation = p.gender === "Female" ? "Wife" : "Husband";
+      p.relationship = 100;
+      char.hasPrenup = hasPrenup;
+      char.happiness = 100;
+
+      const giftCash = 500 + Math.floor(Math.random() * 2500);
+      char.money += giftCash;
+
+      recordAction(`💒 MARRIAGE CELEBRATION: Married ${p.name} at ${venueName}! Received ${giftCash.toLocaleString()} in wedding gifts! ${hasPrenup ? '(Prenup Signed)' : '(No Prenup)'}`);
+      showPopup(`🎉 JUST MARRIED! You and ${p.name} exchanged eternal wedding vows at ${venueName}! Friends and family celebrated with champagne, and you received ${giftCash.toLocaleString()} in wedding cash gifts!`, "Just Married! 💍", "👰");
+
+      checkMilestones();
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactTryForBaby(relId, isAutomaticConception = false) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const boyNames = ["Noah", "Liam", "Oliver", "Lucas", "Ethan", "Aiden", "James", "Benjamin"];
+      const girlNames = ["Emma", "Sophia", "Chloe", "Olivia", "Ava", "Mia", "Isabella", "Harper"];
+      const gender = Math.random() > 0.5 ? "Male" : "Female";
+      const babyName = (gender === "Male" 
+        ? boyNames[Math.floor(Math.random() * boyNames.length)]
+        : girlNames[Math.floor(Math.random() * girlNames.length)]) + " " + (char.name.split(" ")[1] || "Roosevelt");
+
+      const newChild = {
+        id: "child_" + Date.now(),
+        name: babyName,
+        relation: gender === "Male" ? "Son" : "Daughter",
+        category: "child",
+        gender: gender,
+        age: 0,
+        relationship: 100,
+        job: "Infant",
+        salary: 0,
+        icon: gender === "Male" ? "👦" : "👧",
+        isAlive: true,
+        generosity: 75,
+        craziness: 15,
+        passedAge: null,
+        passedReason: null
+      };
+
+      char.relationships.push(newChild);
+      char.happiness = clamp(char.happiness + 35, 0, 100);
+
+      recordAction(`👶 Welcome to the world! ${p.name} and I welcomed our newborn ${newChild.relation.toLowerCase()}, ${newChild.name}!`);
+      showPopup(`👶 IT'S A ${gender.toUpperCase()}! Congratulations! You and ${p.name} welcomed your newborn ${newChild.relation.toLowerCase()}, ${newChild.name}, into your loving family!`, "Newborn Baby! 👶", "👶");
+
+      checkMilestones();
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactCouplesCounseling(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const cost = 350;
+      if (char.money < cost) {
+        showPopup(`Couples therapy costs ${cost}, but you only have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      p.relationship = clamp((p.relationship || 70) + 22, 0, 100);
+      char.happiness = clamp(char.happiness + 12, 0, 100);
+
+      recordAction(`🛋️ Attended couples therapy with ${p.name} (${cost}). Bond improved to ${p.relationship}%.`);
+      showPopup(`The therapist helped you and ${p.name} work through grievances and communicate openly. Relationship restored to ${p.relationship}%!`, "Couples Counseling", "🛋️");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactBreakUpOrDivorce(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const isMarried = p.maritalStatus === "Married";
+
+      showConfirm(
+        isMarried 
+          ? `Are you sure you want to divorce ${p.name}? ${char.hasPrenup ? 'Your prenuptial agreement will protect your individual assets.' : 'Without a prenup, court will award them 40% of marital cash!'}`
+          : `Are you sure you want to end your relationship with ${p.name}?`,
+        () => {
+          if (isMarried) {
+            let splitMsg = "";
+            if (char.hasPrenup) {
+              const legalFee = Math.min(1500, char.money);
+              char.money -= legalFee;
+              splitMsg = `The judge upheld your prenuptial agreement! Your individual business empire and property assets were protected. You paid ${legalFee.toLocaleString()} in standard court filing fees.`;
+            } else {
+              const splitAmt = Math.round(Math.max(0, char.money) * 0.40);
+              char.money -= splitAmt;
+              splitMsg = `Without a prenuptial agreement, family court awarded your ex-spouse ${splitAmt.toLocaleString()} in liquid marital funds.`;
+            }
+
+            p.relation = "Ex-Spouse";
+            p.category = "friend";
+            p.relationship = 25;
+            p.maritalStatus = "Divorced";
+            char.partner = null;
+            char.happiness = clamp(char.happiness - 30, 0, 100);
+
+            recordAction(`💔 DIVORCE FINALIZED: Divorced ${p.name}. ${splitMsg}`);
+            showPopup(`⚖️ Divorce Decree Issued: ${splitMsg}`, "Divorce Finalized", "⚖️");
+          } else {
+            p.relation = "Ex";
+            p.category = "friend";
+            p.relationship = 35;
+            p.maritalStatus = "Separated";
+            char.partner = null;
+            char.happiness = clamp(char.happiness - 15, 0, 100);
+
+            recordAction(`💔 Broke up with ${p.name}. We went our separate ways.`);
+            showPopup(`You and ${p.name} had a difficult conversation and decided to end your relationship.`, "Relationship Ended", "💔");
+          }
+          syncRelationshipsPointers();
+          switchTab('pageRelationships', 'tabBtnRelationships');
+          render();
+        },
+        isMarried ? "File Divorce" : "Break Up",
+        "💔",
+        "Confirm Separation"
+      );
+    }
+
+    // CHILD ACTIONS
+    function interactTutorChild(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      p.relationship = clamp((p.relationship || 80) + 10, 0, 100);
+      char.happiness = clamp(char.happiness + 8, 0, 100);
+
+      recordAction(`📚 Tutored my child ${p.name} with their school homework. (+Bond)`);
+      showPopup(`You spent 2 hours reviewing math and science lessons with ${p.name}. They aced their quiz the next morning!`, "Tutor Homework", "📚");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactGiftChild(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const cost = 120;
+      if (char.money < cost) {
+        showPopup(`Buying toys costs ${cost}, but you only have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      p.relationship = clamp((p.relationship || 80) + 16, 0, 100);
+      char.happiness = clamp(char.happiness + 12, 0, 100);
+
+      recordAction(`🎮 Bought new video games and toys for ${p.name} (${cost}).`);
+      showPopup(`🎮 ${p.name} jumped up and down in excitement after opening their new video game! (+Bond: +16%)`, "Toys & Games! 🎮", "🎮");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactPayTuition(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+
+      const cost = 20000;
+      if (char.money < cost) {
+        showPopup(`Paying university tuition costs ${cost.toLocaleString()}, but you have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      p.relationship = 100;
+      char.happiness = clamp(char.happiness + 25, 0, 100);
+
+      recordAction(`🎓 Paid full ${cost.toLocaleString()} university tuition for my child ${p.name}!`);
+      showPopup(`🎓 What an incredible gift! You paid ${cost.toLocaleString()} for ${p.name}'s college tuition, allowing them to graduate completely debt-free!`, "Tuition Paid! 🎓", "🎓");
+      render();
+      renderPersonDetailPage();
+    }
+
+    // PET ACTIONS
+    function interactPetPlay(petId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === petId);
+      if (!p || !p.isAlive) return;
+
+      p.relationship = clamp((p.relationship || 80) + 10, 0, 100);
+      char.happiness = clamp(char.happiness + 12, 0, 100);
+
+      recordAction(`🎾 Played fetch in the yard with my pet ${p.name}!`);
+      showPopup(`🎾 You threw the ball back and forth with ${p.name}! Their tail was wagging with sheer joy!`, "Playtime! 🎾", "🎾");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactPetTreat(petId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === petId);
+      if (!p || !p.isAlive) return;
+
+      const cost = 15;
+      if (char.money < cost) {
+        showPopup("Insufficient funds to buy treats!", "Declined", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      p.relationship = clamp((p.relationship || 80) + 8, 0, 100);
+      char.happiness = clamp(char.happiness + 6, 0, 100);
+
+      recordAction(`🥓 Fed delicious gourmet treats to ${p.name}.`);
+      showPopup(`🥓 ${p.name} eagerly devoured the bacon snack and licked your fingers happily!`, "Yummy Treats! 🥓", "🥓");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactPetWalk(petId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === petId);
+      if (!p || !p.isAlive) return;
+
+      p.relationship = clamp((p.relationship || 80) + 8, 0, 100);
+      char.health = clamp(char.health + 2, 0, 100);
+      char.happiness = clamp(char.happiness + 8, 0, 100);
+
+      recordAction(`🐕 Took ${p.name} on a refreshing outdoor walk in the park.`);
+      showPopup(`You and ${p.name} walked 2 miles through the neighborhood. Fresh air and exercise! (+Health)`, "Outdoor Walk", "🐕");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactPetVet(petId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === petId);
+      if (!p || !p.isAlive) return;
+
+      const cost = 150;
+      if (char.money < cost) {
+        showPopup(`A vet visit costs ${cost}, but you have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      p.health = 100;
+      p.relationship = clamp((p.relationship || 80) + 12, 0, 100);
+
+      recordAction(`🩺 Took ${p.name} to the veterinarian for a full checkup and vaccine boosters (${cost}).`);
+      showPopup(`🩺 The veterinarian examined ${p.name}, administered routine vaccinations, and declared them in peak physical health! (Health: 100%)`, "Vet Clinic Exam", "🩺");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactVisitMemorial(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p) return;
+
+      const cost = 50;
+      if (char.money < cost) {
+        showPopup(`Flowers cost ${cost}, but you have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+      char.happiness = clamp(char.happiness + 8, 0, 100);
+
+      recordAction(`💐 Visited ${p.name}'s memorial and placed fresh floral tributes in their honor.`);
+      showPopup(`💐 You stood quietly at ${p.name}'s memorial resting place, laying fresh white lilies and reminiscing on all the wonderful moments you shared. Their spirit lives on.`, `Memorial: ${p.name} 🕊️`, "🕊️");
+      render();
+      renderPersonDetailPage();
+    }
+
+    // SOCIAL HUBS
+    function openDatingHub() {
+      ensureRelationshipsState();
+      if (char.partner && char.partner.isAlive) {
+        showCustomModal(
+          "Romance Status",
+          "❤️",
+          `<div style="text-align:center; padding:10px 4px;">
+            <p style="font-size:13px; color:#1E293B; margin-bottom:12px;">You are currently in a relationship with <strong>${char.partner.name}</strong> (${char.partner.maritalStatus || 'Dating'})!</p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <button class="btn-card-action success" style="padding:10px; width:100%; text-align:center;" onclick="closeModal(); openPersonDetail('${char.partner.id}')">Manage Relationship & Romance →</button>
+              <button class="btn-card-action danger" style="padding:10px; width:100%; text-align:center;" onclick="closeModal(); interactBreakUpOrDivorce('${char.partner.id}')">End Relationship / Break Up</button>
+            </div>
+          </div>`
+        );
+        return;
+      }
+
+      if (char.age < 16) {
+        showPopup("You must be at least 16 years old to use the Dating App or attend singles events!", "Too Young for Dating", "🧸");
+        return;
+      }
+
+      const firstNames = char.gender === "Female" 
+        ? ["Ethan", "Lucas", "Liam", "Noah", "Oliver", "Alexander", "James", "Daniel"]
+        : ["Sophia", "Emma", "Olivia", "Chloe", "Ava", "Mia", "Isabella", "Harper"];
+      const lastNames = ["Sterling", "Mercer", "Vance", "Kovacs", "Sinclair", "Hawthorne", "Brooks", "Kim"];
+      const jobs = [
+        "Graphic Designer", "Software Engineer", "Nurse", "High School Teacher", "Barista", "Photographer", "Personal Trainer", "College Student"
+      ];
+
+      const candidates = [];
+      for (let i = 0; i < 3; i++) {
+        const cAge = Math.max(16, char.age - 2 + Math.floor(Math.random() * 5));
+        const cName = firstNames[Math.floor(Math.random() * firstNames.length)] + " " + lastNames[Math.floor(Math.random() * lastNames.length)];
+        const cJob = cAge < 18 ? "High School Student" : jobs[Math.floor(Math.random() * jobs.length)];
+        const looks = 45 + Math.floor(Math.random() * 50);
+        const smarts = 40 + Math.floor(Math.random() * 55);
+        const compat = 65 + Math.floor(Math.random() * 32);
+        const icon = char.gender === "Female" ? "👨" : "👩";
+        candidates.push({ name: cName, age: cAge, job: cJob, looks: looks, smarts: smarts, compat: compat, icon: icon });
+      }
+
+      let subHtml = '<div class="modal-sublist"><p style="font-size:12px; color:#64748B; margin-bottom:8px;">Local singles seeking romance in your area:</p>';
+      candidates.forEach((c, idx) => {
+        subHtml += `
+          <div class="interactive-card">
+            <div class="card-left-group" style="flex:1;">
+              <div class="card-emoji-box">${c.icon}</div>
+              <div class="card-texts">
+                <h4>${c.name}, ${c.age}</h4>
+                <p>${c.job} • Compat: ${c.compat}%</p>
+                <div style="margin-top:3px;">
+                  <span class="asset-badge info">Looks: ${c.looks}%</span>
+                  <span class="asset-badge success">Smarts: ${c.smarts}%</span>
+                </div>
+              </div>
+            </div>
+            <button class="btn-card-action success" onclick="executeAskOut('${c.name}', ${c.age}, '${c.job}', ${c.looks}, '${c.icon}')">Ask Out</button>
+          </div>
+        `;
+      });
+      subHtml += '</div>';
+
+      showCustomModal("Dating App & Local Singles", "💘", subHtml);
+    }
+
+    function executeAskOut(name, age, job, looks, icon) {
+      closeModal();
+      ensureRelationshipsState();
+
+      const appeal = (char.looks * 0.5) + (char.smarts * 0.3) + (char.money > 10000 ? 15 : 0);
+      const threshold = looks * 0.60;
+
+      if (appeal >= threshold) {
+        const newPartner = {
+          id: "rel_partner_" + Date.now(),
+          name: name,
+          relation: char.gender === "Female" ? "Boyfriend" : "Girlfriend",
+          category: "love",
+          gender: char.gender === "Female" ? "Male" : "Female",
+          age: age,
+          relationship: 92,
+          job: job,
+          salary: age >= 18 ? 48000 : 0,
+          icon: icon || "❤️",
+          isAlive: true,
+          maritalStatus: "Dating",
+          generosity: 75,
+          craziness: 25,
+          passedAge: null,
+          passedReason: null
+        };
+        char.relationships.push(newPartner);
+        char.partner = newPartner;
+        char.happiness = clamp(char.happiness + 28, 0, 100);
+
+        recordAction(`💘 Went on a romantic first date with ${name}! We are now officially dating!`);
+        showPopup(`💘 Great chemistry! You and ${name} hit it off immediately over dinner. You are now officially boyfriend & girlfriend!`, "Romance Begun! 💘", "💘");
+      } else {
+        char.happiness = clamp(char.happiness - 8, 0, 100);
+        recordAction(`💔 Asked out ${name}, but they politely declined.`);
+        showPopup(`${name} smiled apologetically: "You seem wonderful, but I don't feel a romantic spark between us."`, "Politely Declined 💔", "💔");
+      }
+      render();
+    }
+
+    function openPetAdoptionModal() {
+      ensureRelationshipsState();
+
+      const pets = [
+        { breed: "Golden Retriever Puppy", type: "Dog", cost: 150, icon: "🐶" },
+        { breed: "Rescue Tabby Kitten", type: "Cat", cost: 75, icon: "🐱" },
+        { breed: "German Shepherd", type: "Dog", cost: 220, icon: "🐕" },
+        { breed: "French Bulldog", type: "Dog", cost: 450, icon: "🐾" },
+        { breed: "Scarlet Macaw Parrot", type: "Parrot", cost: 1500, icon: "🦜" },
+        { breed: "Bengal Leopard Kitten", type: "Cat", cost: 2500, icon: "🐆" }
+      ];
+
+      let subHtml = '<div class="modal-sublist"><p style="font-size:12px; color:#64748B; margin-bottom:8px;">Adopt a loving pet companion from local shelters and breeders:</p>';
+      pets.forEach(p => {
+        subHtml += `
+          <div class="interactive-card">
+            <div class="card-left-group" style="flex:1;">
+              <div class="card-emoji-box">${p.icon}</div>
+              <div class="card-texts">
+                <h4>${p.breed}</h4>
+                <p>${p.type} • Adoption Fee: ${p.cost.toLocaleString()}</p>
+              </div>
+            </div>
+            <button class="btn-card-action success" onclick="executeAdoptPet('${p.breed}', '${p.type}', ${p.cost}, '${p.icon}')">Adopt ${p.cost}</button>
+          </div>
+        `;
+      });
+      subHtml += '</div>';
+
+      showCustomModal("Pet Adoption Agency", "🐾", subHtml);
+    }
+
+    function executeAdoptPet(breed, type, cost, icon) {
+      closeModal();
+      ensureRelationshipsState();
+
+      if (char.money < cost) {
+        showPopup(`Adopting this ${breed} costs ${cost}, but you only have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= cost;
+
+      const petNames = ["Buddy", "Milo", "Luna", "Bella", "Charlie", "Oliver", "Simba", "Daisy", "Max", "Leo"];
+      const chosenName = petNames[Math.floor(Math.random() * petNames.length)];
+
+      const newPet = {
+        id: "pet_" + Date.now(),
+        name: chosenName,
+        relation: breed,
+        category: "pet",
+        breed: breed,
+        gender: Math.random() > 0.5 ? "Male" : "Female",
+        age: 1,
+        relationship: 95,
+        health: 100,
+        icon: icon || "🐾",
+        isAlive: true,
+        passedAge: null,
+        passedReason: null
+      };
+
+      char.relationships.push(newPet);
+      char.happiness = clamp(char.happiness + 25, 0, 100);
+
+      recordAction(`🐾 ADOPTED PET: Welcomed a sweet ${breed} named ${chosenName} into our home! (${cost.toLocaleString()})`);
+      showPopup(`🎉 Welcome home, ${chosenName}! You finalized the adoption of your new ${breed}! (+Happiness: +25%)`, "Pet Adopted! 🐾", "🐾");
+      render();
+    }
+
+    function openAdoptionModal() {
+      ensureRelationshipsState();
+
+      if (char.age < 21) {
+        showPopup("You must be at least 21 years old to apply to adopt a child!", "Adoption Age Requirement", "👶");
+        return;
+      }
+
+      const waitingChildren = [
+        { name: "Liam", age: 1, gender: "Male", icon: "👶" },
+        { name: "Maya", age: 4, gender: "Female", icon: "👧" },
+        { name: "Noah", age: 7, gender: "Male", icon: "👦" }
+      ];
+
+      const fee = 5000;
+      let subHtml = `<div class="modal-sublist"><p style="font-size:12px; color:#64748B; margin-bottom:8px;">Adoption agency fee: ${fee.toLocaleString()} (legal placement & background review):</p>`;
+      waitingChildren.forEach(c => {
+        subHtml += `
+          <div class="interactive-card">
+            <div class="card-left-group" style="flex:1;">
+              <div class="card-emoji-box">${c.icon}</div>
+              <div class="card-texts">
+                <h4>${c.name}, Age ${c.age}</h4>
+                <p>${c.gender === 'Male' ? 'Boy' : 'Girl'} looking for a loving permanent home.</p>
+              </div>
+            </div>
+            <button class="btn-card-action success" onclick="executeAdoptChild('${c.name}', ${c.age}, '${c.gender}')">Adopt ${fee.toLocaleString()}</button>
+          </div>
+        `;
+      });
+      subHtml += '</div>';
+
+      showCustomModal("Child Adoption Agency", "👶", subHtml);
+    }
+
+    function executeAdoptChild(name, age, gender) {
+      closeModal();
+      ensureRelationshipsState();
+
+      const fee = 5000;
+      if (char.money < fee) {
+        showPopup(`Adoption placement fees are ${fee.toLocaleString()}, but you have ${char.money.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+
+      char.money -= fee;
+      const fullName = name + " " + (char.name.split(" ")[1] || "Roosevelt");
+
+      const newChild = {
+        id: "child_" + Date.now(),
+        name: fullName,
+        relation: gender === "Male" ? "Son" : "Daughter",
+        category: "child",
+        gender: gender,
+        age: age,
+        relationship: 95,
+        job: age >= 6 ? "Elementary Student" : "Toddler",
+        salary: 0,
+        icon: gender === "Male" ? "👦" : "👧",
+        isAlive: true,
+        generosity: 75,
+        craziness: 15,
+        passedAge: null,
+        passedReason: null
+      };
+
+      char.relationships.push(newChild);
+      char.happiness = clamp(char.happiness + 35, 0, 100);
+
+      recordAction(`👶 FAMILY EXPANSION: Officially finalized the adoption of my new ${newChild.relation.toLowerCase()}, ${fullName}!`);
+      showPopup(`🎉 Congratulations! You have finalized the legal adoption of ${fullName}! They are now officially your beloved child and part of your family!`, "Adoption Finalized! 👶", "👶");
+
+      checkMilestones();
+      render();
+    }
+
+    function openMakeFriendsModal() {
+      ensureRelationshipsState();
+
+      let contextName = "Community Neighbor";
+      let pool = ["Marcus Wright", "Elena Rostova", "Jordan Blake", "Priya Sharma"];
+      if (char.school && char.school.stage !== "None" && char.school.stage !== "Career" && char.school.stage !== "Dropout") {
+        contextName = "Classmate";
+        pool = ["Tyler Henderson", "Aria Montgomery", "Mason Reed", "Zoe Callahan"];
+      } else if (char.salary > 0) {
+        contextName = "Office Coworker";
+        pool = ["Brian Vance", "Claire Davenport", "Nate Fischer", "Jessica Lin"];
+      }
+
+      let subHtml = `<div class="modal-sublist"><p style="font-size:12px; color:#64748B; margin-bottom:8px;">Connect and make new friends in your social circle (${contextName}s):</p>`;
+      pool.forEach(n => {
+        subHtml += `
+          <div class="interactive-card">
+            <div class="card-left-group" style="flex:1;">
+              <div class="card-emoji-box">🤝</div>
+              <div class="card-texts">
+                <h4>${n}</h4>
+                <p>${contextName} • Friendly & Outgoing</p>
+              </div>
+            </div>
+            <button class="btn-card-action success" onclick="executeAddFriend('${n}', '${contextName}')">Connect</button>
+          </div>
+        `;
+      });
+      subHtml += '</div>';
+
+      showCustomModal("Make New Friends", "🤝", subHtml);
+    }
+
+    function executeAddFriend(name, contextName) {
+      closeModal();
+      ensureRelationshipsState();
+
+      if (char.relationships.some(r => r.name === name)) {
+        showPopup(`You are already friends with ${name}!`, "Already Connected", "🤝");
+        return;
+      }
+
+      const newFriend = {
+        id: "friend_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+        name: name,
+        relation: "Friend",
+        category: "friend",
+        gender: Math.random() > 0.5 ? "Male" : "Female",
+        age: char.age,
+        relationship: 75,
+        job: contextName,
+        salary: 0,
+        icon: "⭐",
+        isAlive: true,
+        generosity: 70,
+        craziness: 20,
+        passedAge: null,
+        passedReason: null
+      };
+
+      char.relationships.push(newFriend);
+      char.happiness = clamp(char.happiness + 15, 0, 100);
+
+      recordAction(`🤝 Became close friends with ${name} (${contextName})!`);
+      showPopup(`🤝 You and ${name} bonded over shared interests and became friends!`, "New Friend Made! 🤝", "🤝");
+      render();
     }
 
     function renderTasksPage() {
@@ -1842,12 +3548,88 @@
       }
 
       char.age++;
-      char.father.age++;
-      char.mother.age++;
-      char.sister.age++;
-      if (char.partner) char.partner.age++;
-
       const yearNotes = [];
+      ensureRelationshipsState();
+
+      // Aging relationships & handling sibling/child milestones and elderly mortality
+      char.relationships.forEach(rel => {
+        if (rel.isAlive) {
+          rel.age++;
+
+          // Sibling job progression
+          if (rel.relation === "Sister" || rel.relation === "Brother") {
+            if (rel.age === 6) rel.job = "Elementary Student";
+            else if (rel.age === 14) rel.job = "High School Student";
+            else if (rel.age === 18 && (rel.job || "").includes("Student")) {
+              const sibJobs = ["Nurse", "Graphic Designer", "Accountant", "Photographer", "Sales Rep", "Chef"];
+              rel.job = sibJobs[Math.floor(Math.random() * sibJobs.length)];
+              rel.salary = 45000 + Math.floor(Math.random() * 25000);
+            }
+          }
+
+          // Children job progression
+          if (rel.category === "child") {
+            if (rel.age === 6) rel.job = "Elementary Student";
+            else if (rel.age === 14) rel.job = "High School Student";
+            else if (rel.age === 18) {
+              yearNotes.push(`🎉 Milestone: Your child ${rel.name} turned 18 and graduated from high school!`);
+              const kidJobs = ["Software Developer", "Architect", "Teacher", "Biologist", "Marketing Specialist"];
+              rel.job = kidJobs[Math.floor(Math.random() * kidJobs.length)];
+              rel.salary = 55000 + Math.floor(Math.random() * 30000);
+            }
+          }
+
+          // Gradual relationship decay (-1 to -3%) if neglected
+          if (!rel.interactedThisYear) {
+            rel.relationship = clamp(rel.relationship - (1 + Math.floor(Math.random() * 3)), 15, 100);
+          }
+          rel.interactedThisYear = false;
+
+          // Natural elderly mortality for parents & grandparents (age >= 75)
+          if ((rel.relation === "Father" || rel.relation === "Mother" || rel.relation === "Grandparent") && rel.age >= 75) {
+            const risk = (rel.age - 72) * 0.028;
+            if (Math.random() < risk) {
+              rel.isAlive = false;
+              rel.passedAge = rel.age;
+              rel.passedReason = "Old Age";
+              char.happiness = clamp(char.happiness - 35, 0, 100);
+
+              let inheritance = 0;
+              if (rel.relationship >= 50) {
+                const baseEstate = (rel.salary || 65000) * (2 + Math.floor(Math.random() * 3));
+                const generosityFactor = (rel.generosity || 75) / 100;
+                inheritance = Math.round(baseEstate * generosityFactor);
+                char.money += inheritance;
+              }
+
+              yearNotes.push(`🕊️ IN MEMORIAM: My ${rel.relation.toLowerCase()}, ${rel.name}, passed away peacefully at age ${rel.age}. I attended the funeral.`);
+              if (inheritance > 0) {
+                yearNotes.push(`📜 INHERITANCE: ${rel.name} bequeathed me ${inheritance.toLocaleString()} in their final will!`);
+                setTimeout(() => {
+                  showPopup(`🕊️ With deep sorrow, your ${rel.relation.toLowerCase()}, ${rel.name}, passed away at age ${rel.age}.\n\nIn accordance with their last will and testament, you received an inheritance bequest of ${inheritance.toLocaleString()}!`, `Memorial Service: ${rel.name} 🕊️`, "🕊️");
+                }, 400);
+              } else {
+                setTimeout(() => {
+                  showPopup(`🕊️ With deep sorrow, your ${rel.relation.toLowerCase()}, ${rel.name}, passed away peacefully at age ${rel.age}. May their memory be a blessing.`, `In Loving Memory: ${rel.name} 🕊️`, "🕊️");
+                }, 400);
+              }
+            }
+          }
+
+          // Pet mortality (age >= 13)
+          if (rel.category === "pet" && rel.age >= 13) {
+            const petRisk = (rel.age - 11) * 0.14;
+            if (Math.random() < petRisk) {
+              rel.isAlive = false;
+              rel.passedAge = rel.age;
+              char.happiness = clamp(char.happiness - 20, 0, 100);
+              yearNotes.push(`🐾 Rainbow Bridge: My beloved companion ${rel.name} (${rel.breed || rel.relation}) passed away peacefully at age ${rel.age}.`);
+            }
+          }
+        }
+      });
+
+      syncRelationshipsPointers();
 
       // Aging health decay
       if (char.age > 45) char.health -= (1 + Math.floor(Math.random() * 3));
@@ -5440,7 +7222,27 @@
           return;
         }
         if (p.friendship >= 50 && char.looks >= 30) {
-          char.partner = { name: p.name, age: char.age, job: "Student" };
+          ensureRelationshipsState();
+          const newPartner = {
+            id: "rel_partner_" + Date.now(),
+            name: p.name,
+            relation: p.gender === "Female" ? "Girlfriend" : "Boyfriend",
+            category: "love",
+            gender: p.gender || (char.gender === "Female" ? "Male" : "Female"),
+            age: char.age,
+            job: "Student",
+            salary: 0,
+            icon: "❤️",
+            relationship: 95,
+            isAlive: true,
+            maritalStatus: "Dating",
+            generosity: 75,
+            craziness: 25,
+            passedAge: null,
+            passedReason: null
+          };
+          char.relationships.push(newPartner);
+          char.partner = newPartner;
           char.happiness = clamp(char.happiness + 28, 0, 100);
           recordAction(`💘 ${p.name} and I started dating!`);
           showPopup(`💘 ${p.name} blushed and agreed to be your romantic partner! You are now officially dating!`, "Sweet Romance! 💘", "💘");
