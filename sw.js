@@ -1,4 +1,4 @@
-const CACHE_NAME = 'life-journey-v2';
+const CACHE_NAME = 'life-journey-v3';
 const ASSETS = [
   '/flutter-life-sim/',
   '/flutter-life-sim/index.html',
