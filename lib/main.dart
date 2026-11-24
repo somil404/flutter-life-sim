@@ -93,12 +93,13 @@ class _LifeGameScreenState extends State<LifeGameScreen> {
 
     setState(() {
       age++;
-      // Natural health aging
-      if (age > 40) {
+      // Natural health recovery in youth/midlife & gentle realistic aging
+      if (age <= 55 && health > 0 && health < 75) {
+        health += 1 + _rnd.nextInt(3);
+      } else if (age > 55 && age <= 75) {
+        if (_rnd.nextDouble() < 0.45) health -= 1;
+      } else if (age > 75) {
         health -= (1 + _rnd.nextInt(3));
-      }
-      if (age > 75) {
-        health -= (2 + _rnd.nextInt(5));
       }
 
       // Income & expenses
@@ -120,8 +121,8 @@ class _LifeGameScreenState extends State<LifeGameScreen> {
       // Random annual events
       _triggerRandomLifeEvent();
 
-      // Check longevity death
-      if (age >= 100 || (age > 70 && _rnd.nextInt(120 - age) == 0)) {
+      // Check realistic longevity death (only after age 78+, average ~82-90)
+      if (age >= 105 || (age >= 78 && _rnd.nextInt(max(6, 118 - age)) == 0)) {
         if (isAlive) {
           isAlive = false;
           causeOfDeath = 'passed away peacefully of old age';
@@ -135,18 +136,23 @@ class _LifeGameScreenState extends State<LifeGameScreen> {
 
   void _triggerRandomLifeEvent() {
     int roll = _rnd.nextInt(100);
-    if (roll < 15) {
-      // Sickness / Accident
-      health -= 15 + _rnd.nextInt(20);
-      happiness -= 10;
-      eventLogs.insert(0, '🤒 Age $age: You caught a severe seasonal flu and felt terrible.');
-    } else if (roll < 30) {
+    if (roll < 8) {
+      // Mild seasonal illness
+      health -= 3 + _rnd.nextInt(5);
+      happiness -= 5;
+      eventLogs.insert(0, '🤒 Age $age: You caught a seasonal flu and recovered after resting.');
+    } else if (roll < 24) {
       // Lucky moment
       int find = 50 + _rnd.nextInt(200);
       money += find;
       happiness += 10;
       eventLogs.insert(0, '🍀 Age $age: You found \$$find on the sidewalk!');
-    } else if (roll < 45 && age >= 16) {
+    } else if (roll < 36) {
+      // Wellness & healthy habit
+      health += 2 + _rnd.nextInt(4);
+      happiness += 5;
+      eventLogs.insert(0, '🥗 Age $age: You maintained healthy habits and felt energized.');
+    } else if (roll < 50 && age >= 16) {
       // Social / Romance
       happiness += 15;
       eventLogs.insert(0, '❤️ Age $age: You had an unforgettable date with someone special.');
