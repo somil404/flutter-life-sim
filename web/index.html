@@ -1511,11 +1511,69 @@
             <div class="card-left-group">
               <div class="card-emoji-box">🪩</div>
               <div class="card-texts">
-                <h4>Visit Nightclub & Dance</h4>
-                <p>Party the night away. (+Happiness, -Health)</p>
+                <h4>Visit Nightclub & VIP Lounge</h4>
+                <p>Hit the dance floor ($80) or pop champagne bottles in VIP! (+Happiness)</p>
               </div>
             </div>
             <button class="btn-card-action">Party</button>
+          </div>
+        </div>
+
+        <div class="section-title"><span>🔞</span> Adult Nightlife & 18+ Lifestyle</div>
+        <div class="bitlife-list">
+          <div class="interactive-card" onclick="doBarVisit()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🍹</div>
+              <div class="card-texts">
+                <h4>Cocktail Bar & Happy Hour ($60)</h4>
+                <p>Enjoy craft drinks, bar flirting, and late-night conversations (18+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Drinks</button>
+          </div>
+
+          <div class="interactive-card" onclick="openCasinoModal()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🃏</div>
+              <div class="card-texts">
+                <h4>High-Roller Casino (Blackjack & Roulette)</h4>
+                <p>Wager real stakes from $100 to $50,000 at the VIP tables! (18+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action success">Gamble</button>
+          </div>
+
+          <div class="interactive-card" onclick="doCabaretLounge()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🍸</div>
+              <div class="card-texts">
+                <h4>After-Hours Cabaret Lounge ($250)</h4>
+                <p>Adults-only late show & cocktails—careful if your partner checks receipts! (18+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Enter</button>
+          </div>
+
+          <div class="interactive-card" onclick="openCosmeticStudioModal()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">💅</div>
+              <div class="card-texts">
+                <h4>Tattoos & Cosmetic Studio</h4>
+                <p>Get custom sleeve ink, aesthetic fillers, or cosmetic sculpting (18+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Enhance</button>
+          </div>
+
+          <div class="interactive-card" onclick="openAdultClinicModal()">
+            <div class="card-left-group">
+              <div class="card-emoji-box">🧬</div>
+              <div class="card-texts">
+                <h4>Adult Wellness & STI Clinic</h4>
+                <p>Confidential STI testing & treatment, birth control & vitality care (18+)</p>
+              </div>
+            </div>
+            <button class="btn-card-action">Clinic</button>
           </div>
         </div>
       </div>
@@ -1802,6 +1860,31 @@
       if (isNaN(player.finance.taxLossCarryforward)) player.finance.taxLossCarryforward = 0;
       if (isNaN(player.finance.taxesPaidLifetime)) player.finance.taxesPaidLifetime = 0;
       return player.finance;
+    }
+
+    function ensureAdultState(player = char) {
+      if (!player) return null;
+      if (!player.adult) {
+        player.adult = {
+          bodyCount: 0,
+          hasSTI: null,
+          onBirthControl: false,
+          affairsCount: 0,
+          nightlifeThisYear: 0,
+          flingsThisYear: 0,
+          casinoNetLifetime: 0,
+          tattoos: [],
+          cosmeticCount: 0
+        };
+      }
+      if (!Array.isArray(player.adult.tattoos)) player.adult.tattoos = [];
+      if (isNaN(player.adult.bodyCount)) player.adult.bodyCount = 0;
+      if (isNaN(player.adult.affairsCount)) player.adult.affairsCount = 0;
+      if (isNaN(player.adult.nightlifeThisYear)) player.adult.nightlifeThisYear = 0;
+      if (isNaN(player.adult.flingsThisYear)) player.adult.flingsThisYear = 0;
+      if (isNaN(player.adult.casinoNetLifetime)) player.adult.casinoNetLifetime = 0;
+      if (isNaN(player.adult.cosmeticCount)) player.adult.cosmeticCount = 0;
+      return player.adult;
     }
 
     function getCreditRatingLabel(score) {
@@ -2460,9 +2543,11 @@ function generateSchoolName(stage) {
       char._lastFinancialAge = -1;
       char._lastFinancialSummary = null;
       char.finance = null;
+      char.adult = null;
 
       initSchoolState();
       ensureFinanceState(char);
+      ensureAdultState(char);
       generateYearlyMarketOpportunities(char);
 
       const familyLastName = char.name.split(" ")[1] || "Roosevelt";
@@ -2649,6 +2734,7 @@ function generateSchoolName(stage) {
           char = parsed.char;
           if (!char.school) initSchoolState();
           ensureFinanceState(char);
+          ensureAdultState(char);
           ensureRelationshipsState();
           if (Array.isArray(parsed.tasks)) {
             parsed.tasks.forEach(savedT => {
@@ -2864,6 +2950,13 @@ function generateSchoolName(stage) {
         char.partner = p;
       }
 
+      ensureAdultState(char);
+      if (char.relationships) {
+        char.relationships.forEach(r => {
+          if (r.category === 'love' && r.passion == null) r.passion = 85;
+          if (r.category === 'love' && r.yearsTogether == null) r.yearsTogether = 0;
+        });
+      }
       syncRelationshipsPointers();
     }
 
@@ -2914,11 +3007,12 @@ function generateSchoolName(stage) {
     function renderRelationshipRow(r) {
       const relVal = r.relationship != null ? r.relationship : 90;
       const relColor = relVal >= 65 ? '#059669' : relVal >= 35 ? '#D97706' : '#DC2626';
+      const passionTag = (r.category === 'love' && r.isAlive) ? ` • 🔥 ${r.passion != null ? r.passion : 85}%` : '';
       const subText = !r.isAlive
         ? `Passed away at age ${r.passedAge || r.age}`
         : r.category === 'pet'
         ? `${r.breed || 'Pet'} • Age ${r.age} • Health ${r.health || 100}%`
-        : `${r.relation}${r.maritalStatus === 'Married' ? ' (Married)' : r.maritalStatus === 'Engaged' ? ' (Engaged)' : ''} • Age ${r.age} • ${r.job || 'Unemployed'}`;
+        : `${r.relation}${r.maritalStatus === 'Married' ? ' (Married)' : r.maritalStatus === 'Engaged' ? ' (Engaged)' : ''} • Age ${r.age} • ${r.job || 'Unemployed'}${passionTag}`;
 
       return `
         <div class="interactive-card" onclick="openPersonDetail('${r.id}')">
@@ -2985,27 +3079,31 @@ function generateSchoolName(stage) {
       if (totalCountBar) totalCountBar.style.width = `${Math.min(100, Math.max(15, countAll * 15))}%`;
 
       // Header Status
+      const adult = ensureAdultState(char);
       const headerStatus = document.getElementById('relHeaderStatus');
       const headerSubtitle = document.getElementById('relHeaderSubtitle');
       const headerBadge = document.getElementById('relHeaderBadge');
       if (char.partner && char.partner.isAlive) {
         const ms = char.partner.maritalStatus || "Dating";
+        const pPassion = char.partner.passion != null ? char.partner.passion : 85;
         if (ms === "Married") {
           if (headerStatus) headerStatus.innerText = `Married to ${char.partner.name} 💍`;
-          if (headerSubtitle) headerSubtitle.innerText = `Spouse: ${char.partner.job} • Bond: ${char.partner.relationship}%`;
+          if (headerSubtitle) headerSubtitle.innerText = `${char.partner.job} • Bond ${char.partner.relationship}% • Passion ${pPassion}%`;
           if (headerBadge) headerBadge.innerText = "💍";
         } else if (ms === "Engaged") {
           if (headerStatus) headerStatus.innerText = `Engaged to ${char.partner.name} 💍`;
-          if (headerSubtitle) headerSubtitle.innerText = `Fiancé(e): ${char.partner.job} • Bond: ${char.partner.relationship}%`;
+          if (headerSubtitle) headerSubtitle.innerText = `Fiancé(e): ${char.partner.job} • Bond ${char.partner.relationship}% • Passion ${pPassion}%`;
           if (headerBadge) headerBadge.innerText = "💍";
         } else {
           if (headerStatus) headerStatus.innerText = `Dating ${char.partner.name} ❤️`;
-          if (headerSubtitle) headerSubtitle.innerText = `Partner • Bond: ${char.partner.relationship}%`;
+          if (headerSubtitle) headerSubtitle.innerText = `Partner • Bond ${char.partner.relationship}% • Passion ${pPassion}%`;
           if (headerBadge) headerBadge.innerText = "❤️";
         }
       } else {
         if (headerStatus) headerStatus.innerText = "Single 💫";
-        if (headerSubtitle) headerSubtitle.innerText = "Partner & Children always listed first";
+        if (headerSubtitle) headerSubtitle.innerText = char.age >= 18
+          ? `18+ Romance & Hookups Ready • Partners: ${adult.bodyCount}`
+          : "Partner & Children always listed first";
         if (headerBadge) headerBadge.innerText = "❤️";
       }
 
@@ -3094,17 +3192,31 @@ function generateSchoolName(stage) {
       const relVal = p.relationship != null ? p.relationship : 90;
       const relFill = relVal >= 65 ? 'fill-green' : relVal >= 35 ? 'fill-yellow' : 'fill-red';
 
+      const adult = ensureAdultState(char);
+      const isHumanAdult = char.age >= 18 && p.age >= 18;
       let badgesHtml = '';
       if (!p.isAlive) {
         badgesHtml += '<span class="asset-badge danger">🕊️ Passed Away</span>';
       } else if (p.category === 'love') {
         const ms = p.maritalStatus || "Dating";
         badgesHtml += `<span class="asset-badge ${ms === 'Married' ? 'success' : 'info'}">${ms === 'Married' ? '💍 Married' : ms === 'Engaged' ? '💍 Engaged' : '💘 Dating'}</span> `;
+        if (ms === 'Married') {
+          badgesHtml += `<span class="asset-badge ${char.hasPrenup ? 'success' : 'warning'}">${char.hasPrenup ? '📜 Prenup Signed' : '⚠️ No Prenup'}</span> `;
+        }
+        if (p.salary > 0) {
+          badgesHtml += `<span class="asset-badge">💵 $${p.salary.toLocaleString()}/yr</span> `;
+        }
+        if (char.age >= 18) {
+          badgesHtml += `<span class="asset-badge ${adult.onBirthControl ? 'success' : ''}">${adult.onBirthControl ? '💊 Protected' : '🔥 Natural'}</span>`;
+        }
       } else if (p.category === 'pet') {
         badgesHtml += `<span class="asset-badge info">🐾 ${p.breed || 'Pet'}</span> `;
       } else {
         badgesHtml += `<span class="asset-badge">${p.relation}</span> `;
       }
+
+      const passionVal = p.passion != null ? p.passion : 85;
+      const passionFill = passionVal >= 65 ? 'fill-green' : passionVal >= 35 ? 'fill-yellow' : 'fill-red';
 
       let html = `
         <!-- Person Overview Card -->
@@ -3114,7 +3226,7 @@ function generateSchoolName(stage) {
             <div class="school-overview-info">
               <div class="school-overview-name">${p.name}</div>
               <div class="school-overview-desc">${p.relation.toUpperCase()} • ${p.isAlive ? `Age ${p.age} • ${p.job || (p.category === 'pet' ? p.breed : 'Companion')}` : `Passed away at age ${p.passedAge || p.age} 🕊️`}</div>
-              <div style="margin-top: 4px;">${badgesHtml}</div>
+              <div style="margin-top: 4px; display:flex; flex-wrap:wrap; gap:4px;">${badgesHtml}</div>
             </div>
           </div>
           <div class="school-metrics-grid">
@@ -3127,6 +3239,11 @@ function generateSchoolName(stage) {
                 <div class="school-metric-label"><span>Pet Health</span> <span>${p.health || 100}%</span></div>
                 <div class="school-progress-bar"><div class="school-progress-fill fill-green" style="width: ${p.health || 100}%;"></div></div>
               </div>
+            ` : p.category === 'love' ? `
+              <div class="school-metric-box">
+                <div class="school-metric-label"><span>Passion & Spark 🔥</span> <span>${passionVal}%</span></div>
+                <div class="school-progress-bar"><div class="school-progress-fill ${passionFill}" style="width: ${passionVal}%;"></div></div>
+              </div>
             ` : `
               <div class="school-metric-box">
                 <div class="school-metric-label"><span>Generosity</span> <span>${p.generosity || 75}%</span></div>
@@ -3137,74 +3254,76 @@ function generateSchoolName(stage) {
         </div>
       `;
 
-      // ACTIONS
+      // ACTIONS (All grouped cleanly inside BitLife lists)
       if (!p.isAlive) {
         html += `
           <div class="section-title"><span>🕊️</span> In Loving Memory</div>
-          <div class="interactive-card" onclick="interactVisitMemorial('${p.id}')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">💐</div>
-              <div class="card-texts">
-                <h4>Visit Memorial & Leave Flowers ($50)</h4>
-                <p>Pay respects at their resting place and honor their cherished legacy.</p>
+          <div class="bitlife-list">
+            <div class="interactive-card" onclick="interactVisitMemorial('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">💐</div>
+                <div class="card-texts">
+                  <h4>Visit Memorial & Leave Flowers ($50)</h4>
+                  <p>Pay respects at their resting place and honor their cherished legacy.</p>
+                </div>
               </div>
+              <button class="btn-card-action">Visit</button>
             </div>
-            <button class="btn-card-action">Visit</button>
           </div>
         `;
       } else if (p.category === 'pet') {
         html += `
           <div class="section-title"><span>🐾</span> Pet Care & Activities</div>
-
-          <div class="interactive-card" onclick="interactPetPlay('${p.id}')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🎾</div>
-              <div class="card-texts">
-                <h4>Play Fetch & Toys</h4>
-                <p>Play with squeaky toys in the backyard. (+Happiness, +Bond)</p>
+          <div class="bitlife-list">
+            <div class="interactive-card" onclick="interactPetPlay('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🎾</div>
+                <div class="card-texts">
+                  <h4>Play Fetch & Toys</h4>
+                  <p>Play with squeaky toys in the backyard. (+Happiness, +Bond)</p>
+                </div>
               </div>
+              <button class="btn-card-action">Play</button>
             </div>
-            <button class="btn-card-action">Play</button>
-          </div>
 
-          <div class="interactive-card" onclick="interactPetTreat('${p.id}')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🥓</div>
-              <div class="card-texts">
-                <h4>Feed Gourmet Treats ($15)</h4>
-                <p>Spoil your pet with organic premium bacon bites and dental chews.</p>
+            <div class="interactive-card" onclick="interactPetTreat('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🥓</div>
+                <div class="card-texts">
+                  <h4>Feed Gourmet Treats ($15)</h4>
+                  <p>Spoil your pet with organic premium bacon bites and dental chews.</p>
+                </div>
               </div>
+              <button class="btn-card-action success">Treat</button>
             </div>
-            <button class="btn-card-action success">Treat</button>
-          </div>
 
-          <div class="interactive-card" onclick="interactPetWalk('${p.id}')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🐕</div>
-              <div class="card-texts">
-                <h4>Outdoor Park Walk</h4>
-                <p>Take an invigorating 30-minute walk through the park. (+Health)</p>
+            <div class="interactive-card" onclick="interactPetWalk('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🐕</div>
+                <div class="card-texts">
+                  <h4>Outdoor Park Walk</h4>
+                  <p>Take an invigorating 30-minute walk through the park. (+Health)</p>
+                </div>
               </div>
+              <button class="btn-card-action">Walk</button>
             </div>
-            <button class="btn-card-action">Walk</button>
-          </div>
 
-          <div class="interactive-card" onclick="interactPetVet('${p.id}')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">🩺</div>
-              <div class="card-texts">
-                <h4>Veterinary Examination ($150)</h4>
-                <p>Full health checkup, booster vaccinations, and wellness exam.</p>
+            <div class="interactive-card" onclick="interactPetVet('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">🩺</div>
+                <div class="card-texts">
+                  <h4>Veterinary Examination ($150)</h4>
+                  <p>Full health checkup, booster vaccinations, and wellness exam.</p>
+                </div>
               </div>
+              <button class="btn-card-action">Visit Vet</button>
             </div>
-            <button class="btn-card-action">Visit Vet</button>
           </div>
         `;
       } else {
         // Living Human Relationships (Family, Partner, Child, Friend)
-        html += `<div class="section-title"><span>💬</span> Social Interactions</div>`;
+        html += `<div class="section-title"><span>💬</span> Social Interactions</div><div class="bitlife-list">`;
 
-        // 1. Have Conversation
         html += `
           <div class="interactive-card" onclick="interactConversation('${p.id}')">
             <div class="card-left-group">
@@ -3216,10 +3335,7 @@ function generateSchoolName(stage) {
             </div>
             <button class="btn-card-action">Talk</button>
           </div>
-        `;
 
-        // 2. Spend Quality Time
-        html += `
           <div class="interactive-card" onclick="interactSpendQualityTime('${p.id}')">
             <div class="card-left-group">
               <div class="card-emoji-box">☕</div>
@@ -3230,10 +3346,7 @@ function generateSchoolName(stage) {
             </div>
             <button class="btn-card-action success">Hang Out</button>
           </div>
-        `;
 
-        // 3. Compliment
-        html += `
           <div class="interactive-card" onclick="interactCompliment('${p.id}')">
             <div class="card-left-group">
               <div class="card-emoji-box">🌸</div>
@@ -3244,10 +3357,7 @@ function generateSchoolName(stage) {
             </div>
             <button class="btn-card-action">Compliment</button>
           </div>
-        `;
 
-        // 4. Give Gift
-        html += `
           <div class="interactive-card" onclick="interactGiveGiftModal('${p.id}')">
             <div class="card-left-group">
               <div class="card-emoji-box">🎁</div>
@@ -3258,115 +3368,220 @@ function generateSchoolName(stage) {
             </div>
             <button class="btn-card-action success">Gift</button>
           </div>
-        `;
 
-        // 5. Ask for Money / Allowance / Loan
-        html += `
           <div class="interactive-card" onclick="interactAskMoney('${p.id}')">
             <div class="card-left-group">
               <div class="card-emoji-box">💵</div>
               <div class="card-texts">
-                <h4>${char.age < 18 ? 'Ask for Pocket Money / Allowance' : 'Ask for a Financial Loan'}</h4>
-                <p>Request financial assistance based on their generosity and bond with you.</p>
+                <h4>${char.age < 18 ? 'Ask for Pocket Money / Allowance' : 'Ask for Financial Support'}</h4>
+                <p>Request assistance based on their generosity (${p.generosity || 75}%) and bond.</p>
               </div>
             </div>
             <button class="btn-card-action">Ask $</button>
           </div>
-        `;
+        </div>`;
 
         // ROMANCE SPECIFIC ACTIONS (if category === 'love')
         if (p.category === 'love') {
           const ms = p.maritalStatus || "Dating";
           html += `
-            <div class="section-title"><span>💌</span> Romance & Marriage</div>
-
-            <div class="interactive-card" onclick="interactDateNight('${p.id}')">
-              <div class="card-left-group">
-                <div class="card-emoji-box">🍷</div>
-                <div class="card-texts">
-                  <h4>Romantic Date Night ($120)</h4>
-                  <p>Candlelight dining at a fine restaurant with champagne and dessert.</p>
-                </div>
-              </div>
-              <button class="btn-card-action success">Date</button>
-            </div>
-
-            <div class="interactive-card" onclick="interactMakeLove('${p.id}')">
-              <div class="card-left-group">
-                <div class="card-emoji-box">🛌</div>
-                <div class="card-texts">
-                  <h4>Passionate Night Together</h4>
-                  <p>Spend an intimate romantic evening in bed. (+Happiness, +Affection)</p>
-                </div>
-              </div>
-              <button class="btn-card-action">Intimacy</button>
-            </div>
-          `;
-
-          if (ms === 'Dating') {
-            html += `
-              <div class="interactive-card" onclick="interactProposeMarriage('${p.id}')">
+            <div class="section-title"><span>💌</span> Romance & Dating</div>
+            <div class="bitlife-list">
+              <div class="interactive-card" onclick="interactDateNight('${p.id}')">
                 <div class="card-left-group">
-                  <div class="card-emoji-box">💍</div>
+                  <div class="card-emoji-box">🍷</div>
                   <div class="card-texts">
-                    <h4>Propose Marriage</h4>
-                    <p>Present an engagement ring, get down on one knee, and ask them to marry you!</p>
+                    <h4>Romantic Date Night ($120)</h4>
+                    <p>Candlelight dining at a fine restaurant with wine and dessert.</p>
                   </div>
                 </div>
-                <button class="btn-card-action success">Propose</button>
+                <button class="btn-card-action success">Date</button>
               </div>
-            `;
-          } else if (ms === 'Engaged') {
-            html += `
-              <div class="interactive-card" onclick="interactPlanWedding('${p.id}')">
-                <div class="card-left-group">
-                  <div class="card-emoji-box">💒</div>
-                  <div class="card-texts">
-                    <h4>Plan Wedding Ceremony</h4>
-                    <p>Choose a wedding venue, invite guests, and exchange eternal vows!</p>
-                  </div>
-                </div>
-                <button class="btn-card-action success">Marry</button>
-              </div>
-            `;
-          }
 
-          if (char.age >= 18 && char.age <= 50) {
-            html += `
-              <div class="interactive-card" onclick="interactTryForBaby('${p.id}')">
-                <div class="card-left-group">
-                  <div class="card-emoji-box">👶</div>
-                  <div class="card-texts">
-                    <h4>Try for a Baby</h4>
-                    <p>Plan together to start or expand your family with a new child.</p>
+              ${char.age >= 18 ? `
+                <div class="interactive-card" onclick="interactFineDateNight('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">🥂</div>
+                    <div class="card-texts">
+                      <h4>Rooftop VIP & Cocktails ($450)</h4>
+                      <p>Luxury skyline dining, craft cocktails, and VIP booth romance.</p>
+                    </div>
                   </div>
+                  <button class="btn-card-action success">VIP Date</button>
                 </div>
-                <button class="btn-card-action">Try Baby</button>
-              </div>
-            `;
-          }
+              ` : ''}
 
-          html += `
-            <div class="interactive-card" onclick="interactCouplesCounseling('${p.id}')">
-              <div class="card-left-group">
-                <div class="card-emoji-box">🛋️</div>
-                <div class="card-texts">
-                  <h4>Couples Therapy ($350)</h4>
-                  <p>Meet with a licensed relationship psychologist to resolve tension.</p>
+              ${ms === 'Married' && p.salary > 0 ? `
+                <div class="interactive-card" onclick="interactSharedFinances('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">💸</div>
+                    <div class="card-texts">
+                      <h4>Share Household Budget (${p.sharedThisYear ? 'Collected' : 'Annual'})</h4>
+                      <p>Partner pitches in 15% of their $${p.salary.toLocaleString()}/yr income toward home expenses.</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action ${p.sharedThisYear ? 'secondary' : 'success'}">${p.sharedThisYear ? 'Settled' : 'Pool $'}</button>
                 </div>
-              </div>
-              <button class="btn-card-action">Therapy</button>
+              ` : ''}
             </div>
 
-            <div class="interactive-card" onclick="interactBreakUpOrDivorce('${p.id}')">
-              <div class="card-left-group">
-                <div class="card-emoji-box">💔</div>
-                <div class="card-texts">
-                  <h4>${ms === 'Married' ? 'File for Divorce' : 'Break Up'}</h4>
-                  <p>${ms === 'Married' ? 'Retain divorce attorneys to dissolve marriage and split marital assets.' : 'End the romantic relationship and part ways.'}</p>
+            <div class="section-title"><span>🔞</span> Passion & 18+ Intimacy</div>
+            <div class="bitlife-list">
+              ${isHumanAdult ? `
+                <div class="interactive-card" onclick="openIntimacyModal('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">🛏️</div>
+                    <div class="card-texts">
+                      <h4>Get Intimate (Choose Vibe 🔞)</h4>
+                      <p>Pick Sweet Romance, Wild Night 🔥, or Champagne Massage ($85). (+Passion, +Bond)</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action success">Intimate</button>
                 </div>
+
+                <div class="interactive-card" onclick="interactSpicyNight('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">🌶️</div>
+                    <div class="card-texts">
+                      <h4>Spicy Roleplay & Mystery Box ($60)</h4>
+                      <p>Keep the spark blazing hot with adventurous couples night in! (+Passion)</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action">Spice Up</button>
+                </div>
+
+                <div class="interactive-card" onclick="interactAdultsGetaway('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">🍾</div>
+                    <div class="card-texts">
+                      <h4>Adults-Only Resort Weekend ($650)</h4>
+                      <p>Private beachfront infinity villa & champagne escape. (++Passion, ++Bond)</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action success">Escape</button>
+                </div>
+
+                <div class="interactive-card" onclick="toggleBirthControl(true)">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">💊</div>
+                    <div class="card-texts">
+                      <h4>Contraception & Protection</h4>
+                      <p>${adult.onBirthControl ? 'Currently Protected (Very low unplanned pregnancy risk)' : 'Natural / Unprotected (Higher chance of surprise baby)'}</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action ${adult.onBirthControl ? 'success' : ''}">${adult.onBirthControl ? 'Active' : 'Enable'}</button>
+                </div>
+
+                <div class="interactive-card" onclick="interactSecretAffair('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">🕵️</div>
+                    <div class="card-texts">
+                      <h4>Sneak Out for a Secret Affair (18+)</h4>
+                      <p>High-risk late-night infidelity—thrill & +1 partner count, but getting caught ruins everything!</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action danger">Risk It</button>
+                </div>
+              ` : `
+                <div class="interactive-card" onclick="showPopup('18+ intimacy, spicy roleplay, and adults-only getaways unlock automatically once both you and your partner are 18+.', '18+ Adult Content', '🔞')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">🔒</div>
+                    <div class="card-texts">
+                      <h4>18+ Intimacy & Adult Romance Locked</h4>
+                      <p>Available once both you and your partner reach Age 18.</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action">18+</button>
+                </div>
+              `}
+            </div>
+
+            <div class="section-title"><span>💍</span> Commitment, Family & Legal</div>
+            <div class="bitlife-list">
+              ${ms === 'Dating' ? `
+                <div class="interactive-card" onclick="interactProposeMarriage('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">💍</div>
+                    <div class="card-texts">
+                      <h4>Propose Marriage</h4>
+                      <p>Present an engagement ring, get down on one knee, and pop the question!</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action success">Propose</button>
+                </div>
+              ` : ms === 'Engaged' ? `
+                <div class="interactive-card" onclick="interactPlanWedding('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">💒</div>
+                    <div class="card-texts">
+                      <h4>Plan Wedding Ceremony</h4>
+                      <p>Choose a venue, decide on a Prenup, and exchange eternal vows!</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action success">Marry</button>
+                </div>
+              ` : ''}
+
+              ${ms === 'Married' && !char.hasPrenup ? `
+                <div class="interactive-card" onclick="interactPostnup('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">📜</div>
+                    <div class="card-texts">
+                      <h4>Negotiate Postnuptial Agreement ($2,500)</h4>
+                      <p>Hire family counsel to protect your business & assets in writing.</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action">Postnup</button>
+                </div>
+              ` : ''}
+
+              ${char.age >= 18 && char.age <= 50 ? `
+                <div class="interactive-card" onclick="interactTryForBaby('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">👶</div>
+                    <div class="card-texts">
+                      <h4>Try for a Baby</h4>
+                      <p>Plan together to start or expand your family with a new child.</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action">Try Baby</button>
+                </div>
+              ` : ''}
+
+              ${char.age >= 30 && char.age <= 50 ? `
+                <div class="interactive-card" onclick="interactIVF('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">🧬</div>
+                    <div class="card-texts">
+                      <h4>Fertility Clinic & IVF ($4,500)</h4>
+                      <p>High-success reproductive therapy with strong chance of twins!</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action success">IVF</button>
+                </div>
+              ` : ''}
+
+              <div class="interactive-card" onclick="interactCouplesCounseling('${p.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">🛋️</div>
+                  <div class="card-texts">
+                    <h4>Couples Therapy ($350)</h4>
+                    <p>Meet with a licensed relationship psychologist to resolve tension & rebuild trust.</p>
+                  </div>
+                </div>
+                <button class="btn-card-action">Therapy</button>
               </div>
-              <button class="btn-card-action danger">${ms === 'Married' ? 'Divorce' : 'Break Up'}</button>
+
+              <div class="interactive-card" onclick="interactBreakUpOrDivorce('${p.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">💔</div>
+                  <div class="card-texts">
+                    <h4>${ms === 'Married' ? 'File for Divorce' : 'Break Up'}</h4>
+                    <p>${ms === 'Married' ? 'Retain divorce attorneys to dissolve marriage and split marital assets.' : 'End the romantic relationship and part ways.'}</p>
+                  </div>
+                </div>
+                <button class="btn-card-action danger">${ms === 'Married' ? 'Divorce' : 'Break Up'}</button>
+              </div>
             </div>
           `;
         }
@@ -3375,58 +3590,58 @@ function generateSchoolName(stage) {
         if (p.category === 'child') {
           html += `
             <div class="section-title"><span>👶</span> Parenting & Child Care</div>
-
-            <div class="interactive-card" onclick="interactTutorChild('${p.id}')">
-              <div class="card-left-group">
-                <div class="card-emoji-box">📚</div>
-                <div class="card-texts">
-                  <h4>Tutor & Help with Homework</h4>
-                  <p>Sit down together and help them master their school lessons. (+Smarts)</p>
-                </div>
-              </div>
-              <button class="btn-card-action">Tutor</button>
-            </div>
-
-            <div class="interactive-card" onclick="interactGiftChild('${p.id}')">
-              <div class="card-left-group">
-                <div class="card-emoji-box">🎮</div>
-                <div class="card-texts">
-                  <h4>Buy Video Games & Toys ($120)</h4>
-                  <p>Surprise them with the latest gaming console or fun toy set.</p>
-                </div>
-              </div>
-              <button class="btn-card-action success">Buy Toys</button>
-            </div>
-          `;
-
-          if (p.age >= 18) {
-            html += `
-              <div class="interactive-card" onclick="interactPayTuition('${p.id}')">
+            <div class="bitlife-list">
+              <div class="interactive-card" onclick="interactTutorChild('${p.id}')">
                 <div class="card-left-group">
-                  <div class="card-emoji-box">🎓</div>
+                  <div class="card-emoji-box">📚</div>
                   <div class="card-texts">
-                    <h4>Pay College Tuition ($20,000)</h4>
-                    <p>Pay off your child's university education so they graduate debt-free!</p>
+                    <h4>Tutor & Help with Homework</h4>
+                    <p>Sit down together and help them master their school lessons. (+Smarts)</p>
                   </div>
                 </div>
-                <button class="btn-card-action success">Pay Tuition</button>
+                <button class="btn-card-action">Tutor</button>
               </div>
-            `;
-          }
+
+              <div class="interactive-card" onclick="interactGiftChild('${p.id}')">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">🎮</div>
+                  <div class="card-texts">
+                    <h4>Buy Video Games & Toys ($120)</h4>
+                    <p>Surprise them with the latest gaming console or fun toy set.</p>
+                  </div>
+                </div>
+                <button class="btn-card-action success">Buy Toys</button>
+              </div>
+              ${p.age >= 18 ? `
+                <div class="interactive-card" onclick="interactPayTuition('${p.id}')">
+                  <div class="card-left-group">
+                    <div class="card-emoji-box">🎓</div>
+                    <div class="card-texts">
+                      <h4>Pay College Tuition ($20,000)</h4>
+                      <p>Pay off your child's university education so they graduate debt-free!</p>
+                    </div>
+                  </div>
+                  <button class="btn-card-action success">Pay Tuition</button>
+                </div>
+              ` : ''}
+            </div>
+          `;
         }
 
         // 6. Argue / Confront
         html += `
           <div class="section-title"><span>⚠️</span> Confrontation</div>
-          <div class="interactive-card" onclick="interactArgue('${p.id}')">
-            <div class="card-left-group">
-              <div class="card-emoji-box">😤</div>
-              <div class="card-texts">
-                <h4>Confront & Argue</h4>
-                <p>Pick a fight or bring up grievances. (-Relationship)</p>
+          <div class="bitlife-list">
+            <div class="interactive-card" onclick="interactArgue('${p.id}')">
+              <div class="card-left-group">
+                <div class="card-emoji-box">😤</div>
+                <div class="card-texts">
+                  <h4>Confront & Argue</h4>
+                  <p>Pick a fight or bring up grievances. (-Relationship)</p>
+                </div>
               </div>
+              <button class="btn-card-action danger">Argue</button>
             </div>
-            <button class="btn-card-action danger">Argue</button>
           </div>
         `;
       }
@@ -3619,37 +3834,315 @@ function generateSchoolName(stage) {
 
       char.money -= cost;
       p.relationship = clamp((p.relationship || 80) + 15, 0, 100);
+      p.passion = clamp((p.passion != null ? p.passion : 85) + 8, 0, 100);
       char.happiness = clamp(char.happiness + 16, 0, 100);
       p.interactedThisYear = true;
 
-      recordAction(`🍷 Enjoyed a romantic candlelight dinner date with ${p.name}! (+Bond, +Happiness)`, true);
-      showPopup(`🍷 You took ${p.name} out for a wonderful candlelight dinner with wine and dessert. Romance is flourishing! (Bond: ${p.relationship}%)`, "Romantic Date Night 🍷", "🍷");
+      recordAction(`🍷 Enjoyed a romantic candlelight dinner date with ${p.name}! (+Bond, +Passion)`, true);
+      showPopup(`🍷 You took ${p.name} out for a wonderful candlelight dinner with wine and dessert. (Bond: ${p.relationship}%, Passion: ${p.passion}%)`, "Romantic Date Night 🍷", "🍷");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactFineDateNight(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+      if (char.age < 18) {
+        showPopup("Rooftop cocktail lounges require patrons to be 18+!", "Age Restricted", "🔞");
+        return;
+      }
+      const cost = 450;
+      if (char.money < cost) {
+        showPopup(`Rooftop VIP lounge costs $${cost}!`, "Insufficient Funds", "💸");
+        return;
+      }
+      char.money -= cost;
+      p.relationship = clamp((p.relationship || 80) + 20, 0, 100);
+      p.passion = clamp((p.passion != null ? p.passion : 85) + 15, 0, 100);
+      char.happiness = clamp(char.happiness + 24, 0, 100);
+      p.interactedThisYear = true;
+      recordAction(`🥂 Booked a private VIP rooftop table and craft cocktails with ${p.name} ($${cost})! (+Bond, ++Passion)`, true);
+      showPopup(`🥂 Champagne flowed under the city skyline! ${p.name} couldn't take their eyes off you all night. (Bond: ${p.relationship}%, Passion: ${p.passion}%)`, "Rooftop VIP Romance 🥂", "🥂");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactSharedFinances(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive || p.maritalStatus !== 'Married') return;
+      if (p.sharedThisYear) {
+        showPopup(`${p.name} has already pitched in toward household expenses this year!`, "Already Settled", "💸");
+        return;
+      }
+      if (!p.salary || p.salary <= 0) {
+        showPopup(`${p.name} currently has no earned income to contribute.`, "No Income", "💸");
+        return;
+      }
+      const share = Math.round(p.salary * 0.15);
+      p.sharedThisYear = true;
+      char.money += share;
+      p.relationship = clamp((p.relationship || 80) - 2, 0, 100);
+      recordAction(`💸 ${p.name} contributed $${share.toLocaleString()} toward shared household finances.`, true);
+      showPopup(`💵 ${p.name} transferred $${share.toLocaleString()} (15% of their salary) into your shared household budget!`, "Household Contribution 💸", "💵");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function toggleBirthControl(refreshDetail = false) {
+      if (char.age < 18) {
+        showPopup("Available at age 18+.", "Age Restricted", "🔞");
+        return;
+      }
+      const adult = ensureAdultState(char);
+      if (!adult.onBirthControl && char.money >= 40) {
+        char.money -= 40;
+      }
+      adult.onBirthControl = !adult.onBirthControl;
+      recordAction(`💊 Contraception / Protection is now ${adult.onBirthControl ? 'ACTIVE' : 'OFF'}.`, true);
+      showPopup(
+        adult.onBirthControl
+          ? "💊 Protection enabled! Unplanned pregnancy chance during casual intimacy is now minimal."
+          : "🔥 Contraception disabled! Intimacy now carries natural conception odds.",
+        "Protection Settings 💊",
+        "💊"
+      );
+      render();
+      if (refreshDetail) renderPersonDetailPage();
+    }
+
+    function openIntimacyModal(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+      if (char.age < 18 || p.age < 18) {
+        showPopup("Intimate adult options unlock once both partners are 18+!", "Age Restricted", "🔞");
+        return;
+      }
+      const adult = ensureAdultState(char);
+      const html = `
+        <div style="font-size:12px; color:#64748B; margin-bottom:8px;">
+          Protection: <strong>${adult.onBirthControl ? '💊 Protected' : '🔥 Natural (Unprotected)'}</strong> • Passion: <strong>${p.passion != null ? p.passion : 85}%</strong>
+        </div>
+        <div class="modal-sublist">
+          <div class="modal-subitem" onclick="executeIntimacy('${p.id}', 'sweet')">
+            <span class="modal-subitem-icon">🕯️</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Sweet & Romantic Night</div>
+              <div class="modal-subitem-sub">Tender closeness behind closed doors (+Bond, +Passion)</div>
+            </div>
+            <button class="modal-subitem-action">Choose</button>
+          </div>
+          <div class="modal-subitem" onclick="executeIntimacy('${p.id}', 'wild')">
+            <span class="modal-subitem-icon">🔥</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Wild & Spontaneous Night (18+)</div>
+              <div class="modal-subitem-sub">Lock the doors & turn up the heat (++Passion, higher conception odds if natural)</div>
+            </div>
+            <button class="modal-subitem-action">Wild</button>
+          </div>
+          <div class="modal-subitem" onclick="executeIntimacy('${p.id}', 'massage')">
+            <span class="modal-subitem-icon">🥂</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Sensual Massage & Champagne ($85)</div>
+              <div class="modal-subitem-sub">Scented oils, bubbles & stress relief (+Health, ++Passion, +Bond)</div>
+            </div>
+            <button class="modal-subitem-action">Spa</button>
+          </div>
+        </div>
+      `;
+      showCustomModal(`Intimate Evening with ${p.name}`, "🔞", html);
+    }
+
+    function executeIntimacy(relId, mode = 'sweet') {
+      closeModal();
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive) return;
+      if (char.age < 18 || p.age < 18) return;
+
+      const adult = ensureAdultState(char);
+      if (mode === 'massage') {
+        if (char.money < 85) {
+          showPopup("Massage oils & champagne cost $85!", "Insufficient Funds", "💸");
+          return;
+        }
+        char.money -= 85;
+        char.health = clamp(char.health + 4, 0, 100);
+        char.happiness = clamp(char.happiness + 20, 0, 100);
+        p.relationship = clamp((p.relationship || 80) + 12, 0, 100);
+        p.passion = clamp((p.passion != null ? p.passion : 85) + 18, 0, 100);
+      } else if (mode === 'wild') {
+        char.happiness = clamp(char.happiness + 22, 0, 100);
+        p.relationship = clamp((p.relationship || 80) + 8, 0, 100);
+        p.passion = clamp((p.passion != null ? p.passion : 85) + 22, 0, 100);
+      } else {
+        char.happiness = clamp(char.happiness + 15, 0, 100);
+        p.relationship = clamp((p.relationship || 80) + 10, 0, 100);
+        p.passion = clamp((p.passion != null ? p.passion : 85) + 12, 0, 100);
+      }
+      p.interactedThisYear = true;
+
+      const canConceive = (char.age >= 18 && char.age <= 45 && p.age >= 18 && p.age <= 45 && char.gender !== p.gender);
+      const baseChance = adult.onBirthControl ? 0.02 : (mode === 'wild' ? 0.30 : 0.18);
+      if (canConceive && Math.random() < baseChance) {
+        recordAction(`🛏️ Shared an unforgettable intimate evening with ${p.name}. Big surprise news followed!`, true);
+        showConfirm(`🎉 Surprise news! Following your passionate night together, ${char.gender === 'Female' ? 'you are expecting' : p.name + ' is pregnant with'} a new baby! Celebrate the arrival?`, () => {
+          interactTryForBaby(p.id, true);
+        }, "Welcome Baby 👶", "👶", "Baby on the Way!");
+      } else {
+        const msgMap = {
+          wild: `🔥 Sparks flew all night! You and ${p.name} lost track of time in an electrifying 18+ evening. (Passion: ${p.passion}%)`,
+          massage: `🥂 Warm scented oils, champagne, and velvet sheets melted all stress away with ${p.name}. (Passion: ${p.passion}%, Health: ${char.health}%)`,
+          sweet: `🕯️ You and ${p.name} shared a deeply affectionate, intimate evening together. (Passion: ${p.passion}%)`
+        };
+        recordAction(`🛏️ Enjoyed a ${mode === 'wild' ? 'wild & passionate' : mode === 'massage' ? 'luxury champagne massage' : 'tender intimate'} night with ${p.name}.`, true);
+        showPopup(msgMap[mode] || msgMap.sweet, "Passionate Night ❤️", "🔥");
+      }
       render();
       renderPersonDetailPage();
     }
 
     function interactMakeLove(relId) {
+      openIntimacyModal(relId);
+    }
+
+    function interactSpicyNight(relId) {
       ensureRelationshipsState();
       const p = (char.relationships || []).find(r => r.id === relId);
-      if (!p || !p.isAlive) return;
-
-      char.happiness = clamp(char.happiness + 15, 0, 100);
-      p.relationship = clamp((p.relationship || 80) + 8, 0, 100);
+      if (!p || !p.isAlive || char.age < 18 || p.age < 18) return;
+      const cost = 60;
+      if (char.money < cost) {
+        showPopup(`The mystery couples box costs $${cost}!`, "Insufficient Funds", "💸");
+        return;
+      }
+      char.money -= cost;
+      p.passion = clamp((p.passion != null ? p.passion : 85) + 18, 0, 100);
+      p.relationship = clamp((p.relationship || 80) + 7, 0, 100);
+      char.happiness = clamp(char.happiness + 18, 0, 100);
       p.interactedThisYear = true;
+      const humorous = (p.craziness || 25) >= 65
+        ? `🌶️ Things got hilariously chaotic with handcuffs from the mystery box—you nearly had to call a locksmith, yet neither of you stopped laughing! (Passion: ${p.passion}%)`
+        : `🌶️ The mystery roleplay kit kept things daring, flirty, and unforgettable! (Passion: ${p.passion}%)`;
+      recordAction(`🌶️ Unboxed an adults-only mystery roleplay kit with ${p.name} ($${cost}). (++Passion)`, true);
+      showPopup(humorous, "Spicy Couples Night 🌶️", "🌶️");
+      render();
+      renderPersonDetailPage();
+    }
 
-      // Check chance of pregnancy if female/male couple aged 18-45
-      const canConceive = (char.age >= 18 && char.age <= 45 && p.age >= 18 && p.age <= 45 && char.gender !== p.gender);
-      if (canConceive && Math.random() < 0.22) {
-        recordAction(`🛌 Spent an intimate night with ${p.name}. Surprise news followed!`, true);
-        showConfirm(`🎉 Wonderful news! Following your passionate night together, ${char.gender === 'Female' ? 'you are pregnant with' : p.name + ' is expecting'} a new baby! Celebrate the arrival?`, () => {
-          interactTryForBaby(p.id, true);
-        }, "Welcome Baby 👶", "👶", "Baby on the Way!");
+    function interactAdultsGetaway(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive || char.age < 18 || p.age < 18) return;
+      const cost = 650;
+      if (char.money < cost) {
+        showPopup(`An adults-only luxury villa weekend costs $${cost}!`, "Insufficient Funds", "💸");
+        return;
+      }
+      char.money -= cost;
+      p.passion = clamp((p.passion != null ? p.passion : 85) + 25, 0, 100);
+      p.relationship = clamp((p.relationship || 80) + 16, 0, 100);
+      char.happiness = clamp(char.happiness + 26, 0, 100);
+      char.health = clamp(char.health + 4, 0, 100);
+      p.interactedThisYear = true;
+      recordAction(`🍾 Booked a private adults-only ocean villa getaway with ${p.name} ($${cost}). (++Passion, ++Bond)`, true);
+      showPopup(`🍾 No kids, no alarms, infinity pool overlooking the sea, and midnight skinny-dipping under the stars! (Passion: ${p.passion}%, Bond: ${p.relationship}%)`, "Adults-Only Resort 🍾", "🍾");
+      render();
+      renderPersonDetailPage();
+    }
+
+    function interactSecretAffair(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive || char.age < 18) return;
+      const adult = ensureAdultState(char);
+
+      showConfirm(`Cheating on ${p.name} carries serious risk! If caught, they may break up or file for divorce. Proceed anyway?`, () => {
+        adult.bodyCount++;
+        adult.affairsCount++;
+        const caughtChance = p.craziness >= 60 ? 0.50 : 0.36;
+        const wildRiskRoll = Math.random();
+        if (!adult.onBirthControl && wildRiskRoll < 0.08 && !adult.hasSTI) {
+          adult.hasSTI = "Treatable STI";
+        }
+
+        if (Math.random() < caughtChance) {
+          p.relationship = clamp((p.relationship || 50) - 55, 0, 100);
+          p.passion = clamp((p.passion != null ? p.passion : 85) - 45, 0, 100);
+          char.happiness = clamp(char.happiness - 22, 0, 100);
+          recordAction(`🚨 CAUGHT CHEATING! ${p.name} saw suspicious late-night messages and confronted you furiously!`, true);
+          if (p.maritalStatus === 'Married') {
+            showPopup(`🚨 BUSTED! ${p.name} unlocked your phone at 2 AM and read every message! Your marriage is hanging by a thread (Bond plunged to ${p.relationship}%).`, "Affair Exposed! 🚨", "🚨");
+          } else {
+            p.relation = "Ex";
+            p.category = "friend";
+            p.maritalStatus = "Separated";
+            char.partner = null;
+            syncRelationshipsPointers();
+            showPopup(`💔 CAUGHT RED-HANDED! ${p.name} found lipstick & hotel receipts, dumped your suitcase on the lawn, and ended the relationship on the spot!`, "Dumped for Cheating! 💔", "💔");
+          }
+        } else {
+          char.happiness = clamp(char.happiness + 18, 0, 100);
+          p.passion = clamp((p.passion != null ? p.passion : 85) - 8, 0, 100);
+          recordAction(`🕵️ Slipped away to a boutique hotel for a secret 18+ affair without ${p.name} finding out.`, true);
+          showPopup(`🕵️ You sneaked off for a secretive hotel rendezvous and covered your tracks before returning home. (Total Partners: ${adult.bodyCount})`, "Secret Kept 🤫", "🕵️");
+        }
+        render();
+        if (char.partner && char.partner.id === p.id) renderPersonDetailPage();
+        else switchTab('pageRelationships', 'tabBtnRelationships');
+      }, "Secret Affair (18+) 🕵️", "🔥", "Sneak Out");
+    }
+
+    function interactPostnup(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive || p.maritalStatus !== 'Married') return;
+      const cost = 2500;
+      if (char.money < cost) {
+        showPopup(`Attorney retainer for a Postnuptial Agreement costs $${cost.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+      char.money -= cost;
+      if ((p.relationship || 70) >= 75 && Math.random() < 0.72) {
+        char.hasPrenup = true;
+        p.relationship = clamp(p.relationship - 6, 0, 100);
+        recordAction(`📜 Signed a mutual Postnuptial Agreement with ${p.name} ($${cost.toLocaleString()}). Individual assets now protected.`);
+        showPopup(`📜 ${p.name} appreciated the clarity and signed the postnuptial contract! Your business empire is now protected.`, "Postnup Signed 📜", "📜");
       } else {
-        recordAction(`🛌 Spent a passionate, loving night together with ${p.name}.`, true);
-        showPopup(`You and ${p.name} shared an intimate and passionate evening together. (+Happiness, +Bond)`, "Passionate Night ❤️", "🛌");
+        p.relationship = clamp((p.relationship || 70) - 18, 0, 100);
+        recordAction(`⚠️ ${p.name} felt insulted by the Postnuptial Agreement request and refused to sign. (-Bond)`);
+        showPopup(`😠 ${p.name} pushed the legal paperwork aside: "You're already planning an exit?!" Relationship bond dropped to ${p.relationship}%.`, "Postnup Refused ⚠️", "😠");
       }
       render();
       renderPersonDetailPage();
+    }
+
+    function interactIVF(relId) {
+      ensureRelationshipsState();
+      const p = (char.relationships || []).find(r => r.id === relId);
+      if (!p || !p.isAlive || char.age < 18) return;
+      const cost = 4500;
+      if (char.money < cost) {
+        showPopup(`Fertility clinic & IVF cycle costs $${cost.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+      char.money -= cost;
+      if (Math.random() < 0.85) {
+        const twins = Math.random() < 0.30;
+        interactTryForBaby(relId, true);
+        if (twins) interactTryForBaby(relId, true);
+        recordAction(`🧬 Fertility IVF succeeded${twins ? ' with TWINS' : ''}! ($${cost.toLocaleString()})`, true);
+        if (twins) {
+          showPopup(`🎉 DOUBLE BLESSING!! Your IVF treatment resulted in healthy TWINS!`, "It's Twins! 👶👶", "🧬");
+        }
+      } else {
+        char.happiness = clamp(char.happiness - 10, 0, 100);
+        recordAction(`🧬 Completed an IVF cycle ($${cost.toLocaleString()}), but unfortunately implantation failed this round.`, true);
+        showPopup("The doctors were compassionate, though this IVF cycle didn't take. You can always try another round.", "Unsuccessful Cycle", "🩺");
+        render();
+        renderPersonDetailPage();
+      }
     }
 
     function interactProposeMarriage(relId) {
@@ -3797,7 +4290,7 @@ function generateSchoolName(stage) {
         : girlNames[Math.floor(Math.random() * girlNames.length)]) + " " + (char.name.split(" ")[1] || "Roosevelt");
 
       const newChild = {
-        id: "child_" + Date.now(),
+        id: "child_" + Date.now() + "_" + Math.floor(Math.random() * 999),
         name: babyName,
         relation: gender === "Male" ? "Son" : "Daughter",
         category: "child",
@@ -4049,57 +4542,114 @@ function generateSchoolName(stage) {
       renderPersonDetailPage();
     }
 
-    // SOCIAL HUBS
+    // SOCIAL HUBS & 18+ ROMANCE ENGINE
     function openDatingHub() {
       ensureRelationshipsState();
-      if (char.partner && char.partner.isAlive) {
-        showCustomModal(
-          "Romance Status",
-          "❤️",
-          `<div style="text-align:center; padding:10px 4px;">
-            <p style="font-size:13px; color:#1E293B; margin-bottom:12px;">You are currently in a relationship with <strong>${char.partner.name}</strong> (${char.partner.maritalStatus || 'Dating'})!</p>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <button class="modal-btn primary" onclick="closeModal(); openPersonDetail('${char.partner.id}')">Manage Relationship & Romance</button>
-              <button class="modal-btn danger" onclick="closeModal(); interactBreakUpOrDivorce('${char.partner.id}')">End Relationship / Break Up</button>
-            </div>
-          </div>`
-        );
-        return;
-      }
+      const adult = ensureAdultState(char);
 
       if (char.age < 16) {
         showPopup("You must be at least 16 years old to use the Dating App or attend singles events!", "Too Young for Dating", "🧸");
         return;
       }
 
-      const firstNames = char.gender === "Female" 
-        ? ["Ethan", "Lucas", "Liam", "Noah", "Oliver", "Alexander", "James", "Daniel"]
-        : ["Sophia", "Emma", "Olivia", "Chloe", "Ava", "Mia", "Isabella", "Harper"];
-      const lastNames = ["Sterling", "Mercer", "Vance", "Kovacs", "Sinclair", "Hawthorne", "Brooks", "Kim"];
+      if (char.partner && char.partner.isAlive) {
+        const exes = (char.relationships || []).filter(r => r.isAlive && r.category === 'friend' && (r.relation === 'Ex' || r.relation === 'Ex-Spouse'));
+        showCustomModal(
+          "Romance & Adult Hub 💘",
+          "❤️",
+          `<div style="text-align:center; padding:6px 4px;">
+            <p style="font-size:12.5px; color:#1E293B; margin-bottom:10px;">Currently in a relationship with <strong>${char.partner.name}</strong> (${char.partner.maritalStatus || 'Dating'}).</p>
+            <div class="modal-sublist" style="text-align:left;">
+              <div class="modal-subitem" onclick="closeModal(); openPersonDetail('${char.partner.id}')">
+                <span class="modal-subitem-icon">💌</span>
+                <div class="modal-subitem-info">
+                  <div class="modal-subitem-title">Manage Relationship & Intimacy</div>
+                  <div class="modal-subitem-sub">Dates, Passion, 18+ Nights, Therapy & Marriage</div>
+                </div>
+                <button class="modal-subitem-action">Open</button>
+              </div>
+              ${char.age >= 18 ? `
+                <div class="modal-subitem" onclick="closeModal(); openHookupFlingModal()">
+                  <span class="modal-subitem-icon">🔥</span>
+                  <div class="modal-subitem-info">
+                    <div class="modal-subitem-title">One-Night Fling / Hookup App (18+ Affair Risk)</div>
+                    <div class="modal-subitem-sub">Casual encounter tonight—getting caught jeopardizes your relationship!</div>
+                  </div>
+                  <button class="modal-subitem-action" style="color:#DC2626;">Hookup</button>
+                </div>
+              ` : ''}
+              ${exes.length > 0 ? `
+                <div class="modal-subitem" onclick="closeModal(); openExReconnectModal()">
+                  <span class="modal-subitem-icon">💔</span>
+                  <div class="modal-subitem-info">
+                    <div class="modal-subitem-title">View Exes (${exes.length})</div>
+                    <div class="modal-subitem-sub">Check on former partners</div>
+                  </div>
+                  <button class="modal-subitem-action">View</button>
+                </div>
+              ` : ''}
+              <div class="modal-subitem" onclick="closeModal(); interactBreakUpOrDivorce('${char.partner.id}')">
+                <span class="modal-subitem-icon">🚪</span>
+                <div class="modal-subitem-info">
+                  <div class="modal-subitem-title">${char.partner.maritalStatus === 'Married' ? 'File for Divorce' : 'Break Up'}</div>
+                  <div class="modal-subitem-sub">End current partnership and re-enter the dating pool</div>
+                </div>
+                <button class="modal-subitem-action" style="color:#DC2626;">End</button>
+              </div>
+            </div>
+          </div>`
+        );
+        return;
+      }
+
+      const firstNames = char.gender === "Female"
+        ? ["Ethan", "Lucas", "Liam", "Noah", "Oliver", "Alexander", "James", "Daniel", "Mateo", "Julian"]
+        : ["Sophia", "Emma", "Olivia", "Chloe", "Ava", "Mia", "Isabella", "Harper", "Elena", "Scarlett"];
+      const lastNames = ["Sterling", "Mercer", "Vance", "Kovacs", "Sinclair", "Hawthorne", "Brooks", "Kim", "Castellano"];
       const jobs = [
-        "Graphic Designer", "Software Engineer", "Nurse", "High School Teacher", "Barista", "Photographer", "Personal Trainer", "Corporate Analyst"
+        { t: "Graphic Designer", s: 48000 },
+        { t: "Software Engineer", s: 110000 },
+        { t: "Registered Nurse", s: 76000 },
+        { t: "Creative Director", s: 95000 },
+        { t: "Barista", s: 32000 },
+        { t: "Fashion Photographer", s: 68000 },
+        { t: "Personal Trainer", s: 54000 },
+        { t: "Corporate Analyst", s: 88000 }
       ];
 
       const candidates = [];
       for (let i = 0; i < 4; i++) {
-        const cAge = Math.max(16, char.age - 3 + Math.floor(Math.random() * 7));
+        const cAge = Math.max(16, char.age - 3 + Math.floor(Math.random() * 8));
         const cName = firstNames[Math.floor(Math.random() * firstNames.length)] + " " + lastNames[Math.floor(Math.random() * lastNames.length)];
-        const cJob = cAge < 18 ? "High School Student" : jobs[Math.floor(Math.random() * jobs.length)];
-        const looks = 45 + Math.floor(Math.random() * 50);
-        const smarts = 40 + Math.floor(Math.random() * 55);
-        const compat = 65 + Math.floor(Math.random() * 32);
+        const jobObj = cAge < 18 ? { t: "High School Student", s: 0 } : jobs[Math.floor(Math.random() * jobs.length)];
+        const looks = 45 + Math.floor(Math.random() * 52);
+        const crazy = 15 + Math.floor(Math.random() * 65);
+        const compat = 62 + Math.floor(Math.random() * 35);
         const icon = char.gender === "Female" ? "👨" : "👩";
-        candidates.push({ name: cName, age: cAge, job: cJob, looks: looks, smarts: smarts, compat: compat, icon: icon });
+        candidates.push({ name: cName, age: cAge, job: jobObj.t, salary: jobObj.s, looks: looks, crazy: crazy, compat: compat, icon: icon });
       }
 
-      let subHtml = '<div style="font-size:12px; color:#64748B; margin-bottom:8px;">Local singles seeking romance in your area:</div><div class="modal-sublist">';
+      const exes = (char.relationships || []).filter(r => r.isAlive && r.category === 'friend' && (r.relation === 'Ex' || r.relation === 'Ex-Spouse'));
+
+      let subHtml = '';
+      if (char.age >= 18) {
+        subHtml += `
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px;">
+            <button class="btn-action-pill" style="justify-content:center; padding:8px; background:#FEF2F2; color:#DC2626; border-color:#FECACA;" onclick="closeModal(); openHookupFlingModal()">🔥 Hookup Fling (18+)</button>
+            <button class="btn-action-pill" style="justify-content:center; padding:8px; background:#EEF2FF; color:#4338CA; border-color:#C7D2FE;" onclick="closeModal(); openEliteMatchmakerModal()">💎 Rich Match ($1.5k)</button>
+          </div>
+          ${exes.length > 0 ? `<button class="btn-action-pill" style="width:100%; justify-content:center; margin-bottom:10px;" onclick="closeModal(); openExReconnectModal()">🔄 Text an Ex to Reconnect (${exes.length})</button>` : ''}
+        `;
+      }
+
+      subHtml += '<div style="font-size:11.5px; color:#64748B; margin-bottom:6px; font-weight:600;">💘 SparkDate Local Singles:</div><div class="modal-sublist">';
       candidates.forEach(c => {
         subHtml += `
-          <div class="modal-subitem" onclick="executeAskOut('${c.name}', ${c.age}, '${c.job}', ${c.looks}, '${c.icon}')">
+          <div class="modal-subitem" onclick="executeAskOut('${c.name}', ${c.age}, '${c.job}', ${c.looks}, '${c.icon}', ${c.salary}, ${c.crazy}, 75)">
             <span class="modal-subitem-icon">${c.icon}</span>
             <div class="modal-subitem-info">
               <div class="modal-subitem-title">${c.name}, ${c.age}</div>
-              <div class="modal-subitem-sub">${c.job} • Looks ${c.looks}% • Compat ${c.compat}%</div>
+              <div class="modal-subitem-sub">${c.job}${c.salary > 0 ? ` ($${Math.round(c.salary/1000)}k)` : ''} • Looks ${c.looks}% • Compat ${c.compat}%</div>
             </div>
             <button class="modal-subitem-action">Ask Out</button>
           </div>
@@ -4107,37 +4657,218 @@ function generateSchoolName(stage) {
       });
       subHtml += '</div>';
 
-      showCustomModal("Dating App & Local Singles", "💘", subHtml);
+      showCustomModal("Romance & Dating Hub", "💘", subHtml);
     }
 
-    function executeAskOut(name, age, job, looks, icon) {
+    function openEliteMatchmakerModal() {
+      if (char.age < 18) {
+        showPopup("Elite Matchmaker is restricted to 18+ adults!", "Age Restricted", "🔞");
+        return;
+      }
+      if (char.money < 1500) {
+        showPopup("Private Wealth Matchmaker requires a $1,500 consultation retainer!", "Insufficient Funds", "💎");
+        return;
+      }
+      char.money -= 1500;
+      const names = char.gender === "Female"
+        ? ["Sebastian Sterling", "Alexander Vanderbilt", "Marcus Chen", "Julian Blackwood"]
+        : ["Victoria Kensington", "Genevieve Laurent", "Anastasia Volkov", "Camille Montgomery"];
+      const eliteJobs = [
+        { t: "Venture Capital Partner", s: 480000 },
+        { t: "Neurosurgeon", s: 410000 },
+        { t: "Tech Startup Founder", s: 650000 },
+        { t: "Real Estate Mogul", s: 520000 }
+      ];
+      let html = `<div style="font-size:12px; color:#64748B; margin-bottom:8px;">High-net-worth bachelors & bachelorettes ($1,500 fee paid):</div><div class="modal-sublist">`;
+      for (let i = 0; i < 3; i++) {
+        const n = names[i % names.length];
+        const j = eliteJobs[Math.floor(Math.random() * eliteJobs.length)];
+        const age = Math.max(23, char.age + Math.floor(Math.random() * 12) - 2);
+        const looks = 72 + Math.floor(Math.random() * 25);
+        const icon = char.gender === "Female" ? "🤵" : "💃";
+        html += `
+          <div class="modal-subitem" onclick="executeAskOut('${n}', ${age}, '${j.t}', ${looks}, '${icon}', ${j.s}, 35, 92)">
+            <span class="modal-subitem-icon">${icon}</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${n}, ${age}</div>
+              <div class="modal-subitem-sub">💎 ${j.t} ($${Math.round(j.s/1000)}k/yr) • Looks ${looks}%</div>
+            </div>
+            <button class="modal-subitem-action">Date</button>
+          </div>
+        `;
+      }
+      html += `</div>`;
+      recordAction("💎 Paid $1,500 for an Elite Millionaire Matchmaker session.", true);
+      showCustomModal("Elite Matchmaker 💎", "💎", html);
+      render();
+    }
+
+    function openHookupFlingModal() {
+      if (char.age < 18) {
+        showPopup("Hookup & Casual Flings require Age 18+!", "Age Restricted", "🔞");
+        return;
+      }
+      const adult = ensureAdultState(char);
+      const firstNames = char.gender === "Female" ? ["Marco", "Zane", "Ryan", "Cole", "Dante"] : ["Chloe", "Madison", "Sienna", "Roxanne", "Aria"];
+      const lastNames = ["Vega", "Cruz", "Knight", "Monet", "Steel"];
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+      const matches = [1, 2, 3].map(() => ({
+        name: pick(firstNames) + " " + pick(lastNames),
+        age: Math.max(18, char.age - 2 + Math.floor(Math.random() * 8)),
+        looks: 58 + Math.floor(Math.random() * 38),
+        icon: char.gender === "Female" ? "🕺" : "💃"
+      }));
+
+      let html = `
+        <div style="font-size:12px; color:#64748B; margin-bottom:8px;">
+          Choose tonight's fling & approach (${adult.onBirthControl ? '💊 Protected' : '🔥 Natural — STI / pregnancy risk if reckless!'}):
+        </div>
+        <div class="modal-sublist">
+      `;
+      matches.forEach(m => {
+        html += `
+          <div class="modal-subitem" onclick="executeHookup('${m.name}', ${m.age}, ${m.looks}, true)">
+            <span class="modal-subitem-icon">${m.icon}</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${m.name}, ${m.age} (Looks ${m.looks}%)</div>
+              <div class="modal-subitem-sub">Safe Protected Fling • Tap for tonight</div>
+            </div>
+            <button class="modal-subitem-action">Safe 🔥</button>
+          </div>
+          <div class="modal-subitem" onclick="executeHookup('${m.name}', ${m.age}, ${m.looks}, false)">
+            <span class="modal-subitem-icon">😈</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${m.name} — No Strings, Reckless Wild Night</div>
+              <div class="modal-subitem-sub">++Thrill, but higher STI / unplanned drama risk!</div>
+            </div>
+            <button class="modal-subitem-action" style="color:#DC2626;">Wild 🔞</button>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      showCustomModal("Tonight's Flings & Hookups 🔥", "🔞", html);
+    }
+
+    function executeHookup(name, age, looks, useProtection) {
+      closeModal();
+      const adult = ensureAdultState(char);
+      if (adult.flingsThisYear >= 4) {
+        showPopup("Take a breath! Your social battery is maxed out after 4 flings this year.", "Cooldown", "😴");
+        return;
+      }
+      adult.flingsThisYear++;
+      adult.bodyCount++;
+      char.happiness = clamp(char.happiness + (useProtection ? 18 : 26), 0, 100);
+      char.looks = clamp(char.looks + 1, 0, 100);
+
+      let extraNote = "";
+      if (!useProtection && Math.random() < 0.22) {
+        adult.hasSTI = "Chlamydia (Treatable)";
+        extraNote = " ⚠️ Unfortunately, a risky encounter left you needing an Adult Clinic checkup!";
+      }
+
+      if (char.partner && char.partner.isAlive) {
+        adult.affairsCount++;
+        const caught = Math.random() < 0.42;
+        if (caught) {
+          char.partner.relationship = clamp((char.partner.relationship || 70) - 55, 0, 100);
+          char.partner.passion = clamp((char.partner.passion || 80) - 45, 0, 100);
+          recordAction(`🚨 CAUGHT CHEATING! Had a hookup with ${name}, and ${char.partner.name} found out!`, true);
+          showPopup(`🚨 ${char.partner.name} discovered your hookup with ${name} on Uber ride logs! Bond plunged to ${char.partner.relationship}%!${extraNote}`, "Busted! 🚨", "🚨");
+          render();
+          return;
+        }
+      }
+
+      recordAction(`🔥 Spent a spontaneous one-night fling with ${name} (age ${age}).${extraNote}`, true);
+      showPopup(`🔥 Sparks flew with ${name}! Great chemistry all night.${extraNote} (Total Romantic Partners: ${adult.bodyCount})`, "Fling Complete 🔥", "🔥");
+      render();
+    }
+
+    function openExReconnectModal() {
+      ensureRelationshipsState();
+      const exes = (char.relationships || []).filter(r => r.isAlive && r.category === 'friend' && (r.relation === 'Ex' || r.relation === 'Ex-Spouse'));
+      if (exes.length === 0) {
+        showPopup("No ex-partners to reconnect with!", "Exes", "💔");
+        return;
+      }
+      let html = `<div style="font-size:12px; color:#64748B; margin-bottom:8px;">Slide back into an old flame's DMs:</div><div class="modal-sublist">`;
+      exes.forEach(ex => {
+        html += `
+          <div class="modal-subitem" onclick="executeReconnectEx('${ex.id}')">
+            <span class="modal-subitem-icon">${ex.icon || '❤️'}</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${ex.name} (${ex.relation})</div>
+              <div class="modal-subitem-sub">Age ${ex.age} • Bond ${ex.relationship}%</div>
+            </div>
+            <button class="modal-subitem-action">Text "Hey"</button>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      showCustomModal("Old Flames & Exes", "💌", html);
+    }
+
+    function executeReconnectEx(exId) {
       closeModal();
       ensureRelationshipsState();
+      if (char.partner && char.partner.isAlive) {
+        showPopup(`You're still with ${char.partner.name}! End your current relationship first before getting back with an ex.`, "Already Taken", "💔");
+        return;
+      }
+      const ex = (char.relationships || []).find(r => r.id === exId && r.isAlive);
+      if (!ex) return;
+      if (Math.random() < 0.65 || (ex.relationship || 20) >= 45) {
+        ex.category = 'love';
+        ex.maritalStatus = 'Dating';
+        ex.relation = ex.gender === 'Female' ? 'Girlfriend' : 'Boyfriend';
+        ex.relationship = clamp(Math.max(70, (ex.relationship || 40) + 35), 0, 100);
+        ex.passion = 92;
+        char.partner = ex;
+        char.happiness = clamp(char.happiness + 24, 0, 100);
+        syncRelationshipsPointers();
+        recordAction(`💘 Rekindled old romance! Back together with ${ex.name}!`, true);
+        showPopup(`💘 "I've missed you too..." Late-night texts turned into dinner, and you and ${ex.name} are officially back together!`, "Old Flame Rekindled! 💘", "💘");
+      } else {
+        ex.relationship = clamp((ex.relationship || 30) - 10, 0, 100);
+        recordAction(`💔 Texted ${ex.name} to reconnect, but was left on Read.`, true);
+        showPopup(`${ex.name} saw your late-night text and replied: "I've moved on. Wishing you well."`, "Left on Read 💔", "📱");
+      }
+      render();
+    }
+
+    function executeAskOut(name, age, job, looks, icon, salary = 0, craziness = 25, generosity = 75) {
+      closeModal();
+      ensureRelationshipsState();
+      const adult = ensureAdultState(char);
 
       const appeal = (char.looks * 0.5) + (char.smarts * 0.3) + (char.money > 10000 ? 15 : 0);
       const threshold = looks * 0.55;
 
       if (appeal >= threshold) {
+        const resolvedSal = salary > 0 ? salary : (age >= 18 ? 52000 : 0);
         const newPartner = {
-          id: "rel_partner_" + Date.now(),
+          id: "rel_partner_" + Date.now() + "_" + Math.floor(Math.random() * 999),
           name: name,
           relation: char.gender === "Female" ? "Boyfriend" : "Girlfriend",
           category: "love",
           gender: char.gender === "Female" ? "Male" : "Female",
           age: age,
           relationship: 92,
+          passion: 88 + Math.floor(Math.random() * 12),
           job: job,
-          salary: age >= 18 ? 52000 : 0,
+          salary: resolvedSal,
           icon: icon || "❤️",
           isAlive: true,
           maritalStatus: "Dating",
-          generosity: 75,
-          craziness: 25,
+          generosity: generosity,
+          craziness: craziness,
           passedAge: null,
           passedReason: null
         };
         char.relationships.push(newPartner);
         char.partner = newPartner;
+        if (char.age >= 18) adult.bodyCount++;
         char.happiness = clamp(char.happiness + 28, 0, 100);
 
         recordAction(`💘 Went on a romantic first date with ${name}! We are now officially dating!`, true);
@@ -4265,7 +4996,7 @@ function generateSchoolName(stage) {
       const fullName = name + " " + (char.name.split(" ")[1] || "Roosevelt");
 
       const newChild = {
-        id: "child_" + Date.now(),
+        id: "child_" + Date.now() + "_" + Math.floor(Math.random() * 999),
         name: fullName,
         relation: gender === "Male" ? "Son" : "Daughter",
         category: "child",
@@ -4431,8 +5162,13 @@ function generateSchoolName(stage) {
           // Gradual relationship decay (-1 to -3%) if neglected
           if (!rel.interactedThisYear) {
             rel.relationship = clamp(rel.relationship - (1 + Math.floor(Math.random() * 3)), 15, 100);
+            if (rel.category === "love") {
+              rel.passion = clamp((rel.passion != null ? rel.passion : 85) - (1 + Math.floor(Math.random() * 3)), 15, 100);
+            }
           }
           rel.interactedThisYear = false;
+          rel.sharedThisYear = false;
+          if (rel.category === "love") rel.yearsTogether = (rel.yearsTogether || 0) + 1;
 
           // Natural elderly mortality for parents & grandparents (age >= 75)
           if ((rel.relation === "Father" || rel.relation === "Mother" || rel.relation === "Grandparent") && rel.age >= 75) {
@@ -4503,12 +5239,19 @@ function generateSchoolName(stage) {
         char.health -= (2 + Math.floor(Math.random() * 3)); // Avg -3/yr in late 80s-90s
       }
 
-      // Reset yearly job/school caps
+      // Reset yearly job/school & adult nightlife caps
       if (char.school) {
         char.school.askedRaiseThisYear = false;
         char.school.promotedThisYear = false;
         char.school.workedCampusThisYear = false;
         char.school.gymVisitsThisYear = 0;
+      }
+      const adultYear = ensureAdultState(char);
+      adultYear.nightlifeThisYear = 0;
+      adultYear.flingsThisYear = 0;
+      if (adultYear.hasSTI && char.age >= 18) {
+        char.health = clamp(char.health - 3, 5, 100);
+        yearNotes.push(`🧬 Health Alert: Uncured ${adultYear.hasSTI} drained some vitality (-3 Health). Visit the Adult Clinic to cure it!`);
       }
 
       // Centralized Financial Processing for the Year
@@ -4743,6 +5486,7 @@ function generateSchoolName(stage) {
       const tier = typeof getWealthTier === 'function' ? getWealthTier(netWorth) : { title: "Citizen", badge: "🏛️" };
       const edu = typeof getEducationStatus === 'function' ? getEducationStatus(char) : "None";
       const livingChildren = (char.relationships || []).filter(r => r.category === 'child' && r.isAlive);
+      const adultStats = ensureAdultState(char);
       const ribbons = [];
       if (netWorth >= 1000000000) ribbons.push("🪐 Billionaire");
       else if (netWorth >= 1000000) ribbons.push("💎 Millionaire");
@@ -4751,6 +5495,7 @@ function generateSchoolName(stage) {
       if (char.educationLevel >= 3) ribbons.push("🎓 Doctor / Esq / MBA");
       if ((char.assets || []).some(a => a.type === 'business')) ribbons.push("🏢 Entrepreneur");
       if (livingChildren.length > 0) ribbons.push(`👶 Parent (${livingChildren.length})`);
+      if (char.age >= 18 && adultStats.bodyCount > 0) ribbons.push(`💘 Partners (${adultStats.bodyCount})`);
 
       const bodyHtml = `
         <div style="text-align:left; font-size:12.5px; color:#334155; display:flex; flex-direction:column; gap:8px;">
@@ -4859,7 +5604,9 @@ function generateSchoolName(stage) {
         vcDeals: [],
         auctions: []
       };
+      char.adult = null;
       ensureFinanceState(char);
+      ensureAdultState(char);
       generateYearlyMarketOpportunities(char);
 
       char.relationships = [deceasedParent, ...siblings];
@@ -5439,6 +6186,156 @@ function generateSchoolName(stage) {
         ]
       });
 
+      // 6. 18+ Adult Lifestyle & Romance Situations
+      if (char.age >= 18) {
+        pool.push({
+          icon: "🥂",
+          title: "Hotel Keycard at the Afterparty (18+)",
+          desc: "At an upscale late-night afterparty, an alluring stranger slides their penthouse suite keycard into your jacket pocket and winks.",
+          choices: [
+            {
+              text: "Slip upstairs for a wild one-night rendezvous 🔥",
+              fn: () => {
+                const adultSit = ensureAdultState(char);
+                adultSit.bodyCount++;
+                char.happiness = clamp(char.happiness + 20, 0, 100);
+                if (char.partner && char.partner.isAlive && Math.random() < 0.40) {
+                  adultSit.affairsCount++;
+                  char.partner.relationship = clamp((char.partner.relationship || 70) - 50, 0, 100);
+                  recordAction(`🚨 Attended a secret penthouse rendezvous and ${char.partner.name} found out! (-Bond)`);
+                  showPopup(`🚨 Rumors reached ${char.partner.name} the next morning! Bond plunged to ${char.partner.relationship}%.`, "Caught Slipping! 🚨", "🚨");
+                } else {
+                  recordAction("🥂 Had an unforgettable late-night rendezvous in a luxury penthouse suite! (18+)");
+                  showPopup(`Sparks flew behind closed penthouse doors! Total Partners: ${adultSit.bodyCount}.`, "Penthouse Night 🔥", "🥂");
+                }
+              }
+            },
+            {
+              text: "Toss the keycard back cheerfully and stay loyal",
+              fn: () => {
+                if (char.partner && char.partner.isAlive) {
+                  char.partner.relationship = clamp((char.partner.relationship || 70) + 12, 0, 100);
+                }
+                char.happiness = clamp(char.happiness + 10, 0, 100);
+                recordAction("Declined a tempting hotel keycard advance and kept my integrity intact.");
+                showPopup("You laughed politely and returned the keycard. No regrets the next morning!", "Zero Regrets 🛡️", "🛡️");
+              }
+            },
+            {
+              text: "Grab free champagne at the bar and slip home early",
+              fn: () => {
+                char.money += 120;
+                char.happiness = clamp(char.happiness + 8, 0, 100);
+                recordAction("Enjoyed complimentary VIP champagne all night without drama.");
+                showPopup("You drank top-shelf bubbly for free and got home to sleep cleanly.", "Smart Night Out 🍾", "🍾");
+              }
+            }
+          ]
+        });
+
+        if (char.partner && char.partner.isAlive) {
+          pool.push({
+            icon: "📱",
+            title: "Partner Snooping Your Phone (18+)",
+            desc: `Late at night, ${char.partner.name} suspiciously asks to scroll through your private DMs and photo vault.`,
+            choices: [
+              {
+                text: "Hand over your unlocked phone without flinching",
+                fn: () => {
+                  const adultSit = ensureAdultState(char);
+                  if (adultSit.affairsCount > 0 && Math.random() < 0.65) {
+                    char.partner.relationship = clamp((char.partner.relationship || 70) - 45, 0, 100);
+                    char.happiness = clamp(char.happiness - 20, 0, 100);
+                    recordAction(`🚨 ${char.partner.name} found hidden affair texts on my phone!`);
+                    showPopup(`🚨 Yikes—they found an old flirty thread! ${char.partner.name} is livid (Bond: ${char.partner.relationship}%).`, "Exposed! 🚨", "🚨");
+                  } else {
+                    char.partner.relationship = clamp((char.partner.relationship || 70) + 14, 0, 100);
+                    char.happiness = clamp(char.happiness + 10, 0, 100);
+                    recordAction(`Handed ${char.partner.name} my phone freely; trust deepened to ${char.partner.relationship}%.`);
+                    showPopup(`Nothing to hide! ${char.partner.name} hugged you tightly and felt reassured.`, "Open Trust ❤️", "❤️");
+                  }
+                }
+              },
+              {
+                text: "Turn it into an intimate distraction in the bedroom 🔥",
+                fn: () => {
+                  char.partner.passion = clamp((char.partner.passion != null ? char.partner.passion : 85) + 18, 0, 100);
+                  char.happiness = clamp(char.happiness + 16, 0, 100);
+                  recordAction(`Turned an awkward phone check into a passionate romantic night with ${char.partner.name}!`);
+                  showPopup(`They forgot all about the phone within two minutes! (Passion: ${char.partner.passion}%)`, "Smooth Distraction 🔥", "🔥");
+                }
+              },
+              {
+                text: "Refuse strictly on privacy grounds",
+                fn: () => {
+                  char.partner.relationship = clamp((char.partner.relationship || 70) - 10, 0, 100);
+                  recordAction(`Refused ${char.partner.name}'s phone inspection on privacy grounds. (-Bond)`);
+                  showPopup(`You stood firm on personal privacy, though ${char.partner.name} remained suspicious.`, "Boundaries Drawn", "🔒");
+                }
+              }
+            ]
+          });
+        }
+
+        pool.push({
+          icon: "🥃",
+          title: "Tequila Blackout Morning (18+)",
+          desc: "After 7 spiced margaritas last night, you wake up at 7:45 AM wearing sunglasses indoors with a $500 casino chip in your pocket!",
+          choices: [
+            {
+              text: "Cash the $500 chip & chug electrolyte water",
+              fn: () => {
+                char.money += 500;
+                char.health = clamp(char.health - 2, 0, 100);
+                char.happiness = clamp(char.happiness + 14, 0, 100);
+                recordAction("Recovered from a wild tequila night and discovered a lucky $500 casino chip in my pocket!");
+                showPopup("You cashed out $500 and cured the hangover before noon!", "Lucky Hangover 💵", "🥃");
+              }
+            },
+            {
+              text: "Run right back to the casino tables and let the $500 ride!",
+              fn: () => {
+                if (Math.random() < 0.45) {
+                  char.money += 1800;
+                  char.happiness = clamp(char.happiness + 25, 0, 100);
+                  recordAction("Doubled down on a lucky casino chip after a party night and won $1,800!");
+                  showPopup("Black 17 hit!! You walked out of the casino $1,800 richer!", "Jackpot Run 🎰", "🎰");
+                } else {
+                  char.happiness = clamp(char.happiness - 6, 0, 100);
+                  recordAction("Gambled away the mystery casino chip immediately.");
+                  showPopup("Zero-zero green wiped the chip out. Easy come, easy go!", "Busted Out", "🃏");
+                }
+              }
+            }
+          ]
+        });
+
+        pool.push({
+          icon: "📸",
+          title: "Viral VIP Promo Offer (18+)",
+          desc: "A luxury nightlife & swimwear brand slides into your DMs offering $4,000 for an edgy 18+ social campaign.",
+          choices: [
+            {
+              text: "Sign the contract & strike a pose ($4,000)",
+              fn: () => {
+                char.money += 4000;
+                char.looks = clamp(char.looks + 4, 0, 100);
+                char.happiness = clamp(char.happiness + 15, 0, 100);
+                recordAction("Modeled in a viral luxury 18+ nightlife campaign for a $4,000 paycheck!");
+                showPopup("The shoot went viral and your $4,000 wire hit immediately! (+Looks, +$4,000)", "Paid Collaboration 📸", "💵");
+              }
+            },
+            {
+              text: "Decline cleanly to keep a low profile",
+              fn: () => {
+                recordAction("Passed on a flashy nightlife modeling offer.");
+                showPopup("You politely declined and kept your personal brand private.", "Low Profile", "🛡️");
+              }
+            }
+          ]
+        });
+      }
+
       const item = pool[Math.floor(Math.random() * pool.length)];
       showCustomDilemma(item.title, item.desc, item.choices, item.icon);
     }
@@ -5697,23 +6594,368 @@ function generateSchoolName(stage) {
         showPopup("You must be at least 18 years old to enter nightclubs!", "Age Restriction", "🪩");
         return;
       }
-      if (char.money < 80) {
-        showPopup("Nightclub cover charge & drinks cost $80!", "Nightclub", "🪩");
+      const html = `
+        <div style="font-size:12px; color:#64748B; margin-bottom:8px;">Pick your nightclub experience tonight:</div>
+        <div class="modal-sublist">
+          <div class="modal-subitem" onclick="executeNightclub('general')">
+            <span class="modal-subitem-icon">🪩</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">General Entry & Dance Floor ($80)</div>
+              <div class="modal-subitem-sub">+Happiness, +Looks • Electric beats till 3 AM</div>
+            </div>
+            <button class="modal-subitem-action">Enter</button>
+          </div>
+          <div class="modal-subitem" onclick="executeNightclub('vip')">
+            <span class="modal-subitem-icon">🍾</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">VIP Table & Champagne Bottles ($1,500)</div>
+              <div class="modal-subitem-sub">++Happiness, ++Looks • Sparklers & chance to meet VIPs!</div>
+            </div>
+            <button class="modal-subitem-action">VIP 🔞</button>
+          </div>
+        </div>
+      `;
+      showCustomModal("Nightclub & VIP Lounge", "🪩", html);
+    }
+
+    function executeNightclub(tier) {
+      closeModal();
+      const cost = tier === 'vip' ? 1500 : 80;
+      if (char.money < cost) {
+        showPopup(`That nightclub tier costs $${cost.toLocaleString()}!`, "Nightclub", "🪩");
         return;
       }
-      char.money -= 80;
-      char.happiness = clamp(char.happiness + 20, 0, 100);
-      char.looks = clamp(char.looks + 3, 0, 100);
-      char.health = clamp(char.health - 2, 0, 100);
-      recordAction("🪩 Partied all night at an upscale nightclub with friends! (+Happiness, +Looks)", true);
-      showPopup("You danced under neon lights until 3 AM! (+Happiness, +Looks)", "Nightclub 🪩", "🪩");
+      const adult = ensureAdultState(char);
+      adult.nightlifeThisYear++;
+      char.money -= cost;
+      char.happiness = clamp(char.happiness + (tier === 'vip' ? 30 : 18), 0, 100);
+      char.looks = clamp(char.looks + (tier === 'vip' ? 6 : 3), 0, 100);
+      char.health = clamp(char.health - 1, 5, 100);
+      if (tier === 'vip' && char.partner && char.partner.isAlive) {
+        char.partner.passion = clamp((char.partner.passion != null ? char.partner.passion : 85) + 10, 0, 100);
+      }
+      recordAction(
+        tier === 'vip'
+          ? "🍾 Popped champagne in the VIP section with sparklers until sunrise! (++Happiness, +Looks)"
+          : "🪩 Partied on the neon nightclub dance floor until 3 AM! (+Happiness, +Looks)",
+        true
+      );
+      showPopup(
+        tier === 'vip'
+          ? "🍾 Bottle service with sparklers had the whole VIP lounge turning heads! (+30 Happiness, +6 Looks)"
+          : "You danced under neon lights and met vibrant nightlife crowds! (+18 Happiness, +3 Looks)",
+        tier === 'vip' ? "VIP Bottle Service 🍾" : "Nightclub 🪩",
+        "🪩"
+      );
+    }
+
+    function doBarVisit() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        showPopup("Cocktail bars & lounges are strictly 18+!", "Age Restricted", "🔞");
+        return;
+      }
+      const cost = 60;
+      if (char.money < cost) {
+        showPopup("A round at the cocktail lounge costs $60!", "Insufficient Funds", "💸");
+        return;
+      }
+      const adult = ensureAdultState(char);
+      if (adult.nightlifeThisYear >= 5) {
+        showPopup("Easy there—you've hit the nightlife scene 5 times this year! Rest up until next year.", "Pace Yourself", "💧");
+        return;
+      }
+      adult.nightlifeThisYear++;
+      char.money -= cost;
+      const roll = Math.random();
+      if (roll < 0.25 && !char.partner) {
+        adult.bodyCount++;
+        char.happiness = clamp(char.happiness + 24, 0, 100);
+        recordAction("🍹 Met a gorgeous stranger over spicy margaritas at Happy Hour—we headed back to their loft! (+Happiness)");
+        showPopup("🍹 One cocktail turned into four laughs and an electrifying night back at their place! (+24 Happiness)", "Cocktail Spark 🔥", "🍹");
+      } else if (roll < 0.38) {
+        char.happiness = clamp(char.happiness + 10, 0, 100);
+        char.money += 150;
+        recordAction("🎤 Slayed late-night bar karaoke and won a $150 bar tab prize!");
+        showPopup("🎤 Your rendition brought the entire bar to their feet! The bartender handed you $150 prize cash.", "Karaoke Legend 🎤", "🎤");
+      } else {
+        char.happiness = clamp(char.happiness + 14, 0, 100);
+        recordAction("🍹 Unwound with top-shelf craft cocktails at Happy Hour. (+Happiness)", true);
+        showPopup("🍹 Craft Old Fashioneds, dim lighting, and great banter helped melt away all stress.", "Cocktail Lounge 🍹", "🍹");
+      }
+    }
+
+    function openCasinoModal() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        showPopup("Casino entry & wagering require Age 18+!", "Age Restricted", "🔞");
+        return;
+      }
+      const adult = ensureAdultState(char);
+      const bets = [100, 500, 2500, 10000, 50000].filter(b => char.money >= b);
+      if (bets.length === 0) {
+        showPopup("You need at least $100 in cash to step up to the casino tables!", "Casino Cage", "🃏");
+        return;
+      }
+      let html = `
+        <div style="font-size:12px; color:#475569; margin-bottom:8px; background:#F8FAFC; padding:8px; border-radius:8px; border:1px solid #E2E8F0;">
+          Bankroll: <strong>$${char.money.toLocaleString()}</strong> • Lifetime Net: <strong style="color:${adult.casinoNetLifetime >= 0 ? '#059669' : '#DC2626'}">${adult.casinoNetLifetime >= 0 ? '+$' : '-$'}${Math.abs(adult.casinoNetLifetime).toLocaleString()}</strong>
+        </div>
+        <div class="modal-sublist">
+      `;
+      bets.forEach(b => {
+        html += `
+          <div class="modal-subitem" onclick="playCasinoGame('blackjack', ${b})">
+            <span class="modal-subitem-icon">🃏</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Blackjack Hand ($${b.toLocaleString()})</div>
+              <div class="modal-subitem-sub">1:1 payout (Natural 21 pays 1.5x!)</div>
+            </div>
+            <button class="modal-subitem-action">Deal</button>
+          </div>
+          <div class="modal-subitem" onclick="playCasinoGame('lucky7', ${b})">
+            <span class="modal-subitem-icon">🎡</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Roulette High-Risk Number ($${b.toLocaleString()})</div>
+              <div class="modal-subitem-sub">18% hit chance • Huge 4x Payout!</div>
+            </div>
+            <button class="modal-subitem-action">Spin</button>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      showCustomModal("High-Roller Casino 🃏", "🃏", html);
+    }
+
+    function playCasinoGame(mode, bet) {
+      closeModal();
+      if (char.money < bet || char.age < 18) return;
+      const adult = ensureAdultState(char);
+      char.money -= bet;
+      const r = Math.random();
+
+      if (mode === 'blackjack') {
+        if (r < 0.10) {
+          const payout = Math.round(bet * 2.5);
+          const profit = payout - bet;
+          char.money += payout;
+          adult.casinoNetLifetime += profit;
+          char.happiness = clamp(char.happiness + 18, 0, 100);
+          recordAction(`🃏 BLACKJACK 21! Bet $${bet.toLocaleString()} and won $${profit.toLocaleString()} net profit!`, true);
+          showPopup(`🎉 NATURAL BLACKJACK!! Dealer busted against your Ace-King! Won $${profit.toLocaleString()} net profit!`, "Blackjack 21! 🃏", "🃏");
+        } else if (r < 0.48) {
+          const payout = bet * 2;
+          char.money += payout;
+          adult.casinoNetLifetime += bet;
+          char.happiness = clamp(char.happiness + 10, 0, 100);
+          recordAction(`🃏 Won a $${bet.toLocaleString()} hand at the Blackjack tables!`, true);
+          showPopup(`✅ You hit 20 and beat the dealer's 18! Won +$${bet.toLocaleString()}!`, "Winner! 🃏", "🃏");
+        } else {
+          adult.casinoNetLifetime -= bet;
+          char.happiness = clamp(char.happiness - 6, 0, 100);
+          recordAction(`🃏 Busted on a $${bet.toLocaleString()} Blackjack bet.`, true);
+          showPopup(`Dealer pulled a 21 on the river! Lost $${bet.toLocaleString()}.`, "House Wins", "🃏");
+        }
+      } else {
+        if (r < 0.18) {
+          const payout = bet * 5;
+          const profit = bet * 4;
+          char.money += payout;
+          adult.casinoNetLifetime += profit;
+          char.happiness = clamp(char.happiness + 28, 0, 100);
+          recordAction(`🎡 ROULETTE HIT 4X!! Bet $${bet.toLocaleString()} and cashed out $${profit.toLocaleString()} pure profit!`, true);
+          showPopup(`🎉 BALL DROPPED ON YOUR NUMBER!! Won $${profit.toLocaleString()} profit!!`, "Roulette Jackpot! 🎡", "🎡");
+        } else {
+          adult.casinoNetLifetime -= bet;
+          char.happiness = clamp(char.happiness - 7, 0, 100);
+          recordAction(`🎡 Roulette wheel missed your number (-$${bet.toLocaleString()}).`, true);
+          showPopup(`The ivory ball bounced two pockets away! Lost $${bet.toLocaleString()}.`, "No Luck 🎡", "🎡");
+        }
+      }
+      render();
+    }
+
+    function doCabaretLounge() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        showPopup("Adults-only cabaret lounges require Age 18+!", "Age Restricted", "🔞");
+        return;
+      }
+      const cost = 250;
+      if (char.money < cost) {
+        showPopup(`VIP cover & table drinks cost $${cost}!`, "Cabaret Lounge", "🍸");
+        return;
+      }
+      char.money -= cost;
+      char.happiness = clamp(char.happiness + 22, 0, 100);
+
+      if (char.partner && char.partner.isAlive && (char.partner.craziness || 25) >= 55 && Math.random() < 0.45) {
+        char.partner.relationship = clamp((char.partner.relationship || 75) - 18, 0, 100);
+        recordAction(`🍸 Visited the After-Hours Cabaret ($${cost}), and ${char.partner.name} spotted the charge on your bank statement! (-Bond)`);
+        showPopup(`😬 Awkward! ${char.partner.name} saw a $250 midnight charge from Velvet Cabaret Lounge and isn't thrilled. (Bond: ${char.partner.relationship}%)`, "Caught on Statement! 🍸", "🍸");
+      } else {
+        recordAction(`🍸 Enjoyed VIP cabaret cocktails and live lounge entertainment ($${cost}). (+Happiness)`, true);
+        showPopup("🍸 Velvet booths, dim red spotlights, and electrifying performances made for a thrilling adults-only evening!", "After-Hours Cabaret 🍸", "🍸");
+      }
+    }
+
+    function openCosmeticStudioModal() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        showPopup("Tattoos and cosmetic procedures require Age 18+!", "Age Restricted", "🔞");
+        return;
+      }
+      const adult = ensureAdultState(char);
+      const html = `
+        <div style="font-size:12px; color:#64748B; margin-bottom:8px;">Tattoos inked: <strong>${adult.tattoos.length}</strong> • Procedures: <strong>${adult.cosmeticCount}</strong></div>
+        <div class="modal-sublist">
+          <div class="modal-subitem" onclick="executeCosmetic('tattoo')">
+            <span class="modal-subitem-icon">🖋️</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Custom Forearm / Sleeve Tattoo ($450)</div>
+              <div class="modal-subitem-sub">+4 Looks, +8 Happiness • Express your edge</div>
+            </div>
+            <button class="modal-subitem-action">Ink Up</button>
+          </div>
+          <div class="modal-subitem" onclick="executeCosmetic('fillers')">
+            <span class="modal-subitem-icon">✨</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Aesthetic Glow & Fillers ($1,200)</div>
+              <div class="modal-subitem-sub">+8 Looks, +6 Happiness • Subtle refresh</div>
+            </div>
+            <button class="modal-subitem-action">Book</button>
+          </div>
+          <div class="modal-subitem" onclick="executeCosmetic('sculpt')">
+            <span class="modal-subitem-icon">💎</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Full Cosmetic Sculpting ($6,500)</div>
+              <div class="modal-subitem-sub">90% chance +18 Looks • 10% rare botched risk</div>
+            </div>
+            <button class="modal-subitem-action">Surgery</button>
+          </div>
+        </div>
+      `;
+      showCustomModal("Tattoos & Cosmetic Studio 💅", "💅", html);
+    }
+
+    function executeCosmetic(proc) {
+      closeModal();
+      const adult = ensureAdultState(char);
+      const costs = { tattoo: 450, fillers: 1200, sculpt: 6500 };
+      const cost = costs[proc] || 450;
+      if (char.money < cost) {
+        showPopup(`That studio procedure costs $${cost.toLocaleString()}!`, "Insufficient Funds", "💸");
+        return;
+      }
+      char.money -= cost;
+      if (proc === 'tattoo') {
+        const designs = ["Geometric Wolf", "Koi Koi Sleeve", "Cyberpunk Rose", "Compass & Dagger", "Serpent Wrap"];
+        const design = designs[Math.floor(Math.random() * designs.length)];
+        adult.tattoos.push(design);
+        char.looks = clamp(char.looks + 4, 0, 100);
+        char.happiness = clamp(char.happiness + 8, 0, 100);
+        recordAction(`🖋️ Got a fresh ${design} tattoo inked ($450)! Looks: ${char.looks}%.`, true);
+        showPopup(`🖋️ Sharp needlework! Your new "${design}" tattoo looks crisp. Looks: ${char.looks}%!`, "Fresh Ink 🖋️", "🖋️");
+      } else if (proc === 'fillers') {
+        adult.cosmeticCount++;
+        char.looks = clamp(char.looks + 8, 0, 100);
+        char.happiness = clamp(char.happiness + 6, 0, 100);
+        recordAction(`✨ Visited aesthetic dermatology for subtle facial glow fillers ($1,200). Looks: ${char.looks}%.`, true);
+        showPopup(`✨ Refreshed and radiant! Looks jumped to ${char.looks}%.`, "Aesthetic Refresh ✨", "✨");
+      } else {
+        adult.cosmeticCount++;
+        if (Math.random() < 0.90) {
+          char.looks = clamp(char.looks + 18, 0, 100);
+          char.happiness = clamp(char.happiness + 20, 0, 100);
+          recordAction(`💎 Top cosmetic surgeon nailed the transformation ($6,500)! Looks rocketed to ${char.looks}%!`, true);
+          showPopup(`💎 Magazine-cover transformation! Looks surged to ${char.looks}%!`, "Procedure Success! 💎", "💎");
+        } else {
+          char.looks = clamp(char.looks - 12, 0, 100);
+          char.health = clamp(char.health - 8, 5, 100);
+          char.happiness = clamp(char.happiness - 18, 0, 100);
+          recordAction(`⚠️ Cosmetic sculpting had mild swelling & uneven results! (-Looks)`, true);
+          showPopup(`⚠️ The clinic rushed recovery and left uneven results. Visit the Doctor to recover comfortably.`, "Botched Clinic ⚠️", "⚠️");
+        }
+      }
+      render();
+    }
+
+    function openAdultClinicModal() {
+      if (!char.isAlive) return;
+      if (char.age < 18) {
+        showPopup("Adult Wellness & Reproductive Clinic requires Age 18+!", "Age Restricted", "🔞");
+        return;
+      }
+      const adult = ensureAdultState(char);
+      const html = `
+        <div style="font-size:12px; color:#475569; margin-bottom:8px; background:#F8FAFC; padding:8px; border-radius:8px; border:1px solid #E2E8F0;">
+          Wellness Status: <strong style="color:${adult.hasSTI ? '#DC2626' : '#059669'}">${adult.hasSTI ? '⚠️ ' + adult.hasSTI : '✅ Clean Bill of Health'}</strong><br>
+          Protection: <strong>${adult.onBirthControl ? '💊 Birth Control Active' : '🔥 Natural'}</strong>
+        </div>
+        <div class="modal-sublist">
+          ${adult.hasSTI ? `
+            <div class="modal-subitem" onclick="cureSTI()">
+              <span class="modal-subitem-icon">💊</span>
+              <div class="modal-subitem-info">
+                <div class="modal-subitem-title">Targeted Antibiotic Cure ($350)</div>
+                <div class="modal-subitem-sub">Completely cure ${adult.hasSTI} & restore health</div>
+              </div>
+              <button class="modal-subitem-action">Cure Now</button>
+            </div>
+          ` : `
+            <div class="modal-subitem" onclick="showPopup('Your confidential screening came back 100% negative and clear!', 'All Clear ✅', '🧬')">
+              <span class="modal-subitem-icon">🧬</span>
+              <div class="modal-subitem-info">
+                <div class="modal-subitem-title">Confidential Screening Check ($0 Member Perk)</div>
+                <div class="modal-subitem-sub">Verify clean adult reproductive health</div>
+              </div>
+              <button class="modal-subitem-action">All Clear</button>
+            </div>
+          `}
+          <div class="modal-subitem" onclick="closeModal(); toggleBirthControl(false)">
+            <span class="modal-subitem-icon">🛡️</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">${adult.onBirthControl ? 'Disable' : 'Activate'} Contraception ($40)</div>
+              <div class="modal-subitem-sub">Toggle pregnancy protection during intimacy</div>
+            </div>
+            <button class="modal-subitem-action">${adult.onBirthControl ? 'Turn Off' : 'Enable'}</button>
+          </div>
+          <div class="modal-subitem" onclick="closeModal(); doDoctor()">
+            <span class="modal-subitem-icon">🩺</span>
+            <div class="modal-subitem-info">
+              <div class="modal-subitem-title">Executive Physical & Vitality ($250)</div>
+              <div class="modal-subitem-sub">+25 to +39 Health boost from specialist</div>
+            </div>
+            <button class="modal-subitem-action">Visit</button>
+          </div>
+        </div>
+      `;
+      showCustomModal("Adult Wellness & STI Clinic 🧬", "🧬", html);
+    }
+
+    function cureSTI() {
+      closeModal();
+      const adult = ensureAdultState(char);
+      if (!adult.hasSTI) return;
+      if (char.money < 350) {
+        showPopup("Clinic prescription & treatment cost $350!", "Insufficient Funds", "💸");
+        return;
+      }
+      const oldCondition = adult.hasSTI;
+      char.money -= 350;
+      adult.hasSTI = null;
+      char.health = clamp(char.health + 12, 0, 100);
+      char.happiness = clamp(char.happiness + 12, 0, 100);
+      recordAction(`🧬 Visited the Adult Clinic ($350) and completely cured ${oldCondition}! (+Health)`, true);
+      showPopup(`✅ Course complete! Your ${oldCondition} is 100% cured and health recovered to ${char.health}%.`, "Cured! 🧬", "✅");
+      render();
     }
 
     // CAREER & ASSETS ACTIONS
-    function applyJob(title, pay, reqEdu, reqSmarts, icon) {
+    function applyJob(title, pay, reqEdu, reqSmarts, icon, minAge = 18) {
       if (!char.isAlive) return;
 
-      const jobObj = { title, pay, reqEdu, reqSmarts, icon };
+      const jobObj = { title, pay, reqEdu, reqSmarts, icon, minAge };
       const check = canApplyForJob(char, jobObj);
       if (!check.eligible) {
         showPopup(check.reason, "Job Application", "💼");
@@ -5748,7 +6990,10 @@ function generateSchoolName(stage) {
       { title: "Grocery Cashier", pay: 6200, minAge: 15, reqSmarts: 15, icon: "🛒", desc: "Scan groceries and bag goods at the supermarket." },
       { title: "Cafe Barista", pay: 7400, minAge: 16, reqSmarts: 25, icon: "☕", desc: "Brew artisan espresso and serve morning commuters." },
       { title: "Warehouse Stocker", pay: 9200, minAge: 18, reqSmarts: 20, icon: "📦", desc: "Night-shift inventory sorting and heavy boxes." },
-      { title: "Freelance Tech Support", pay: 12000, minAge: 18, reqSmarts: 50, icon: "💻", desc: "Troubleshoot PCs, WiFi routers, and software." }
+      { title: "Freelance Tech Support", pay: 12000, minAge: 18, reqSmarts: 50, icon: "💻", desc: "Troubleshoot PCs, WiFi routers, and software." },
+      { title: "Cocktail Bartender", pay: 14500, minAge: 18, reqSmarts: 15, icon: "🍸", desc: "Craft cocktails & earn big late-night lounge tips (18+)." },
+      { title: "VIP Nightclub Promoter", pay: 18000, minAge: 18, reqSmarts: 25, icon: "🪩", desc: "Host VIP tables & champagne bottle service (18+)." },
+      { title: "Spicy Content Creator (18+)", pay: 28000, minAge: 18, reqSmarts: 10, icon: "📸", desc: "Monetize exclusive 18+ lifestyle subscriptions." }
     ];
 
     function applyPartTimeJob(title, pay, minAge, reqSmarts, icon) {
@@ -5845,16 +7090,18 @@ function generateSchoolName(stage) {
       let html = '';
 
       if (currentJobsFilter === 'all' || currentJobsFilter === 'fulltime') {
-        html += `<div class="section-title"><span>💼</span> Full-Time Career Positions</div>`;
+        html += `<div class="section-title"><span>💼</span> Full-Time Career Positions</div><div class="bitlife-list">`;
 
         const fullTimeList = [
-          { title: 'Fast Food Worker', pay: 18000, reqEdu: 0, reqSmarts: 10, icon: '🍔', desc: 'No education required • Entry level' },
-          { title: 'Retail Sales Associate', pay: 28000, reqEdu: 1, reqSmarts: 20, icon: '🛍️', desc: 'Requires HS Diploma or GED • Smarts ≥ 20%' },
-          { title: 'Graphic Designer', pay: 42000, reqEdu: 1, reqSmarts: 30, icon: '🎨', desc: 'Requires HS Diploma or GED • Smarts ≥ 30%' },
-          { title: 'Software Engineer', pay: 98000, reqEdu: 2, reqSmarts: 60, icon: '💻', desc: "Requires Bachelor's Degree • Smarts ≥ 60%" },
-          { title: 'Corporate Lawyer', pay: 165000, reqEdu: 3, reqSmarts: 70, icon: '⚖️', desc: 'Requires Law Degree (J.D.) • Smarts ≥ 70%' },
-          { title: 'Medical Surgeon', pay: 185000, reqEdu: 3, reqSmarts: 80, icon: '🩺', desc: 'Requires Medical Degree (M.D.) • Smarts ≥ 80%' },
-          { title: 'Corporate CEO', pay: 420000, reqEdu: 3, reqSmarts: 90, icon: '👑', desc: 'Requires MBA or Degree + Smarts ≥ 90%' }
+          { title: 'Fast Food Worker', pay: 18000, reqEdu: 0, reqSmarts: 10, icon: '🍔', desc: 'No education required • Entry level', minAge: 18 },
+          { title: 'Retail Sales Associate', pay: 28000, reqEdu: 1, reqSmarts: 20, icon: '🛍️', desc: 'Requires HS Diploma or GED • Smarts ≥ 20%', minAge: 18 },
+          { title: 'Graphic Designer', pay: 42000, reqEdu: 1, reqSmarts: 30, icon: '🎨', desc: 'Requires HS Diploma or GED • Smarts ≥ 30%', minAge: 18 },
+          { title: 'Casino Pit Boss', pay: 68000, reqEdu: 1, reqSmarts: 50, icon: '🃏', desc: 'Min Age 21+ • HS/GED + Smarts ≥ 50% (18+ Nightlife)', minAge: 21 },
+          { title: 'Nightclub & Lounge Owner', pay: 92000, reqEdu: 1, reqSmarts: 55, icon: '🍸', desc: 'Min Age 21+ • HS/GED + Smarts ≥ 55% (18+ Nightlife)', minAge: 21 },
+          { title: 'Software Engineer', pay: 98000, reqEdu: 2, reqSmarts: 60, icon: '💻', desc: "Requires Bachelor's Degree • Smarts ≥ 60%", minAge: 18 },
+          { title: 'Corporate Lawyer', pay: 165000, reqEdu: 3, reqSmarts: 70, icon: '⚖️', desc: 'Requires Law Degree (J.D.) • Smarts ≥ 70%', minAge: 18 },
+          { title: 'Medical Surgeon', pay: 185000, reqEdu: 3, reqSmarts: 80, icon: '🩺', desc: 'Requires Medical Degree (M.D.) • Smarts ≥ 80%', minAge: 18 },
+          { title: 'Corporate CEO', pay: 420000, reqEdu: 3, reqSmarts: 90, icon: '👑', desc: 'Requires MBA or Degree + Smarts ≥ 90%', minAge: 18 }
         ];
 
         fullTimeList.forEach(j => {
@@ -5865,7 +7112,7 @@ function generateSchoolName(stage) {
           const lockBadge = (!isCurrent && !check.eligible) ? `<div style="font-size:11px; color:#DC2626; margin-top:2px;">🔒 ${check.reason}</div>` : "";
 
           html += `
-            <div class="interactive-card" onclick="applyJob('${j.title}', ${j.pay}, ${j.reqEdu}, ${j.reqSmarts}, '${j.icon}')">
+            <div class="interactive-card" onclick="applyJob('${j.title}', ${j.pay}, ${j.reqEdu}, ${j.reqSmarts}, '${j.icon}', ${j.minAge || 18})">
               <div class="card-left-group">
                 <div class="card-emoji-box">${j.icon}</div>
                 <div class="card-texts">
@@ -5878,10 +7125,11 @@ function generateSchoolName(stage) {
             </div>
           `;
         });
+        html += `</div>`;
       }
 
       if (currentJobsFilter === 'all' || currentJobsFilter === 'parttime') {
-        html += `<div class="section-title"><span>🕒</span> Part-Time Jobs & Side Gigs</div>`;
+        html += `<div class="section-title"><span>🕒</span> Part-Time Jobs & 18+ Side Gigs</div><div class="bitlife-list">`;
 
         PART_TIME_JOBS.forEach(j => {
           const isCurrent = char.partTimeJob && char.partTimeJob.title === j.title;
@@ -5898,6 +7146,7 @@ function generateSchoolName(stage) {
             </div>
           `;
         });
+        html += `</div>`;
       }
 
       container.innerHTML = html;
