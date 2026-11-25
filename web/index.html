@@ -1280,6 +1280,165 @@
     .modal-btn.danger:active {
       background: #B91C1C;
     }
+
+    /* FULL-SCREEN CHARACTER CREATION & LEGACY SETUP PAGE */
+    .creator-screen {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-warm);
+      z-index: 95;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .creator-screen.active {
+      display: flex;
+      animation: fadeIn 0.16s ease-out;
+    }
+
+    .creator-header {
+      padding: 10px 14px;
+      background: #FFFFFF;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .creator-body {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 10px 14px 18px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .creator-footer {
+      background: #FFFFFF;
+      border-top: 1px solid #E2E8F0;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .creator-input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px 14px;
+      background: #FFFFFF;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .creator-field label {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+    }
+
+    .creator-field input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #0F172A;
+      background: #F8FAFC;
+      outline: none;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .creator-field input:focus {
+      border-color: #0F172A;
+      background: #FFFFFF;
+    }
+
+    .creator-pill-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+      padding: 10px 14px;
+      background: #FFFFFF;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .creator-pill-btn {
+      padding: 9px 10px;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      background: #F8FAFC;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.12s;
+    }
+
+    .creator-pill-btn.active {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-color: #0F172A;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
+    }
+
+    .creator-pill-btn:active {
+      transform: scale(0.97);
+    }
+
+    .creator-option-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .creator-option-selected .creator-option-check {
+      background: #059669;
+      border-color: #059669;
+      color: #FFFFFF;
+    }
+
+    .creator-cta-btn {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      background: #059669;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.28);
+      transition: transform 0.12s;
+    }
+
+    .creator-cta-btn:active {
+      transform: scale(0.98);
+      background: #047857;
+    }
   </style>
 </head>
 <body>
@@ -1803,6 +1962,26 @@
         <span>Activities</span>
       </button>
     </footer>
+
+    <!-- CHARACTER CREATION & LEGACY SETUP PAGE -->
+    <section id="charCreatorPage" class="creator-screen">
+      <div class="creator-header">
+        <button class="btn-close-page" id="creatorCancelBtn" onclick="closeCharacterCreator()" style="visibility:hidden;">← Cancel</button>
+        <div class="page-top-title"><span>✨</span> Create Your Life</div>
+        <button class="btn-action-pill" onclick="randomizeCreatorDraft()" style="background:#EFF6FF; color:#1D4ED8; border-color:#BFDBFE;">🎲 Random</button>
+      </div>
+
+      <div class="creator-body" id="charCreatorBody">
+        <!-- Populated cleanly by renderCharacterCreator() -->
+      </div>
+
+      <div class="creator-footer">
+        <div style="display:grid; grid-template-columns: 1fr 1.6fr; gap:8px;">
+          <button class="btn-action-pill" style="justify-content:center; padding:11px 8px; border-radius:12px; font-size:13px;" onclick="randomizeCreatorDraft()">🎲 Randomize</button>
+          <button class="creator-cta-btn" id="creatorStartBtn" onclick="launchCustomLife()">🌟 Start Life</button>
+        </div>
+      </div>
+    </section>
 
     <!-- DILEMMA DIALOG -->
     <div id="modalDilemma" class="dilemma-overlay">
@@ -2571,24 +2750,339 @@ function generateSchoolName(stage) {
       { id: "age70", title: "Golden Years", desc: "Live a long healthy life and reach age 70.", done: false, reward: 8000 }
     ];
 
-    function startNewLife() {
-      const firstNames = ["Alyssa", "Sophia", "Chloe", "Emma", "Olivia", "Lucas", "Noah", "Liam", "Ethan", "Oliver"];
-      const lastNames = ["Roosevelt", "Kennedy", "Sterling", "Vance", "Mercer", "Sinclair", "Hayes", "Brooks"];
-      const cities = [
-        { city: "San Diego", country: "United States", flag: "🇺🇸" },
-        { city: "London", country: "United Kingdom", flag: "🇬🇧" },
-        { city: "Sydney", country: "Australia", flag: "🇦🇺" },
-        { city: "Toronto", country: "Canada", flag: "🇨🇦" }
-      ];
+    const CREATOR_FIRST_NAMES_FEMALE = ["Alyssa", "Sophia", "Chloe", "Emma", "Olivia", "Isabella", "Mia", "Harper", "Scarlett", "Elena"];
+    const CREATOR_FIRST_NAMES_MALE = ["Lucas", "Noah", "Liam", "Ethan", "Oliver", "Julian", "Alexander", "Mateo", "James", "Sebastian"];
+    const CREATOR_LAST_NAMES = ["Roosevelt", "Kennedy", "Sterling", "Vance", "Mercer", "Sinclair", "Hayes", "Brooks", "Castellano", "Vanderbilt"];
+    const BIRTH_CITIES = [
+      { id: "us", city: "San Diego", country: "United States", flag: "🇺🇸" },
+      { id: "uk", city: "London", country: "United Kingdom", flag: "🇬🇧" },
+      { id: "au", city: "Sydney", country: "Australia", flag: "🇦🇺" },
+      { id: "ca", city: "Toronto", country: "Canada", flag: "🇨🇦" },
+      { id: "jp", city: "Tokyo", country: "Japan", flag: "🇯🇵" },
+      { id: "ch", city: "Zurich", country: "Switzerland", flag: "🇨🇭" }
+    ];
 
-      const c = cities[Math.floor(Math.random() * cities.length)];
-      char.name = firstNames[Math.floor(Math.random() * firstNames.length)] + " " + lastNames[Math.floor(Math.random() * lastNames.length)];
-      char.gender = Math.random() > 0.5 ? "Female" : "Male";
+    const WEALTH_TIERS = {
+      poor: {
+        id: "poor",
+        icon: "🏚️",
+        label: "Struggling",
+        sub: "$0 start • Modest working parents",
+        startCash: 0,
+        fatherJob: "Warehouse Clerk",
+        fatherSalary: 28000,
+        motherJob: "Diner Server",
+        motherSalary: 24000,
+        estateBase: 28000,
+        generosityMin: 45,
+        trustAge18: 1500
+      },
+      middle: {
+        id: "middle",
+        icon: "🏡",
+        label: "Middle Class",
+        sub: "$500 start • Steady suburban household",
+        startCash: 500,
+        fatherJob: "Engineer",
+        fatherSalary: 75000,
+        motherJob: "Teacher",
+        motherSalary: 58000,
+        estateBase: 165000,
+        generosityMin: 68,
+        trustAge18: 15000
+      },
+      affluent: {
+        id: "affluent",
+        icon: "💎",
+        label: "Affluent",
+        sub: "$25,000 start • Wealthy professionals",
+        startCash: 25000,
+        fatherJob: "Senior Surgeon",
+        fatherSalary: 265000,
+        motherJob: "Corporate Director",
+        motherSalary: 215000,
+        estateBase: 780000,
+        generosityMin: 78,
+        trustAge18: 150000
+      },
+      dynasty: {
+        id: "dynasty",
+        icon: "👑",
+        label: "Billionaire Dynasty",
+        sub: "$250,000 trust • Old money elite estate",
+        startCash: 250000,
+        fatherJob: "Hedge Fund Partner",
+        fatherSalary: 980000,
+        motherJob: "Tech Founder",
+        motherSalary: 1250000,
+        estateBase: 4800000,
+        generosityMin: 82,
+        trustAge18: 1500000
+      }
+    };
+
+    const INHERITANCE_PLANS = {
+      equal: {
+        id: "equal",
+        icon: "⚖️",
+        label: "Standard Will Split",
+        desc: "Inherit fair share of parental estate upon passing (if bond ≥ 50%)"
+      },
+      sole: {
+        id: "sole",
+        icon: "👑",
+        label: "Sole Primary Heir (1.4x)",
+        desc: "Named sole beneficiary in both parents' wills with 1.4x estate share!"
+      },
+      trust: {
+        id: "trust",
+        icon: "🏦",
+        label: "18th Birthday Trust + Will",
+        desc: "Unlock a guaranteed cash trust at Age 18 plus standard will inheritance!"
+      },
+      charity: {
+        id: "charity",
+        icon: "🚫",
+        label: "Self-Made ($0 Inheritance)",
+        desc: "Parents donate 100% of estate to charity ($0 cash at birth, +8 Smarts grit!)"
+      }
+    };
+
+    let creatorDraft = {
+      firstName: "Alyssa",
+      lastName: "Roosevelt",
+      gender: "Female",
+      countryId: "us",
+      wealthTier: "middle",
+      inheritanceMode: "equal"
+    };
+
+    function randomizeCreatorDraft(shouldRender = true) {
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+      const g = Math.random() > 0.5 ? "Female" : "Male";
+      const fnPool = g === "Female" ? CREATOR_FIRST_NAMES_FEMALE : CREATOR_FIRST_NAMES_MALE;
+      const wKeys = Object.keys(WEALTH_TIERS);
+      const iKeys = Object.keys(INHERITANCE_PLANS);
+
+      creatorDraft = {
+        firstName: pick(fnPool),
+        lastName: pick(CREATOR_LAST_NAMES),
+        gender: g,
+        countryId: pick(BIRTH_CITIES).id,
+        wealthTier: pick(wKeys),
+        inheritanceMode: pick(iKeys)
+      };
+      if (shouldRender) renderCharacterCreator();
+    }
+
+    function randomizeCreatorNameOnly() {
+      const fnPool = creatorDraft.gender === "Female" ? CREATOR_FIRST_NAMES_FEMALE : CREATOR_FIRST_NAMES_MALE;
+      creatorDraft.firstName = fnPool[Math.floor(Math.random() * fnPool.length)];
+      creatorDraft.lastName = CREATOR_LAST_NAMES[Math.floor(Math.random() * CREATOR_LAST_NAMES.length)];
+      const fnIn = document.getElementById('creatorFirstNameInput');
+      const lnIn = document.getElementById('creatorLastNameInput');
+      if (fnIn) fnIn.value = creatorDraft.firstName;
+      if (lnIn) lnIn.value = creatorDraft.lastName;
+      syncCreatorNameInputs();
+    }
+
+    function syncCreatorNameInputs() {
+      const fnIn = document.getElementById('creatorFirstNameInput');
+      const lnIn = document.getElementById('creatorLastNameInput');
+      if (fnIn) creatorDraft.firstName = fnIn.value;
+      if (lnIn) creatorDraft.lastName = lnIn.value;
+      const fullName = ((creatorDraft.firstName || "").trim() || "New") + " " + ((creatorDraft.lastName || "").trim() || "Citizen");
+      const pName = document.getElementById('creatorPreviewName');
+      const startBtn = document.getElementById('creatorStartBtn');
+      if (pName) pName.innerText = fullName;
+      if (startBtn) startBtn.innerText = `🌟 Start as ${(creatorDraft.firstName || "").trim() || "Citizen"}`;
+    }
+
+    function setCreatorGender(g) {
+      creatorDraft.gender = g;
+      renderCharacterCreator();
+    }
+
+    function setCreatorCountry(id) {
+      creatorDraft.countryId = id;
+      renderCharacterCreator();
+    }
+
+    function setCreatorWealth(tierId) {
+      creatorDraft.wealthTier = tierId;
+      renderCharacterCreator();
+    }
+
+    function setCreatorInheritance(modeId) {
+      creatorDraft.inheritanceMode = modeId;
+      renderCharacterCreator();
+    }
+
+    function openCharacterCreator(canCancel = false) {
+      randomizeCreatorDraft(false);
+      const cancelBtn = document.getElementById('creatorCancelBtn');
+      if (cancelBtn) {
+        cancelBtn.style.visibility = canCancel ? 'visible' : 'hidden';
+        cancelBtn.innerText = canCancel ? '← Keep Life' : '';
+      }
+      renderCharacterCreator();
+      const page = document.getElementById('charCreatorPage');
+      if (page) page.classList.add('active');
+    }
+
+    function closeCharacterCreator() {
+      const page = document.getElementById('charCreatorPage');
+      if (page) page.classList.remove('active');
+    }
+
+    function renderCharacterCreator() {
+      const body = document.getElementById('charCreatorBody');
+      if (!body) return;
+
+      const cityObj = BIRTH_CITIES.find(c => c.id === creatorDraft.countryId) || BIRTH_CITIES[0];
+      const wTier = WEALTH_TIERS[creatorDraft.wealthTier] || WEALTH_TIERS.middle;
+      const inhPlan = INHERITANCE_PLANS[creatorDraft.inheritanceMode] || INHERITANCE_PLANS.equal;
+      const previewStartCash = inhPlan.id === 'charity' ? 0 : wTier.startCash;
+      const previewFullName = ((creatorDraft.firstName || "").trim() || "Alyssa") + " " + ((creatorDraft.lastName || "").trim() || "Roosevelt");
+
+      const startBtn = document.getElementById('creatorStartBtn');
+      if (startBtn) startBtn.innerText = `🌟 Start as ${(creatorDraft.firstName || "").trim() || "Citizen"}`;
+
+      let html = `
+        <div class="school-overview-card" style="margin-bottom:8px;">
+          <div class="school-overview-header">
+            <div class="school-overview-badge" style="font-size:26px;">${creatorDraft.gender === 'Female' ? '👧' : '👦'}</div>
+            <div class="school-overview-info">
+              <div class="school-overview-name" id="creatorPreviewName">${previewFullName}</div>
+              <div class="school-overview-desc">${creatorDraft.gender} • ${cityObj.flag} ${cityObj.city}, ${cityObj.country}</div>
+              <div style="margin-top:5px; display:flex; flex-wrap:wrap; gap:4px;">
+                <span class="asset-badge success">${wTier.icon} ${wTier.label} ($${previewStartCash.toLocaleString()} start)</span>
+                <span class="asset-badge info">${inhPlan.icon} ${inhPlan.label}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title" style="justify-content:space-between;">
+          <span>🧑 Identity & Name</span>
+          <button type="button" onclick="randomizeCreatorNameOnly()" style="background:none; border:none; color:#2563EB; font-size:11px; font-weight:700; cursor:pointer;">🎲 Roll Name</button>
+        </div>
+        <div class="bitlife-list">
+          <div class="creator-input-row">
+            <div class="creator-field">
+              <label>First Name</label>
+              <input id="creatorFirstNameInput" type="text" maxlength="20" value="${creatorDraft.firstName}" oninput="syncCreatorNameInputs()" placeholder="First name" />
+            </div>
+            <div class="creator-field">
+              <label>Last Name</label>
+              <input id="creatorLastNameInput" type="text" maxlength="20" value="${creatorDraft.lastName}" oninput="syncCreatorNameInputs()" placeholder="Last name" />
+            </div>
+          </div>
+          <div class="creator-pill-grid">
+            <button type="button" class="creator-pill-btn ${creatorDraft.gender === 'Female' ? 'active' : ''}" onclick="setCreatorGender('Female')">👩 Female</button>
+            <button type="button" class="creator-pill-btn ${creatorDraft.gender === 'Male' ? 'active' : ''}" onclick="setCreatorGender('Male')">👨 Male</button>
+          </div>
+        </div>
+
+        <div class="section-title"><span>🌍</span> Birth Country</div>
+        <div class="bitlife-list">
+          <div class="creator-pill-grid">
+            ${BIRTH_CITIES.map(c => `
+              <button type="button" class="creator-pill-btn ${creatorDraft.countryId === c.id ? 'active' : ''}" onclick="setCreatorCountry('${c.id}')">${c.flag} ${c.country}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="section-title"><span>🏛️</span> Family Wealth & Background</div>
+        <div class="bitlife-list">
+          ${Object.values(WEALTH_TIERS).map(w => {
+            const sel = creatorDraft.wealthTier === w.id;
+            return `
+              <div class="interactive-card ${sel ? 'creator-option-selected' : ''}" onclick="setCreatorWealth('${w.id}')" style="${sel ? 'background:#F0FDF4;' : ''}">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${w.icon}</div>
+                  <div class="card-texts">
+                    <h4>${w.label}</h4>
+                    <p>${w.sub} • Est. Parental Estate: ~$${w.estateBase.toLocaleString()}</p>
+                  </div>
+                </div>
+                <div class="creator-option-check">${sel ? '✓' : ''}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <div class="section-title"><span>📜</span> Inheritance & Estate Rule</div>
+        <div class="bitlife-list">
+          ${Object.values(INHERITANCE_PLANS).map(p => {
+            const sel = creatorDraft.inheritanceMode === p.id;
+            const trustNote = p.id === 'trust' ? ` ($${wTier.trustAge18.toLocaleString()} unlocks at 18!)` : '';
+            return `
+              <div class="interactive-card ${sel ? 'creator-option-selected' : ''}" onclick="setCreatorInheritance('${p.id}')" style="${sel ? 'background:#EFF6FF;' : ''}">
+                <div class="card-left-group">
+                  <div class="card-emoji-box">${p.icon}</div>
+                  <div class="card-texts">
+                    <h4>${p.label}</h4>
+                    <p>${p.desc}${trustNote}</p>
+                  </div>
+                </div>
+                <div class="creator-option-check">${sel ? '✓' : ''}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      body.innerHTML = html;
+      const fnEl = document.getElementById('creatorFirstNameInput');
+      const lnEl = document.getElementById('creatorLastNameInput');
+      if (fnEl) fnEl.value = creatorDraft.firstName;
+      if (lnEl) lnEl.value = creatorDraft.lastName;
+    }
+
+    function launchCustomLife() {
+      const fnEl = document.getElementById('creatorFirstNameInput');
+      const lnEl = document.getElementById('creatorLastNameInput');
+      const fnVal = (fnEl && typeof fnEl.value === 'string' && fnEl.value.trim()) ? fnEl.value.trim() : (creatorDraft.firstName || "").trim();
+      const lnVal = (lnEl && typeof lnEl.value === 'string' && lnEl.value.trim()) ? lnEl.value.trim() : (creatorDraft.lastName || "").trim();
+      const firstName = fnVal || (creatorDraft.gender === "Female" ? "Alyssa" : "Lucas");
+      const lastName = lnVal || "Roosevelt";
+      startNewLife({
+        firstName: firstName,
+        lastName: lastName,
+        gender: creatorDraft.gender,
+        countryId: creatorDraft.countryId,
+        wealthTier: creatorDraft.wealthTier,
+        inheritanceMode: creatorDraft.inheritanceMode
+      });
+      closeCharacterCreator();
+    }
+
+    function startNewLife(customOpts = null) {
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+      const chosenGender = (customOpts && (customOpts.gender === "Female" || customOpts.gender === "Male"))
+        ? customOpts.gender
+        : (Math.random() > 0.5 ? "Female" : "Male");
+      const fnPool = chosenGender === "Female" ? CREATOR_FIRST_NAMES_FEMALE : CREATOR_FIRST_NAMES_MALE;
+      const fn = (customOpts && customOpts.firstName && customOpts.firstName.trim()) ? customOpts.firstName.trim() : pick(fnPool);
+      const ln = (customOpts && customOpts.lastName && customOpts.lastName.trim()) ? customOpts.lastName.trim() : pick(CREATOR_LAST_NAMES);
+
+      const c = (customOpts && customOpts.countryId)
+        ? (BIRTH_CITIES.find(x => x.id === customOpts.countryId) || pick(BIRTH_CITIES))
+        : pick(BIRTH_CITIES.slice(0, 4));
+
+      const tierKey = (customOpts && WEALTH_TIERS[customOpts.wealthTier]) ? customOpts.wealthTier : 'middle';
+      const wTier = WEALTH_TIERS[tierKey];
+      const inhKey = (customOpts && INHERITANCE_PLANS[customOpts.inheritanceMode]) ? customOpts.inheritanceMode : 'equal';
+      const inhPlan = INHERITANCE_PLANS[inhKey];
+
+      char.name = fn + " " + ln;
+      char.gender = chosenGender;
       char.city = c.city;
       char.country = c.country;
       char.flag = c.flag;
       char.age = 0;
-      char.money = 0;
+      char.money = customOpts ? (inhKey === 'charity' ? 0 : wTier.startCash) : 0;
       char.salary = 0;
       char.occupation = "Infant";
       char.occIcon = "🍼";
@@ -2597,7 +3091,7 @@ function generateSchoolName(stage) {
       char.employmentStatus = "Unemployed";
       char.happiness = 80 + Math.floor(Math.random() * 20);
       char.health = 85 + Math.floor(Math.random() * 15);
-      char.smarts = 35 + Math.floor(Math.random() * 55);
+      char.smarts = clamp(35 + Math.floor(Math.random() * 55) + (inhKey === 'charity' ? 8 : 0), 0, 100);
       char.looks = 35 + Math.floor(Math.random() * 55);
       char.isAlive = true;
       char.causeOfDeath = null;
@@ -2610,55 +3104,68 @@ function generateSchoolName(stage) {
       char._lastFinancialSummary = null;
       char.finance = null;
       char.adult = null;
+      char.familyBackground = {
+        wealthTier: tierKey,
+        wealthLabel: wTier.label,
+        wealthIcon: wTier.icon,
+        estateBase: wTier.estateBase,
+        inheritanceMode: inhKey,
+        inheritanceLabel: inhPlan.label,
+        trustUnlocked: false
+      };
 
       initSchoolState();
       ensureFinanceState(char);
       ensureAdultState(char);
       generateYearlyMarketOpportunities(char);
 
-      const familyLastName = char.name.split(" ")[1] || "Roosevelt";
+      const familyLastName = ln;
       const fAge = 25 + Math.floor(Math.random() * 10);
       const mAge = 24 + Math.floor(Math.random() * 8);
       const sAge = 2 + Math.floor(Math.random() * 4);
+      const fGen = clamp(wTier.generosityMin + Math.floor(Math.random() * 18), 35, 99);
+      const mGen = clamp(wTier.generosityMin + 4 + Math.floor(Math.random() * 16), 35, 99);
 
       const fRel = {
-        id: "rel_father_" + Date.now(),
+        id: "rel_father_" + Date.now() + "_" + Math.floor(Math.random() * 999),
         name: "David " + familyLastName,
         relation: "Father",
         category: "family",
         gender: "Male",
         age: fAge,
         relationship: 95,
-        job: "Engineer",
-        salary: 75000,
+        job: wTier.fatherJob,
+        salary: wTier.fatherSalary,
+        estateShare: Math.round(wTier.estateBase * (0.48 + Math.random() * 0.14)),
         icon: "👨",
         isAlive: true,
-        generosity: 75 + Math.floor(Math.random() * 20),
+        generosity: fGen,
         craziness: 15 + Math.floor(Math.random() * 25),
         passedAge: null,
         passedReason: null
       };
 
       const mRel = {
-        id: "rel_mother_" + Date.now(),
+        id: "rel_mother_" + Date.now() + "_" + Math.floor(Math.random() * 999),
         name: "Sarah " + familyLastName,
         relation: "Mother",
         category: "family",
         gender: "Female",
         age: mAge,
         relationship: 98,
-        job: "Teacher",
-        salary: 58000,
+        job: wTier.motherJob,
+        salary: wTier.motherSalary,
+        estateShare: Math.round(wTier.estateBase * (0.48 + Math.random() * 0.14)),
         icon: "👩",
         isAlive: true,
-        generosity: 80 + Math.floor(Math.random() * 20),
+        generosity: mGen,
         craziness: 10 + Math.floor(Math.random() * 25),
         passedAge: null,
         passedReason: null
       };
 
       const sRel = {
-        id: "rel_sister_" + Date.now(),
+        id: "rel_sister_" + Date.now() + "_" + Math.floor(Math.random() * 999),
         name: "Chloe " + familyLastName,
         relation: "Sister",
         category: "family",
@@ -2683,19 +3190,19 @@ function generateSchoolName(stage) {
 
       tasks.forEach(t => t.done = false);
 
-      char.events = [
-        {
-          age: 0,
-          paragraphs: [
-            `I was born a ${char.gender.toLowerCase()} in ${char.city}, ${char.country}.`,
-            `My name is ${char.name}.`,
-            `My father is ${char.father.name}, an ${char.father.job} (age ${char.father.age}).`,
-            `My mother is ${char.mother.name}, a ${char.mother.job} (age ${char.mother.age}).`,
-            `I have an older sister named ${char.sister.name} (age ${char.sister.age}).`
-          ]
-        }
+      const birthParagraphs = [
+        `I was born a ${char.gender.toLowerCase()} in ${char.city}, ${char.country}.`,
+        `My name is ${char.name}.`,
+        `My family background is ${wTier.icon} ${wTier.label}${char.money > 0 ? ` (started with $${char.money.toLocaleString()} in youth funds)` : ''}.`,
+        `My father is ${char.father.name}, a ${char.father.job} ($${char.father.salary.toLocaleString()}/yr, age ${char.father.age}).`,
+        `My mother is ${char.mother.name}, a ${char.mother.job} ($${char.mother.salary.toLocaleString()}/yr, age ${char.mother.age}).`,
+        `I have an older sister named ${char.sister.name} (age ${char.sister.age}).`,
+        `Inheritance Pact: ${inhPlan.icon} ${inhPlan.label}.`
       ];
 
+      char.events = [{ age: 0, paragraphs: birthParagraphs }];
+
+      closeCharacterCreator();
       closeToFeed();
       render();
       setTimeout(() => scrollViewportToBottom(false), 50);
@@ -2849,6 +3356,12 @@ function generateSchoolName(stage) {
                 <div class="card-left-group"><div class="card-emoji-box">💘</div><div class="card-texts"><h4>Romance & Family</h4><p>${activePartner} • Children: ${childrenCount}</p></div></div>
                 <div class="row-right-meta"><span class="row-right-sub">View ›</span></div>
               </div>
+              ${char.familyBackground ? `
+                <div class="interactive-card" style="cursor:default;">
+                  <div class="card-left-group"><div class="card-emoji-box">${char.familyBackground.wealthIcon || '🏡'}</div><div class="card-texts"><h4>Family Wealth & Inheritance</h4><p>${char.familyBackground.wealthLabel} • ${char.familyBackground.inheritanceLabel}</p></div></div>
+                  <div class="row-right-meta"><span class="row-right-sub">~$${(char.familyBackground.estateBase || 165000).toLocaleString()}</span></div>
+                </div>
+              ` : ''}
             </div>
 
             ${char.age >= 18 ? `
@@ -2990,6 +3503,17 @@ function generateSchoolName(stage) {
         if (parsed && parsed.char && typeof parsed.char.age === 'number') {
           char = parsed.char;
           if (!char.school) initSchoolState();
+          if (!char.familyBackground) {
+            char.familyBackground = {
+              wealthTier: 'middle',
+              wealthLabel: 'Middle Class',
+              wealthIcon: '🏡',
+              estateBase: 165000,
+              inheritanceMode: 'equal',
+              inheritanceLabel: 'Standard Will Split',
+              trustUnlocked: char.age >= 18
+            };
+          }
           ensureFinanceState(char);
           ensureAdultState(char);
           ensureRelationshipsState();
@@ -5482,14 +6006,25 @@ function generateSchoolName(stage) {
               char.happiness = clamp(char.happiness - 35, 0, 100);
 
               let inheritance = 0;
-              if (rel.relationship >= 50) {
-                const baseEstate = (rel.salary || 65000) * (2 + Math.floor(Math.random() * 3));
+              const fb = char.familyBackground || { wealthTier: 'middle', estateBase: 165000, inheritanceMode: 'equal' };
+              const inhMode = fb.inheritanceMode || 'equal';
+              const baseEstate = rel.estateShare || Math.round((fb.estateBase || 165000) * 0.55) || ((rel.salary || 65000) * (2 + Math.floor(Math.random() * 3)));
+
+              if (inhMode === 'charity') {
+                inheritance = 0;
+              } else if (inhMode === 'sole' && rel.relationship >= 35) {
+                inheritance = Math.round(baseEstate * 1.4);
+                char.money += inheritance;
+              } else if (rel.relationship >= 50) {
                 const generosityFactor = (rel.generosity || 75) / 100;
                 inheritance = Math.round(baseEstate * generosityFactor);
                 char.money += inheritance;
               }
 
               yearNotes.push(`🕊️ IN MEMORIAM: My ${rel.relation.toLowerCase()}, ${rel.name}, passed away peacefully at age ${rel.age}. I attended the funeral.`);
+              if (inhMode === 'charity') {
+                yearNotes.push(`📜 LAST WILL: Per our self-made family pact, ${rel.name}'s estate was donated completely to charity.`);
+              }
               if (inheritance > 0) {
                 yearNotes.push(`📜 INHERITANCE: ${rel.name} bequeathed me $${inheritance.toLocaleString()} in their final will!`);
                 setTimeout(() => {
@@ -5663,6 +6198,14 @@ function generateSchoolName(stage) {
         yearNotes.push("🎉 Senior year of High School! Prom night is here!");
         setTimeout(popupPromNight, 360);
       } else if (char.age === 18) {
+        if (char.familyBackground && char.familyBackground.inheritanceMode === 'trust' && !char.familyBackground.trustUnlocked) {
+          char.familyBackground.trustUnlocked = true;
+          const trustMap = { poor: 1500, middle: 15000, affluent: 150000, dynasty: 1500000 };
+          const trustAmt = trustMap[char.familyBackground.wealthTier] || 15000;
+          char.money += trustAmt;
+          char.happiness = clamp(char.happiness + 18, 0, 100);
+          yearNotes.push(`🏦 FAMILY TRUST UNLOCKED: Turning 18 unlocked my ${char.familyBackground.wealthLabel} family trust payout of $${trustAmt.toLocaleString()}!`);
+        }
         if (char.school && char.school.stage === "High School") {
           triggeredTransitionPopup = true;
           if (char.school.grades >= 50) {
@@ -5831,7 +6374,7 @@ function generateSchoolName(stage) {
         const heir = livingChildren[0];
         actionsHtml += `<button class="modal-btn primary" onclick="closeModal(); continueAsHeir('${heir.id}')">👑 Continue as ${heir.name} (Age ${heir.age})</button>`;
       }
-      actionsHtml += `<button class="modal-btn" onclick="closeModal(); startNewLife()">🔄 Start Brand New Life</button></div>`;
+      actionsHtml += `<button class="modal-btn" onclick="closeModal(); openCharacterCreator(false)">🔄 Create New Character</button></div>`;
       showCustomModal("Rest In Peace 🕊️", "🪦", bodyHtml, actionsHtml);
     }
 
@@ -12496,14 +13039,13 @@ function generateSchoolName(stage) {
     }
 
     function confirmRestart() {
-      showConfirm("Are you sure you want to start a brand new life? Current life progress will be reset.", () => {
-        startNewLife();
-      }, "Restart Life", "🔄", "Restart");
+      openCharacterCreator(true);
     }
 
-    // INITIALIZE (Restore saved game if present, otherwise begin new life)
+    // INITIALIZE (Restore saved game if present, otherwise launch Character Creation setup)
     if (!loadGameState()) {
       startNewLife();
+      openCharacterCreator(false);
     }
 
     // Register OTA Service Worker
